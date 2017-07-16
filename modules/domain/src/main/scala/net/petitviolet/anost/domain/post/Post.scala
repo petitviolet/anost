@@ -4,6 +4,7 @@ import net.petitviolet.anost.domain._
 import net.petitviolet.anost.domain.support.Entity
 import net.petitviolet.anost.domain.user.User
 import net.petitviolet.anost.support.Id
+import net.petitviolet.anost.support.contracts.AppContext
 
 import scala.concurrent.Future
 import scalaz.Kleisli
@@ -32,7 +33,7 @@ object Post {
       fileTypeSpec(fileType) |@|
       contentsSpec(contents))(Post(Id.generate(), ownerId, _, _, _))
 
-  def save(post: Post): Kleisli[Future, PostRepository, Post] = Kleisli {
+  def save(post: Post)(implicit ctx: AppContext): Kleisli[Future, PostRepository, Post] = Kleisli {
     repo => repo.store.run(post)
   }
 }

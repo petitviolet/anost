@@ -10,3 +10,7 @@ import scalaz.Kleisli
 trait UserRepository extends Repository[User] {
   def post(post: Post)(implicit ctx: AppContext): Kleisli[Future, User, Post]
 }
+
+trait UsesUserRepository {
+  val userRepository: UserRepository
+}
