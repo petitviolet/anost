@@ -48,6 +48,7 @@ val commonDependencies = Seq(
   "com.github.pureconfig" %% "pureconfig" % "0.7.2",
   "com.lihaoyi" %% "sourcecode" % "0.1.3",
   "com.beachape" %% "enumeratum" % "1.5.12",
+  "net.petitviolet" %% "operator" % "0.2.2",
 
   "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 ) ++ loggerDependencies ++ dbDependencies
