@@ -112,6 +112,6 @@ trait MixInLogger {
 }
 
 private object AnostLoggerImpl extends AnostLogger {
-  override protected val loggerKey: String = "RavenLogger"
+  override protected val loggerKey: String = "AnostLogger"
 }
 
