@@ -1,4 +1,4 @@
-package net.petitviolet.anost.adapter
+package net.petitviolet.anost.adapter.support
 
 import java.util.concurrent.{ ExecutorService, ForkJoinPool }
 
