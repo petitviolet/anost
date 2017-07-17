@@ -76,7 +76,7 @@ def commonSettings(projectName: String) = Seq(
 
 lazy val root = (project in file("."))
   .settings(commonSettings("anost"))
-  .dependsOn(adapter, usecase, domain, support)
+  .aggregate(conf, usecase, domain, support, adapter)
 
 lazy val adapter = (project in file("modules/adapter"))
   .settings(commonSettings("adapter"))
