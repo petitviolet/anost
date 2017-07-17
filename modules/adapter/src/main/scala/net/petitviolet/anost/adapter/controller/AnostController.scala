@@ -6,9 +6,9 @@ import akka.http.scaladsl.model._
 import akka.http.scaladsl.model.headers._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
-import net.petitviolet.anost.adapter.{ ThreadHelper, UsesControllerConfig }
 import net.petitviolet.anost.adapter.presenter.PresenterOutput
 import net.petitviolet.anost.adapter.support.json.JsonSupport
+import net.petitviolet.anost.adapter.support.{ ThreadHelper, UsesControllerConfig }
 import net.petitviolet.anost.support.UsesLogger
 import net.petitviolet.anost.usecase.ValidationError
 
