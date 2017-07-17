@@ -2,13 +2,13 @@ package net.petitviolet.anost.adapter.controller
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
-import net.petitviolet.anost.adapter.presenter.{ JsonOutput, MixInUserPresenter, UsesUserPresenter }
+import net.petitviolet.anost.adapter.presenter.{ MixInUserPresenter, UsesUserPresenter }
 import net.petitviolet.anost.adapter.repository.Database.Anost
 import net.petitviolet.anost.adapter.repository.MixInUserRepository
-import net.petitviolet.anost.support.MixInLogger
+import net.petitviolet.anost.support.{ MixInLogger, UsesLogger }
 import net.petitviolet.anost.usecase.user.{ RegisterUserArgs, RegisterUserUseCase, UsesRegisterUserUseCase }
 
-trait UserController extends AnostController with MixInLogger
+trait UserController extends AnostController with UsesLogger
     with UsesRegisterUserUseCase with UsesUserPresenter {
   override def configKey: String = "user"
   override protected def route: Route = {
@@ -22,12 +22,8 @@ trait UserController extends AnostController with MixInLogger
   }
 }
 
-object UserControllerImpl extends UserController with MixInUserPresenter
-  with MixInRegisterUserUseCase
-
-trait MixInRegisterUserUseCase {
-  val registerUserUseCase: RegisterUserUseCase = RegisterUserUseCaseImpl
+object UserControllerImpl extends UserController with MixInLogger
+    with MixInUserPresenter {
+  override val registerUserUseCase: RegisterUserUseCase = new RegisterUserUseCase with MixInUserRepository
 }
 
-private object RegisterUserUseCaseImpl extends RegisterUserUseCase
-  with MixInUserRepository
