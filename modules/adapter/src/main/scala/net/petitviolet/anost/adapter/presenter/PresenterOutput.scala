@@ -1,7 +1,12 @@
 package net.petitviolet.anost.adapter.presenter
 
-import akka.http.scaladsl.model.{ ContentType, ContentTypes, HttpEntity, HttpHeader }
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import akka.http.scaladsl.model._
 import akka.http.scaladsl.model.headers.HttpCookie
+import net.petitviolet.anost.adapter.support.json.JsonSupport
+import net.petitviolet.anost.usecase.Out
+import spray.json.{ DefaultJsonProtocol, JsValue }
+
 import scala.collection.immutable
 
 trait PresenterOutput extends Any {
@@ -21,9 +26,29 @@ object PresenterOutput {
   }
 }
 
+case class HtmlOutput(cookies: Seq[HttpCookie], content: Content) extends PresenterOutput {
+  override val contentType = ContentTypes.`text/html(UTF-8)`
+
+  override def asEntity: HttpEntity.Strict =
+    HttpEntity(contentType, content.value)
+}
+
+trait JsonPresenter[I <: Out] extends AnostPresenter[I, JsonOutput] with JsonSupport
+
+case class JsonOutput(cookies: Seq[HttpCookie], jsValue: JsValue) extends PresenterOutput {
+  override val contentType = ContentType(MediaTypes.`application/javascript`, HttpCharsets.`UTF-8`)
+
+  override def asEntity: HttpEntity.Strict =
+    HttpEntity(contentType, jsValue.toString())
+}
+
+case class NotFoundOutput(cookies: Seq[HttpCookie]) extends PresenterOutput {
+  override val contentType = ContentTypes.`text/html(UTF-8)`
+  override def asEntity: HttpEntity.Strict = HttpEntity(contentType, Content.EMPTY.value)
+}
+
 case class Content(value: String) extends AnyVal
 
 object Content {
   val EMPTY = Content("")
 }
-
