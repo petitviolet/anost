@@ -10,11 +10,6 @@ import scala.concurrent.Future
 import scalaz.Kleisli
 
 object UserRepositoryImpl extends UserRepository with MixInLogger {
-  override def post(post: Post)(implicit ctx: AppContext): Kleisli[Future, User, Post] = Kleisli { user =>
-    import ctx._
-    ???
-  }
-
   override def resolve(implicit ctx: AppContext): Kleisli[Future, Id[User], User] = Kleisli { userId =>
     import ctx._
     ???
@@ -23,7 +18,7 @@ object UserRepositoryImpl extends UserRepository with MixInLogger {
   override def store(implicit ctx: AppContext): Kleisli[Future, User, User] = kleisliF { user =>
     import ctx._
     val id = Users.insert(user)
-    logger.info(s"insert $id")
+    logger.debug(s"insert $id")
     user
   }
 

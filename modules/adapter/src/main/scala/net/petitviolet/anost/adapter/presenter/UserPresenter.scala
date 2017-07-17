@@ -1,13 +1,13 @@
 package net.petitviolet.anost.adapter.presenter
 
-import net.petitviolet.anost.support.MixInLogger
+import net.petitviolet.anost.support.{ MixInLogger, UsesLogger }
 import net.petitviolet.anost.support.contracts.Callback
 import net.petitviolet.anost.usecase.user.UserOutput
-
-import scala.concurrent.Promise
 import spray.json._
 
-trait UserPresenter extends JsonPresenter[UserOutput] with MixInLogger {
+import scala.concurrent.Promise
+
+trait UserPresenter extends JsonPresenter[UserOutput] with UsesLogger {
   /**
    * @param promise
    * @return
@@ -29,4 +29,4 @@ trait MixInUserPresenter {
   val userPresenter: UserPresenter = UserPresenterImpl
 }
 
-private object UserPresenterImpl extends UserPresenter
+private object UserPresenterImpl extends UserPresenter with MixInLogger

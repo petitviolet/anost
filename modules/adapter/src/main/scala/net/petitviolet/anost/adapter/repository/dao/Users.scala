@@ -25,7 +25,7 @@ object Users extends AnostMapper[Users] {
     )
   }
 
-  private[adapter] def insert(user: User)(implicit s: DBSession): Id[Users] = {
+  private[repository] def insert(user: User)(implicit s: DBSession): Id[Users] = {
     val dateTime = now()
     createWithAttributes(
       'id -> user.id,
