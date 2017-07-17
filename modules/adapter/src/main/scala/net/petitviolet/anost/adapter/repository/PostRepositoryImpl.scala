@@ -26,9 +26,19 @@ object PostRepositoryImpl extends PostRepository with MixInLogger {
 
   override def update(implicit ctx: AppContext): Kleisli[Future, Post, Post] = ???
 
-  override def findByUserId(implicit ctx: AppContext): Kleisli[Future, Id[User], Seq[Post]] = ???
+  override def findByUserId(implicit ctx: AppContext): Kleisli[Future, Id[User], Seq[Post]] = kleisliF {
+    userId =>
+      import ctx._
+      val postss = Posts.findAllByUserId(userId)
+      postss map { Posts.toModel }
+  }
 
-  override def findByTitle(implicit ctx: AppContext): Kleisli[Future, String, Seq[Post]] = ???
+  override def findByTitle(implicit ctx: AppContext): Kleisli[Future, String, Seq[Post]] = kleisliF {
+    title =>
+      import ctx._
+      val postss = Posts.findAllLikeTitle(title)
+      postss map { Posts.toModel }
+  }
 }
 
 trait MixInPostRepository {

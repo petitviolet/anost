@@ -1,18 +1,21 @@
 package net.petitviolet.anost.adapter.repository.dao
 
 import net.petitviolet.anost.adapter.repository.AnostMapper
-import net.petitviolet.anost.domain.post.{ Contents, FileType, Post, Title }
+import net.petitviolet.anost.domain.post._
 import net.petitviolet.anost.domain.user.User
 import net.petitviolet.anost.support.Id
 import org.joda.time.DateTime
 import scalikejdbc._
 import skinny.orm.Alias
 
-case class Posts(id: Id[Posts], ownerId: Id[Users], title: String, fileType: String, content: String,
+case class Posts(id: Id[Posts], ownerId: Id[Users],
+  title: String, fileType: String, content: String,
   createdAt: DateTime, updatedAt: DateTime)
 
 object Posts extends AnostMapper[Posts] {
   override def defaultAlias: Alias[Posts] = createAlias("p")
+
+  private def posts: Alias[Posts] = defaultAlias
 
   override def extract(rs: WrappedResultSet, rn: ResultName[Posts]): Posts = {
     Posts(
@@ -36,7 +39,7 @@ object Posts extends AnostMapper[Posts] {
 
   private[repository] def insert(post: Post)(implicit s: DBSession): Id[Posts] = {
     val dt = now()
-    createWithAttributes(
+    Posts.createWithAttributes(
       'id -> post.id,
       'owner_id -> post.ownerId.value,
       'title -> post.title.value,
@@ -45,5 +48,19 @@ object Posts extends AnostMapper[Posts] {
       'created_at -> dt,
       'updated_at -> dt
     )
+  }
+
+  def findAllByUserId(userId: Id[User])(implicit s: DBSession): Seq[Posts] = {
+    Nil
+    //    Posts.findAllBy {
+    //      sqls.eq(Users.defaultAlias.id, userId)
+    //    }
+  }
+
+  def findAllLikeTitle(title: String)(implicit s: DBSession): Seq[Posts] = {
+    Nil
+    //    Posts.findAllBy {
+    //      sqls.like(Users.defaultAlias.id, title)
+    //    }
   }
 }

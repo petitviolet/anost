@@ -26,7 +26,7 @@ object PresenterOutput {
   }
 }
 
-case class HtmlOutput(cookies: Seq[HttpCookie], content: Content) extends PresenterOutput {
+case class HtmlOutput(cookies: Seq[HttpCookie], content: ResponseBody) extends PresenterOutput {
   override val contentType = ContentTypes.`text/html(UTF-8)`
 
   override def asEntity: HttpEntity.Strict =
@@ -44,11 +44,11 @@ case class JsonOutput(cookies: Seq[HttpCookie], jsValue: JsValue) extends Presen
 
 case class NotFoundOutput(cookies: Seq[HttpCookie]) extends PresenterOutput {
   override val contentType = ContentTypes.`text/html(UTF-8)`
-  override def asEntity: HttpEntity.Strict = HttpEntity(contentType, Content.EMPTY.value)
+  override def asEntity: HttpEntity.Strict = HttpEntity(contentType, ResponseBody.EMPTY.value)
 }
 
-case class Content(value: String) extends AnyVal
+case class ResponseBody(value: String) extends AnyVal
 
-object Content {
-  val EMPTY = Content("")
+object ResponseBody {
+  val EMPTY = ResponseBody("")
 }
