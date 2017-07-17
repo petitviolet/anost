@@ -28,7 +28,7 @@ val akkaHttpDependencies = Seq(
   "com.typesafe.akka" %% "akka-http-spray-json" % akka,
   "com.typesafe.akka" %% "akka-http-testkit" % akka % "test"
 )
-val SKINNY_VERSION = "2.3.1"
+val SKINNY_VERSION = "2.3.7"
 val dbDependencies = Seq(
   "org.skinny-framework" %% "skinny-orm" % SKINNY_VERSION,
   "org.skinny-framework" %% "skinny-task" % SKINNY_VERSION,
@@ -86,7 +86,7 @@ lazy val adapter = (project in file("modules/adapter"))
         "commons-daemon" % "commons-daemon" % "1.0.15"
       )
   )
-  .dependsOn(support, usecase, domain)
+  .dependsOn(support, usecase, domain, conf)
 
 lazy val usecase = (project in file("modules/usecase"))
   .settings(commonSettings("usecase"))
