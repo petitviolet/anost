@@ -1,12 +1,14 @@
 package net.petitviolet.anost.adapter.controller
 
 import akka.event.Logging
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.model.headers._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 import net.petitviolet.anost.adapter.{ ThreadHelper, UsesControllerConfig }
 import net.petitviolet.anost.adapter.presenter.PresenterOutput
+import net.petitviolet.anost.adapter.support.json.JsonSupport
 import net.petitviolet.anost.support.UsesLogger
 import net.petitviolet.anost.usecase.ValidationError
 
@@ -16,7 +18,8 @@ import scala.concurrent.{ ExecutionContext, Future, TimeoutException }
  * Controllerが[[Route]]をimplementしておくことで
  * `FooController ~ BarController`のようにobjectそのものをrouteとして扱えて見た目がすっきりする
  */
-trait AnostController extends Route with UsesLogger with UsesControllerConfig {
+trait AnostController extends Route with UsesLogger with UsesControllerConfig
+    with SprayJsonSupport with JsonSupport {
   private val TAG = getClass.getSimpleName
   protected def route: Route
   private lazy val _route: Route = route
