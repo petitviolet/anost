@@ -1,7 +1,8 @@
 package net.petitviolet.anost.adapter.repository.dao
 
 import net.petitviolet.anost.adapter.repository.AnostMapper
-import net.petitviolet.anost.domain.post.Post
+import net.petitviolet.anost.domain.post.{ Contents, FileType, Post, Title }
+import net.petitviolet.anost.domain.user.User
 import net.petitviolet.anost.support.Id
 import org.joda.time.DateTime
 import scalikejdbc._
@@ -24,6 +25,14 @@ object Posts extends AnostMapper[Posts] {
       rs.get(rn.updatedAt)
     )
   }
+
+  def toModel(posts: Posts): Post = Post(
+    posts.id.as[Post],
+    posts.ownerId.as[User],
+    Title(posts.title),
+    FileType(posts.fileType),
+    Contents(posts.content)
+  )
 
   private[repository] def insert(post: Post)(implicit s: DBSession): Id[Posts] = {
     val dt = now()

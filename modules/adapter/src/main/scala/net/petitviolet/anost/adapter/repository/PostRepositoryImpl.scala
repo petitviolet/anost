@@ -2,6 +2,7 @@ package net.petitviolet.anost.adapter.repository
 
 import net.petitviolet.anost.adapter.repository.dao.Posts
 import net.petitviolet.anost.domain.post.{ Post, PostRepository }
+import net.petitviolet.anost.domain.user.User
 import net.petitviolet.anost.support.contracts.AppContext
 import net.petitviolet.anost.support.{ Id, MixInLogger }
 
@@ -9,7 +10,12 @@ import scala.concurrent.Future
 import scalaz.Kleisli
 
 object PostRepositoryImpl extends PostRepository with MixInLogger {
-  override def resolve(implicit ctx: AppContext): Kleisli[Future, Id[Post], Post] = ???
+  override def resolve(implicit ctx: AppContext): Kleisli[Future, Id[Post], Post] = kleisliF {
+    id: Id[Post] =>
+      import ctx._
+      val postOpt = Posts.findById(id.as[Posts])
+      postOpt.map { Posts.toModel } getOrElse { throw NotFound(s"post($id) does not exist") }
+  }
 
   override def store(implicit ctx: AppContext): Kleisli[Future, Post, Post] = kleisliF { post =>
     import ctx._
@@ -19,6 +25,10 @@ object PostRepositoryImpl extends PostRepository with MixInLogger {
   }
 
   override def update(implicit ctx: AppContext): Kleisli[Future, Post, Post] = ???
+
+  override def findByUserId(implicit ctx: AppContext): Kleisli[Future, Id[User], Seq[Post]] = ???
+
+  override def findByTitle(implicit ctx: AppContext): Kleisli[Future, String, Seq[Post]] = ???
 }
 
 trait MixInPostRepository {
