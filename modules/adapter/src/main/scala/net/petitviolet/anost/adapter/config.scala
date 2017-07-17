@@ -7,8 +7,8 @@ case class HttpConfig(host: String, post: Int)
 case class ControllerConfig(parallelism: Int)
 
 trait UsesControllerConfig {
-  def key: String
-  lazy val controllerConfig: ControllerConfig = ControllerConfig.findByKey(s"controller.$key")
+  def configKey: String
+  lazy val controllerConfig: ControllerConfig = ControllerConfig.findByKey(s"controller.$configKey")
 }
 
 object ControllerConfig {
