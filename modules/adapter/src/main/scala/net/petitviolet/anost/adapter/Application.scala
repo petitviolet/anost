@@ -6,7 +6,7 @@ import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 import akka.http.scaladsl.settings.{ ParserSettings, RoutingSettings }
-import net.petitviolet.anost.adapter.controller.{ AnostController, UserControllerImpl }
+import net.petitviolet.anost.adapter.controller.{ AnostController, PostControllerImpl, UserControllerImpl }
 import net.petitviolet.anost.adapter.repository.Database
 import net.petitviolet.anost.adapter.support._
 import net.petitviolet.anost.support.MixInLogger
@@ -116,9 +116,9 @@ private object AppController extends AnostController with MixInLogger {
   import AnostController._
   override def configKey: String = "root"
 
-  lazy val exceptionHandler = ExceptionHandler {
+  override protected def exceptionHandler(implicit s: sourcecode.File) = ExceptionHandler {
     case t: Throwable =>
-      logger.debugStackTrace(t)
+      //      logger.debugStackTrace(t)
       logger.warn(s"exception handler: $t")
 
       respondWithHeaders(defaultHeaders: _*) {
@@ -146,7 +146,8 @@ private object AppController extends AnostController with MixInLogger {
 
   protected lazy val route =
     Route.seal {
-      UserControllerImpl
+      UserControllerImpl ~
+        PostControllerImpl
     }(routingSettings, parserSettings, rejectionHandler, exceptionHandler)
 }
 

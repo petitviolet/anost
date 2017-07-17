@@ -20,6 +20,7 @@ import scala.concurrent.{ ExecutionContext, Future, TimeoutException }
  */
 trait AnostController extends Route with UsesLogger with UsesControllerConfig
     with SprayJsonSupport with JsonSupport {
+
   private val TAG = getClass.getSimpleName
   protected def route: Route
   private lazy val _route: Route = route
@@ -45,9 +46,10 @@ trait AnostController extends Route with UsesLogger with UsesControllerConfig
    */
   protected def exceptionHandler(implicit s: sourcecode.File) = ExceptionHandler {
     case t: Throwable =>
-      logger.debugStackTrace(t)
+      //      logger.debugStackTrace(t)
       logger.warn(s"[${s.value}] exception-handler: $t")
-      ok(fallbackOutput)
+      //      ok(fallbackOutput)
+      failWith(t)
   }
 
   // directive合成を1回だけにするためvalで持つ
@@ -123,7 +125,7 @@ trait AnostController extends Route with UsesLogger with UsesControllerConfig
     }
 
     logRequest(path, logLevel) {
-      AnostController.NOT_FOUND
+      failWith(t)
     }
   }
 
