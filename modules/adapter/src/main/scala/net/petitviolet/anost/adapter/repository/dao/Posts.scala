@@ -13,9 +13,10 @@ case class Posts(id: Id[Posts], ownerId: Id[Users],
   createdAt: DateTime, updatedAt: DateTime)
 
 object Posts extends AnostMapper[Posts] {
+  override def tableName: String = "posts"
   override def defaultAlias: Alias[Posts] = createAlias("p")
 
-  private def posts: Alias[Posts] = defaultAlias
+  private def p: Alias[Posts] = defaultAlias
 
   override def extract(rs: WrappedResultSet, rn: ResultName[Posts]): Posts = {
     Posts(
@@ -51,16 +52,14 @@ object Posts extends AnostMapper[Posts] {
   }
 
   def findAllByUserId(userId: Id[User])(implicit s: DBSession): Seq[Posts] = {
-    Nil
-    //    Posts.findAllBy {
-    //      sqls.eq(Users.defaultAlias.id, userId)
-    //    }
+    Posts.findAllBy {
+      sqls.eq(p.ownerId, userId.value)
+    }
   }
 
   def findAllLikeTitle(title: String)(implicit s: DBSession): Seq[Posts] = {
-    Nil
-    //    Posts.findAllBy {
-    //      sqls.like(Users.defaultAlias.id, title)
-    //    }
+    Posts.findAllBy {
+      sqls.like(p.title, s"%$title%")
+    }
   }
 }

@@ -29,4 +29,6 @@ package object dao {
 
   implicit def idB[A] = stringTypeBinder(Id.apply[A])
 
+  implicit def idBinder[A] = Binders.string.xmap[Id[A]](Id.apply[A], _.value)
+
 }
