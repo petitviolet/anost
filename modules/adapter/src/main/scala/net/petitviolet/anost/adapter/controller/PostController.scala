@@ -4,8 +4,9 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import net.petitviolet.anost.adapter.presenter._
 import net.petitviolet.anost.adapter.repository.Database.Anost
-import net.petitviolet.anost.adapter.repository.MixInPostRepository
+import net.petitviolet.anost.adapter.repository.{ MixInPostRepository, MixInUserRepository }
 import net.petitviolet.anost.support._
+import net.petitviolet.anost.usecase.AuthArg
 import net.petitviolet.anost.usecase.post._
 
 trait PostController extends AnostController with UsesLogger
@@ -15,9 +16,9 @@ trait PostController extends AnostController with UsesLogger
 
   override protected def route: Route = {
     pathPrefix("post") {
-      (pathEnd & post & entity(as[SavePostArg])) { arg =>
+      (pathEnd & post & withAuth & entity(as[SavePostArg])) { (token, arg) =>
         implicit val ctx = createContext(Anost.writeSession)
-        val out = postPresenter.execute(savePostUseCase.execute(arg))
+        val out = postPresenter.execute(savePostUseCase.execute(AuthArg(token, arg)))
         onCompleteResponse("/post", out) { ok }
       } ~
         (path(Segment) & get).as(GetPostArg.fromString _) { arg: GetPostArg =>
@@ -38,7 +39,7 @@ trait PostController extends AnostController with UsesLogger
 object PostControllerImpl extends PostController with MixInLogger
     with MixInPostPresenter
     with MixInPostsPresenter {
-  override val savePostUseCase: SavePostUseCase = new SavePostUseCase with MixInPostRepository
+  override val savePostUseCase: SavePostUseCase = new SavePostUseCase with MixInPostRepository with MixInUserRepository with MixInLogger
   override val getPostUseCase: GetPostUseCase = new GetPostUseCase with MixInPostRepository
   override val findPostUseCase: FindPostUseCase = new FindPostUseCase with MixInPostRepository
 }
