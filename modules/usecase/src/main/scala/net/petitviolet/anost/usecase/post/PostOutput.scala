@@ -7,7 +7,9 @@ import net.petitviolet.anost.usecase.Out
 
 case class PostOutput(id: Id[Post], ownerId: Id[User], title: String, fileType: String, contents: String) extends Out
 
-case class PostsOutput(posts: Seq[PostOutput]) extends Out
+// contentsが重いのでそこは削る
+case class PostElement(id: Id[Post], ownerId: Id[User], title: String, fileType: String) extends Out
+case class PostsOutput(posts: Seq[PostElement]) extends Out
 
 object PostOutput {
   def fromModel(post: Post): PostOutput = PostOutput(
@@ -16,8 +18,12 @@ object PostOutput {
 }
 
 object PostsOutput {
+  private def toElement(post: Post): PostElement = PostElement(
+    post.id, post.ownerId, post.title.value, post.fileType.value
+  )
+
   def fromModels(posts: Seq[Post]): PostsOutput = PostsOutput(
-    posts map PostOutput.fromModel
+    posts map toElement
   )
 }
 
