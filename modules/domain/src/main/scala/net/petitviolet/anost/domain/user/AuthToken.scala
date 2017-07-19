@@ -2,12 +2,14 @@ package net.petitviolet.anost.domain.user
 
 import java.time.LocalDateTime
 
-case class AuthToken(value: String, expiresAt: LocalDateTime) {
-  require(value.length == 36, s"auth_token is invalid. value: $value is wrong.")
+case class AuthToken(value: AuthTokenValue, expiresAt: LocalDateTime) {
   // if true, token had expired
   def isExpired: Boolean = {
     expiresAt.isAfter(LocalDateTime.now())
   }
+}
+case class AuthTokenValue(value: String) {
+  require(value.length == 36, s"auth_token is invalid. value: $value is wrong.")
 }
 
 object AuthToken {
@@ -19,7 +21,7 @@ object AuthToken {
     // last 4 digits
     val m = s"${System.currentTimeMillis()}".takeRight(4)
     AuthToken(
-      s"$h$m", expiresAt
+      AuthTokenValue(s"$h$m"), expiresAt
     )
   }
 
