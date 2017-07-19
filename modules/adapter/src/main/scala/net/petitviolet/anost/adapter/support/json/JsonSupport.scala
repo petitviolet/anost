@@ -16,7 +16,7 @@ trait JsonSupport extends DefaultJsonProtocol {
     override def write(obj: Id[A]): JsValue = JsString(s"${obj.value}")
   }
   implicit val userArgJson = jsonFormat3(RegisterUserArgs.apply)
-  implicit val userOutputJson = jsonFormat3(UserOutput.apply)
+  implicit val userOutputJson = jsonFormat4(UserOutput.apply)
   implicit val savePostArgJson = jsonFormat4(SavePostArg.apply)
   implicit val postOutputJson = jsonFormat5(PostOutput.apply)
   implicit val postElementJson = jsonFormat4(PostElement.apply)

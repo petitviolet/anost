@@ -1,13 +1,15 @@
 package net.petitviolet.anost.adapter.repository
 
 import java.sql.ResultSet
+import java.time.{ LocalDateTime, ZoneId, ZoneOffset }
+import java.util.Locale
 
 import net.petitviolet.anost.support.Id
-import org.joda.time.DateTime
+import org.joda.time.{ DateTime, DateTimeZone }
 import scalikejdbc._
 
 package object dao {
-  def now(): DateTime = DateTime.now()
+  def now(): DateTime = DateTime.now(DateTimeZone.getDefault)
 
   private object BinderBuilder {
     /**
@@ -31,4 +33,24 @@ package object dao {
 
   implicit def idBinder[A] = Binders.string.xmap[Id[A]](Id.apply[A], _.value)
 
+  implicit class DateTimeConverter(val ldt: LocalDateTime) extends AnyVal {
+    def asJoda: DateTime = {
+      val instant = ldt.atZone(ZoneId.systemDefault()).toInstant
+      new DateTime(instant.toEpochMilli)
+    }
+  }
+
+  implicit class JodaConverter(val jdt: DateTime) extends AnyVal {
+    def asLocalDateTime: LocalDateTime = {
+      LocalDateTime.of(
+        jdt.getYear,
+        jdt.getMonthOfYear,
+        jdt.getDayOfMonth,
+        jdt.getHourOfDay,
+        jdt.getMinuteOfHour,
+        jdt.getSecondOfMinute,
+        jdt.getMillisOfSecond * 1000000
+      )
+    }
+  }
 }

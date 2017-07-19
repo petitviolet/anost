@@ -6,7 +6,8 @@ import net.petitviolet.anost.adapter.support.ConfigContainer
 import net.petitviolet.anost.support.Id
 import scalikejdbc._
 import scalikejdbc.config._
-import skinny.orm.SkinnyCRUDMapperWithId
+import skinny.logging.Logger
+import skinny.orm.{ SkinnyCRUDMapper, SkinnyCRUDMapperWithId, SkinnyMapperBase, SkinnyNoIdCRUDMapper }
 
 /**
  * DBの共通部分
@@ -83,12 +84,21 @@ object Database {
  * DBに対するORM
  * @tparam T
  */
-sealed trait DatabaseMapper[T] extends SkinnyCRUDMapperWithId[Id[T], T] {
+sealed trait DatabaseMapper[T] extends SkinnyMapperBase[T] {
   val db: Database
 
   final override def connectionPoolName: Any = db.dbName
 
   override def autoSession: DBSession = db.readSession
+
+}
+
+/**
+ * DB:anostを使用する場合はこちらをextendsする
+ * @tparam T
+ */
+trait AnostMapper[T] extends DatabaseMapper[T] with SkinnyCRUDMapperWithId[Id[T], T] {
+  lazy val db = Database.Anost
 
   override def idToRawValue(id: Id[T]): Any = id.value
 
@@ -100,12 +110,6 @@ sealed trait DatabaseMapper[T] extends SkinnyCRUDMapperWithId[Id[T], T] {
   override def useExternalIdGenerator: Boolean = true
 }
 
-/**
- * DB:anostを使用する場合はこちらをextendsする
- * @tparam T
- */
-trait AnostMapper[T] extends DatabaseMapper[T] {
+trait AnostNoIdMapper[T] extends DatabaseMapper[T] with SkinnyNoIdCRUDMapper[T] {
   lazy val db = Database.Anost
-
 }
-

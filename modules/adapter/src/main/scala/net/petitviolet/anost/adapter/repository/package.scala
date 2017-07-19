@@ -13,4 +13,5 @@ package object repository {
     Kleisli { a => Future(f(a))(ctx.executionContext) }
 
   case class NotFound(msg: String) extends Exception(msg)
+  def notFound(msg: String) = throw NotFound(msg)
 }
