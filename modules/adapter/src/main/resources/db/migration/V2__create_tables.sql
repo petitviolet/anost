@@ -1,4 +1,4 @@
-create table posts (
+CREATE TABLE posts (
     id VARCHAR(36) NOT NULL,
     owner_id VARCHAR(36) NOT NULL,
     title VARCHAR(255) NOT NULL,
@@ -6,6 +6,6 @@ create table posts (
     content TEXT NOT NULL,
     created_at DATETIME NOT NULL DEFAULT NOW(),
     updated_at DATETIME NOT NULL DEFAULT NOW(),
-    primary key (id),
-    foreign key (owner_id) references users(id)
+    PRIMARY KEY (id),
+    FOREIGN KEY (owner_id) REFERENCES users(id)
 );
