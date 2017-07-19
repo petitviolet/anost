@@ -12,7 +12,7 @@ trait AnostUseCase[I <: In, O <: Out] extends UseCase with InputPort[I, O, Conte
 }
 
 // usecases only for logged-in users
-trait AnostAuthUseCase[I <: In, O <: Out] extends AnostUseCase[AuthIn[I], O] with UsesUserRepository with UsesLogger {
+trait AnostAuthUseCase[I <: In, O <: Out] extends AnostUseCase[AuthArg[I], O] with UsesUserRepository with UsesLogger {
 
   final override protected def call(arg: In)(implicit ctx: Ctx): Future[Out] = {
     import ctx._
@@ -25,4 +25,4 @@ trait AnostAuthUseCase[I <: In, O <: Out] extends AnostUseCase[AuthIn[I], O] wit
 trait In extends Any
 trait Out extends Any
 
-case class AuthIn[I <: In](token: AuthTokenValue, in: I) extends In
+case class AuthArg[I <: In](token: AuthTokenValue, in: I) extends In

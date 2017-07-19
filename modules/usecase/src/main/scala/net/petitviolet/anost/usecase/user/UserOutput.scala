@@ -8,5 +8,5 @@ case class UserOutput(id: Id[User], name: String, email: String, token: String) 
 
 object UserOutput {
   def fromModel(user: User, authToken: AuthToken): UserOutput =
-    UserOutput(user.id, user.name.value, user.email.value, authToken.value)
+    UserOutput(user.id, user.name.value, user.email.value, authToken.value.value)
 }

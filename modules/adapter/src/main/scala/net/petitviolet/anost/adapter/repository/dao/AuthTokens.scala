@@ -1,7 +1,7 @@
 package net.petitviolet.anost.adapter.repository.dao
 
 import net.petitviolet.anost.adapter.repository.AnostNoIdMapper
-import net.petitviolet.anost.domain.user.{ AuthToken, User }
+import net.petitviolet.anost.domain.user.{ AuthToken, AuthTokenValue, User }
 import net.petitviolet.anost.support.{ AnostLogger, Id, MixInLogger }
 import net.petitviolet.operator._
 import org.joda.time.DateTime
@@ -35,10 +35,10 @@ object AuthTokens extends AnostNoIdMapper[AuthTokens] with MixInLogger {
   }
 
   def fromModel(userId: Id[Users])(at: AuthToken): AuthTokens = AuthTokens(
-    at.value, userId, at.expiresAt.asJoda, now()
+    at.value.value, userId, at.expiresAt.asJoda, now()
   )
 
   def toModel(at: AuthTokens): AuthToken = AuthToken(
-    at.token, at.expiresAt.asLocalDateTime
+    AuthTokenValue(at.token), at.expiresAt.asLocalDateTime
   )
 }
