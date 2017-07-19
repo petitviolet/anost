@@ -6,9 +6,11 @@ import akka.http.scaladsl.model._
 import akka.http.scaladsl.model.headers._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
+import akka.http.scaladsl.server.directives.AuthenticationResult
 import net.petitviolet.anost.adapter.presenter.PresenterOutput
 import net.petitviolet.anost.adapter.support.json.JsonSupport
 import net.petitviolet.anost.adapter.support.{ ThreadHelper, UsesControllerConfig }
+import net.petitviolet.anost.domain.user.AuthTokenValue
 import net.petitviolet.anost.support.UsesLogger
 import net.petitviolet.anost.usecase.ValidationError
 
@@ -25,7 +27,14 @@ trait AnostController extends Route with UsesLogger with UsesControllerConfig
   protected def route: Route
   private lazy val _route: Route = route
 
-  //  protected val authenticate = authenticateOrRejectWithChallenge()
+  protected val withAuth = authenticateOrRejectWithChallenge[OAuth2BearerToken, AuthTokenValue] {
+    case Some(OAuth2BearerToken(token)) =>
+      Future.successful(AuthenticationResult.success(AuthTokenValue(token)))
+    case _ =>
+      Future.successful(AuthenticationResult.failWithChallenge(
+        HttpChallenge("bearer", None, Map("error" -> "missing token"))
+      ))
+  }
 
   /**
    * 何かしらの理由により正常なレスポンスを返却できなかった場合に返却する代替レスポンス
