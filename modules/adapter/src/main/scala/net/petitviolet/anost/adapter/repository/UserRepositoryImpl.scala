@@ -29,14 +29,12 @@ object UserRepositoryImpl extends UserRepository with MixInLogger {
     ???
   }
 
-  override def findByToken(implicit ctx: AppContext): Kleisli[Future, AuthTokenValue, Option[User]] = kleisliF { token =>
+  override def findByToken(implicit ctx: AppContext): Kleisli[Future, AuthTokenValue, User] = kleisliF { token =>
     import ctx._
-    Users.findByAutoToken(token).fold(notFound(s"user not found for token($token)")) {
-      case (users, tokens) =>
-        // if expired, result will be None. else Some(user)
-        if (AuthTokens.toModel(tokens).isExpired) Some(Users.toModel(users))
-        else None
-    }
+    Users.findByAutoToken(token).collect {
+      case (users, tokens) // if expired, result will be None. else Some(user)
+      if AuthTokens.toModel(tokens).isExpired => Users.toModel(users)
+    } getOrElse { notFound(s"user not found for token($token)") }
   }
 
   override def generateToken(implicit ctx: AppContext): Kleisli[Future, User, AuthToken] = kleisliF { user =>
