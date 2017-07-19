@@ -20,7 +20,7 @@ object PostRepositoryImpl extends PostRepository with MixInLogger {
   override def store(implicit ctx: AppContext): Kleisli[Future, Post, Post] = kleisliF { post =>
     import ctx._
     val id = Posts.insert(post)
-    logger.debug(s"inserted $id")
+    aLogger.debug(s"inserted $id")
     post
   }
 

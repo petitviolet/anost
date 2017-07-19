@@ -28,7 +28,7 @@ class Application() extends MixInLogger with UsesHttpConfig with MixInActorSyste
    * HTTPサーバーの起動
    */
   def startServer(): Unit = {
-    logger.info(s"application starting...")
+    aLogger.info(s"application starting...")
 
     val http = Http()(system)
     bind = http.bindAndHandle(AppController, host, port)
@@ -39,7 +39,7 @@ class Application() extends MixInLogger with UsesHttpConfig with MixInActorSyste
     // 自分自身に一度リクエストを送信する
     //    checkTestRequest()
 
-    logger.info(s"application started - $host:$port")
+    aLogger.info(s"application started - $host:$port")
   }
 
   /**
@@ -47,12 +47,12 @@ class Application() extends MixInLogger with UsesHttpConfig with MixInActorSyste
    */
   def stopServer(): Unit = {
     val f = bind flatMap { _.unbind() } flatMap { _ =>
-      logger.info("application shutting down...")
+      aLogger.info("application shutting down...")
       try {
         Database.shutDown()
       } catch {
         case t: Throwable =>
-          logger.warn(s"Failed shut down database connections", t)
+          aLogger.warn(s"Failed shut down database connections", t)
       }
       materializer.shutdown()
       system.terminate()
@@ -60,9 +60,9 @@ class Application() extends MixInLogger with UsesHttpConfig with MixInActorSyste
 
     f.onComplete {
       case Success(x) =>
-        logger.info(s"application shutting down complete: $x")
+        aLogger.info(s"application shutting down complete: $x")
       case Failure(t) =>
-        logger.error(s"application shutting down failed: $t", t)
+        aLogger.error(s"application shutting down failed: $t", t)
     }
 
     val _ = Await.result(f, TERMINATE_DURATION)
@@ -77,7 +77,7 @@ class Application() extends MixInLogger with UsesHttpConfig with MixInActorSyste
     val resF: Future[HttpResponse] = Http().singleRequest(req)(materializer)
 
     val res = Await.result(resF, Duration.Inf)
-    logger.info(s"check-self-request: $res")
+    aLogger.info(s"check-self-request: $res")
   }
 }
 
@@ -99,7 +99,7 @@ class ApplicationDaemon() extends Application with Daemon {
     isStarted = false
   }
 
-  override def destroy(): Unit = logger.info("application destroyed")
+  override def destroy(): Unit = aLogger.info("application destroyed")
 }
 
 /**
@@ -119,7 +119,7 @@ private object AppController extends AnostController with MixInLogger {
   override protected def exceptionHandler(implicit s: sourcecode.File) = ExceptionHandler {
     case t: Throwable =>
       //      logger.debugStackTrace(t)
-      logger.warn(s"exception handler: $t")
+      aLogger.warn(s"exception handler: $t")
 
       respondWithHeaders(defaultHeaders: _*) {
         complete(StatusCodes.BadRequest)
@@ -131,10 +131,10 @@ private object AppController extends AnostController with MixInLogger {
       .handleNotFound(NOT_FOUND)
       .handle {
         case r: MethodRejection =>
-          logger.debug(s"rejection: $r")
+          aLogger.debug(s"rejection: $r")
           NOT_FOUND
         case other: Rejection =>
-          logger.warn(s"rejection: $other")
+          aLogger.warn(s"rejection: $other")
           respondWithHeaders(defaultHeaders: _*) {
             complete(StatusCodes.BadRequest)
           }

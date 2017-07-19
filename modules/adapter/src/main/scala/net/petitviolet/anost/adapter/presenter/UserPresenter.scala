@@ -1,7 +1,7 @@
 package net.petitviolet.anost.adapter.presenter
 
-import net.petitviolet.anost.support.{ MixInLogger, UsesLogger }
 import net.petitviolet.anost.support.contracts.Callback
+import net.petitviolet.anost.support.{ MixInLogger, UsesLogger }
 import net.petitviolet.anost.usecase.user.UserOutput
 import spray.json._
 

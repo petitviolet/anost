@@ -5,5 +5,5 @@ import net.petitviolet.anost.support.contracts.{ InputPort, UseCase }
 trait AnostUseCase[I <: In, O <: Out] extends UseCase with InputPort[I, O, Context] {
 }
 
-trait In
-trait Out
+trait In extends Any
+trait Out extends Any

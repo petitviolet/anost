@@ -1,6 +1,5 @@
 package net.petitviolet.anost.adapter.presenter
 
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.model.headers.HttpCookie
 import net.petitviolet.anost.adapter.support.json.JsonSupport

@@ -25,6 +25,8 @@ trait AnostController extends Route with UsesLogger with UsesControllerConfig
   protected def route: Route
   private lazy val _route: Route = route
 
+  //  protected val authenticate = authenticateOrRejectWithChallenge()
+
   /**
    * 何かしらの理由により正常なレスポンスを返却できなかった場合に返却する代替レスポンス
    * - Akka-HTTPでタイムアウトされた
@@ -37,7 +39,7 @@ trait AnostController extends Route with UsesLogger with UsesControllerConfig
    */
   protected lazy val timeoutDirective: Directive0 =
     withRequestTimeoutResponse { req: HttpRequest =>
-      logger.error(s"Timeout occurred. request: $req")
+      aLogger.error(s"Timeout occurred. request: $req")
       toResponse(fallbackOutput)
     }
 
@@ -47,7 +49,7 @@ trait AnostController extends Route with UsesLogger with UsesControllerConfig
   protected def exceptionHandler(implicit s: sourcecode.File) = ExceptionHandler {
     case t: Throwable =>
       //      logger.debugStackTrace(t)
-      logger.warn(s"[${s.value}] exception-handler: $t")
+      aLogger.warn(s"[${s.value}] exception-handler: $t")
       //      ok(fallbackOutput)
       failWith(t)
   }
@@ -111,16 +113,16 @@ trait AnostController extends Route with UsesLogger with UsesControllerConfig
     val logLevel: Logging.LogLevel = t match {
       case ng: ValidationError =>
         // validationエラーはdebug
-        logger.debug(s"validation NG: ${ng.getMessage}")
+        aLogger.debug(s"validation NG: ${ng.getMessage}")
         Logging.DebugLevel
       case te: TimeoutException =>
         // errorログ出さない系の例外
         // 特に対応が必要ないもの
-        logger.warn(s"some error occurred: $te")
+        aLogger.warn(s"some error occurred: $te")
         Logging.WarningLevel
       case _ =>
         t.printStackTrace()
-        logger.error(s"$TAG Controller error", t)
+        aLogger.error(s"$TAG Controller error", t)
         Logging.ErrorLevel
     }
 

@@ -104,11 +104,11 @@ object LogLevel extends Enum[LogLevel] {
 }
 
 trait UsesLogger {
-  val logger: AnostLogger
+  val aLogger: AnostLogger
 }
 
 trait MixInLogger {
-  val logger: AnostLogger = AnostLoggerImpl
+  val aLogger: AnostLogger = AnostLoggerImpl
 }
 
 private object AnostLoggerImpl extends AnostLogger {
