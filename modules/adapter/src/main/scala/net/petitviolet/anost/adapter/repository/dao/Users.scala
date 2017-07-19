@@ -47,17 +47,20 @@ object Users extends AnostMapper[Users] {
     id
   }
 
-  private[repository] def findByAutoToken(authToken: AuthToken)(implicit s: DBSession): Option[Users] = {
+  private[repository] def findByAutoToken(token: AuthTokenValue)(implicit s: DBSession): Option[(Users, AuthTokens)] = {
     withSQL {
-      select(u.result.*)
+      select(u.result.*, at.result.*)
         .from(Users as u)
         .innerJoin(AuthTokens as at)
         .on(at.userId, u.id)
         .where(
-          sqls.eq(at.token, authToken.value)
+          sqls.eq(at.token, token.value)
         )
     }.map { rs =>
-      Users.extract(rs, u.resultName)
+      (
+        Users.extract(rs, u.resultName),
+        AuthTokens.extract(rs, at.resultName)
+      )
     }.single.apply
   }
 }

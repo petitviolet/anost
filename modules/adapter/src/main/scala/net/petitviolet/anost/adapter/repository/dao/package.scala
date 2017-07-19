@@ -4,6 +4,7 @@ import java.sql.ResultSet
 import java.time.{ LocalDateTime, ZoneId, ZoneOffset }
 import java.util.Locale
 
+import net.petitviolet.anost.domain.user.AuthTokenValue
 import net.petitviolet.anost.support.Id
 import org.joda.time.{ DateTime, DateTimeZone }
 import scalikejdbc._
@@ -32,6 +33,7 @@ package object dao {
   implicit def idB[A] = stringTypeBinder(Id.apply[A])
 
   implicit def idBinder[A] = Binders.string.xmap[Id[A]](Id.apply[A], _.value)
+  implicit val tokenBinder = Binders.string.xmap[AuthTokenValue](AuthTokenValue.apply, _.value)
 
   implicit class DateTimeConverter(val ldt: LocalDateTime) extends AnyVal {
     def asJoda: DateTime = {

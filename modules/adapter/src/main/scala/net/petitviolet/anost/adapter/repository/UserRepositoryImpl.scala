@@ -1,9 +1,9 @@
 package net.petitviolet.anost.adapter.repository
 
 import net.petitviolet.anost.adapter.repository.dao.{ AuthTokens, Users }
-import net.petitviolet.anost.domain.user.{ AuthToken, User, UserRepository }
-import net.petitviolet.anost.support.{ Id, MixInLogger }
+import net.petitviolet.anost.domain.user.{ AuthToken, AuthTokenValue, User, UserRepository }
 import net.petitviolet.anost.support.contracts.AppContext
+import net.petitviolet.anost.support.{ Id, MixInLogger }
 import net.petitviolet.operator._
 
 import scala.concurrent.Future
@@ -25,17 +25,22 @@ object UserRepositoryImpl extends UserRepository with MixInLogger {
   }
 
   override def update(implicit ctx: AppContext): Kleisli[Future, User, User] = Kleisli { user =>
-    import ctx._
+
     ???
   }
 
-  override def findByToken(implicit ctx: AppContext): Kleisli[Future, AuthToken, Option[User]] = kleisliF { token =>
+  override def findByToken(implicit ctx: AppContext): Kleisli[Future, AuthTokenValue, Option[User]] = kleisliF { token =>
     import ctx._
-    Users.findByAutoToken(token) map Users.toModel
+    Users.findByAutoToken(token).fold(notFound(s"user not found for token($token)")) {
+      case (users, tokens) =>
+        // if expired, result will be None. else Some(user)
+        if (AuthTokens.toModel(tokens).isExpired) Some(Users.toModel(users))
+        else None
+    }
   }
 
   override def generateToken(implicit ctx: AppContext): Kleisli[Future, User, AuthToken] = kleisliF { user =>
-    import ctx._
+
     AuthTokens.generateFor(user) |> AuthTokens.toModel
   }
 }
