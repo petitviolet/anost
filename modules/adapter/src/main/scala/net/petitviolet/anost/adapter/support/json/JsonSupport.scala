@@ -1,6 +1,6 @@
 package net.petitviolet.anost.adapter.support.json
 
-import net.petitviolet.anost.domain.user.AuthTokenValue
+import net.petitviolet.anost.domain.user.{ AuthTokenValue, User }
 import net.petitviolet.anost.support.Id
 import net.petitviolet.anost.usecase.post._
 import net.petitviolet.anost.usecase.user._
@@ -16,14 +16,18 @@ trait JsonSupport extends DefaultJsonProtocol {
 
     override def write(obj: Id[A]): JsValue = JsString(s"${obj.value}")
   }
-  implicit val authTokenArgJson = jsonFormat1(AuthTokenValue.apply)
-  implicit val userArgJson = jsonFormat3(RegisterUserArgs.apply)
-  implicit val userOutputJson = jsonFormat4(UserOutput.apply)
-  implicit val savePostArgJson = jsonFormat3(SavePostArg.apply)
-  implicit val postOutputJson = jsonFormat5(PostOutput.apply)
-  implicit val postElementJson = jsonFormat4(PostElement.apply)
-  implicit val postsOutputJson = jsonFormat1(PostsOutput.apply)
-  implicit val getPostArgJson = jsonFormat1(GetPostArg.apply)
+  implicit lazy val authTokenArgJson = jsonFormat1(AuthTokenValue.apply)
+  implicit lazy val userArgJson = jsonFormat3(RegisterUserArgs.apply)
+  implicit lazy val userOutputJson = jsonFormat3(UserOutput.apply)
+  implicit lazy val savePostArgJson = jsonFormat3(SavePostArg.apply)
+  implicit lazy val postOutputJson = jsonFormat5(PostOutput.apply)
+  implicit lazy val postElementJson = jsonFormat4(PostElement.apply)
+  implicit lazy val postsOutputJson = jsonFormat1(PostsOutput.apply)
+  implicit lazy val getPostArgJson = jsonFormat1(GetPostArg.apply)
+  implicit lazy val loginUserArgJson = jsonFormat2(LoginUserArgs.apply)
+  implicit lazy val autoTokenJson = jsonFormat1(AuthTokenOutput.apply)
+  implicit lazy val autoTokenOpt = optionFormat[AuthTokenOutput]
+  implicit lazy val loginResultJson = jsonFormat1(LoginResult.apply)
   //  implicit val findPostArgJson =
 }
 

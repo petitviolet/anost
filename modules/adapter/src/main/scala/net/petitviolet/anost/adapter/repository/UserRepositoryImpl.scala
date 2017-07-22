@@ -1,15 +1,19 @@
 package net.petitviolet.anost.adapter.repository
 
 import net.petitviolet.anost.adapter.repository.dao.{ AuthTokens, Users }
-import net.petitviolet.anost.domain.user.{ AuthToken, AuthTokenValue, User, UserRepository }
+import net.petitviolet.anost.domain.user._
 import net.petitviolet.anost.support.contracts.AppContext
 import net.petitviolet.anost.support.{ Id, MixInLogger }
 import net.petitviolet.operator._
 
 import scala.concurrent.Future
 import scalaz.Kleisli
+import scalikejdbc._
 
 object UserRepositoryImpl extends UserRepository with MixInLogger {
+  private lazy val u = Users.defaultAlias
+  private lazy val at = AuthTokens.defaultAlias
+
   override def resolve(implicit ctx: AppContext): Kleisli[Future, Id[User], User] = kleisliF { userId =>
     import ctx._
     Users.findById(userId.as[Users])
@@ -40,6 +44,18 @@ object UserRepositoryImpl extends UserRepository with MixInLogger {
   override def generateToken(implicit ctx: AppContext): Kleisli[Future, User, AuthToken] = kleisliF { user =>
 
     AuthTokens.generateFor(user) |> AuthTokens.toModel
+  }
+
+  override def login()(implicit ctx: AppContext): Kleisli[Future, (Email, Password), Option[AuthToken]] = kleisliF {
+    case (email, password) =>
+      import ctx._
+      Users.findBy {
+        sqls.eq(u.email, email.value)
+          .and
+          .eq(u.password, password.value)
+      }.map { users =>
+        users |> Users.toModel |> AuthTokens.generateFor |> AuthTokens.toModel
+      }
   }
 }
 
