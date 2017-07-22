@@ -42,7 +42,6 @@ object UserRepositoryImpl extends UserRepository with MixInLogger {
   }
 
   override def generateToken(implicit ctx: AppContext): Kleisli[Future, User, AuthToken] = kleisliF { user =>
-
     AuthTokens.generateFor(user) |> AuthTokens.toModel
   }
 

@@ -23,7 +23,7 @@ object AuthTokens extends AnostNoIdMapper[AuthTokens] with MixInLogger {
     AuthToken.generate(user)
       .|> { token =>
         // always delete and create
-        val count = deleteBy(sqls.eq(AuthTokens.column.token, token.tokenValue))
+        val count = deleteBy(sqls.eq(AuthTokens.column.userId, user.id.value))
         val created = createWithAttributes(
           'token -> token.tokenValue.value,
           'user_id -> user.id.value,

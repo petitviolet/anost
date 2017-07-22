@@ -4,19 +4,18 @@ import net.petitviolet.anost.domain.user.{ Email, Password, User, UsesUserReposi
 import net.petitviolet.anost.usecase._
 
 import scala.concurrent.Future
-import scalaz.Scalaz.{ ToIdOps => _, _ }
-import net.petitviolet.operator._
+import scalaz.Scalaz._
 
 trait LoginUserUseCase extends AnostUseCase[LoginUserArgs, LoginResult]
     with UsesUserRepository {
   override protected def call(arg: In)(implicit ctx: Ctx): Future[Out] = {
     import ctx._
-    val x = userRepository.login.map(tokenOpt =>
+    userRepository.login.map { tokenOpt =>
       tokenOpt
         .map { _.tokenValue.value }
         .map { AuthTokenOutput.apply }
-        .|> { LoginResult.apply })
-    x.run(Email(arg.email), Password(arg.password))
+        .|> { LoginResult.apply }
+    }.run(Email(arg.email), Password(arg.password))
   }
 }
 
