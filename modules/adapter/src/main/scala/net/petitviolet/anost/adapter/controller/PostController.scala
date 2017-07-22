@@ -17,7 +17,7 @@ trait PostController extends AnostController with UsesLogger
   override protected def route: Route = {
     pathPrefix("post") {
       (pathEnd & post & withAuth & entity(as[SavePostArg])) { (token, arg) =>
-        implicit val ctx = createContext(Anost.writeSession)
+        implicit val ctx = createContext(Anost.writeSession, token)
         val out = postPresenter.execute(savePostUseCase.execute(AuthArg(token, arg)))
         onCompleteResponse("/post", out) { ok }
       } ~
