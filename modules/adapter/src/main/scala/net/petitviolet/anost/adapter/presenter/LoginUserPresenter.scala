@@ -16,7 +16,9 @@ trait LoginUserPresenter extends JsonPresenter[LoginResult] with UsesLogger {
     new Callback[LoginResult] {
       override def onFailure(t: Throwable): Unit = promise.failure(t)
       override def onSuccess(result: LoginResult): Unit = {
-        promise.success(JsonOutput(Nil, result.toJson))
+        // for format json
+        val res = result.tokenOpt map { _.toJson } getOrElse { JsObject.empty }
+        promise.success(JsonOutput(Nil, res))
       }
     }
   }
