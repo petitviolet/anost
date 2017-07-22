@@ -23,9 +23,9 @@ object AuthTokens extends AnostNoIdMapper[AuthTokens] with MixInLogger {
     AuthToken.generate(user)
       .|> { token =>
         // always delete and create
-        val count = deleteBy(sqls.eq(AuthTokens.column.token, token.value))
+        val count = deleteBy(sqls.eq(AuthTokens.column.token, token.tokenValue))
         val created = createWithAttributes(
-          'token -> token.value,
+          'token -> token.tokenValue.value,
           'user_id -> user.id.value,
           'expires_at -> token.expiresAt.asJoda
         )
@@ -35,7 +35,7 @@ object AuthTokens extends AnostNoIdMapper[AuthTokens] with MixInLogger {
   }
 
   def fromModel(userId: Id[Users])(at: AuthToken): AuthTokens = AuthTokens(
-    at.value.value, userId, at.expiresAt.asJoda, now()
+    at.tokenValue.value, userId, at.expiresAt.asJoda, now()
   )
 
   def toModel(at: AuthTokens): AuthToken = AuthToken(

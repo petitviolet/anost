@@ -2,7 +2,7 @@ package net.petitviolet.anost.domain.user
 
 import java.time.LocalDateTime
 
-case class AuthToken(value: AuthTokenValue, expiresAt: LocalDateTime) {
+case class AuthToken(tokenValue: AuthTokenValue, expiresAt: LocalDateTime) {
   // if true, token had expired
   def isExpired: Boolean = {
     expiresAt.isAfter(LocalDateTime.now())
