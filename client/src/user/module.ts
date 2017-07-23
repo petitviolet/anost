@@ -1,32 +1,13 @@
-import { Action } from 'redux';
+import { ActionNames, UserActions } from './actions';
+import { UserState, initialState } from './state';
 
-enum ActionNames {
-  SAVE_TOKEN_NAME = 'user/save_token',
-}
-
-interface SaveTokenAction extends Action {
-  type: ActionNames.SAVE_TOKEN_NAME;
-  newToken: string;
-}
-
-export const saveToken = (newToken: string): SaveTokenAction => ({
-  type: ActionNames.SAVE_TOKEN_NAME,
-  newToken: newToken
-});
-
-export interface UserState {
-  token: string;
-}
-
-export type UserActions = SaveTokenAction;
-
-// with empty token
-const initialState: UserState = { token: '' };
-
+// reducer endpoint for user
 export default function reducer(state: UserState = initialState, action: UserActions): UserState {
   switch (action.type) {
     case ActionNames.SAVE_TOKEN_NAME:
-      return { token: action.newToken };
+      return Object.assign({}, state, { token: action.newToken });
+    case ActionNames.LOGIN:
+      return Object.assign({}, state, { token: action.newToken });
     default:
       return state;
   }

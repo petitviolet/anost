@@ -1,4 +1,6 @@
-import user, { UserActions, UserState } from './user/module';
+import user from './user/module';
+import { UserState } from './user/state';
+import { UserActions } from './user/actions';
 import { createStore, combineReducers, Action } from 'redux';
 
 export default createStore(
