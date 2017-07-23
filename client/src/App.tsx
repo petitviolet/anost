@@ -1,7 +1,10 @@
 import * as React from 'react';
 import './App.css';
+// import User from './model/User';
 
 const logo = require('./logo.svg');
+
+// const user = new User("id", "name", "email");
 
 class App extends React.Component<{}, {}> {
   render() {
