@@ -146,7 +146,12 @@ private object AppController extends AnostController with MixInLogger {
 
   protected lazy val route =
     Route.seal {
-      UserControllerImpl ~
+      (options & path(Segments)) { _ =>
+        respondWithHeaders(defaultHeaders: _*) {
+          complete("OK")
+        }
+      } ~
+        UserControllerImpl ~
         PostControllerImpl
     }(routingSettings, parserSettings, rejectionHandler, exceptionHandler)
 }
