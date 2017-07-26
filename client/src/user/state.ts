@@ -1,8 +1,7 @@
+import { State } from '../state';
 import { User, Token } from './User';
 
-export interface UserState {
-  loading: boolean;  // duration of sending request
-  error: Error | null; // something error occurred or not
+export interface UserState extends State {
   user: User | null;
   token: Token | null;
 }
