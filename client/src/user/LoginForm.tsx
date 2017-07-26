@@ -30,22 +30,23 @@ export const LoginForm: React.StatelessComponent<Props> =
       <div>
         <ul>
           <li>
-          <label>Email:
+            <label>Email:
             <input type="text" placeholder="Email Address" onChange={onEmailChange} required />
-          </label>
+            </label>
           </li>
 
           <li>
-          <label>Password:
+            <label>Password:
             <input type="password" placeholder="Password" onChange={onPasswordChange} required />
-          </label>
+            </label>
           </li>
           <button onClick={onClick}>Sign In</button>
         </ul>
-        { /** show only if token exists **/ }
-        { (props.value.loading == true) ? <p> loading... </p> : null }
-        { (props.value.error == null) ? null : <p> error! { props.value.error.message } </p> }
-        { (props.value.token == null) ? null : <p>current-token: {props.value.token.value}</p> }
+        { // show only if token exists
+        }
+        {(props.value.loading == true) ? <p> loading... </p> : null}
+        {(props.value.error == null) ? null : <p> error! {props.value.error.message} </p>}
+        {(props.value.token == null) ? null : <p>current-token: {props.value.token.value}</p>}
       </div>
     );
   };
