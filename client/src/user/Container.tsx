@@ -3,8 +3,10 @@ import { ReduxAction, ReduxState } from '../store';
 import * as actions from './actions';
 import { apiRequest, HttpMethod } from '../util/request';
 import { connect } from 'react-redux';
-import { User, Token } from './User';
-import { LoginForm } from './LoginForm';
+import { User} from './model/User';
+import { Token } from './model/Token';
+import { UserState } from './state';
+import { User as UserComponent } from './component/User'
 
 enum UserPath {
   LOGIN = '/user/login',
@@ -67,7 +69,12 @@ export class UserActionDispatcher {
   }
 }
 
+export interface UserProps extends React.Props<{}> {
+  value: UserState;
+  actions: UserActionDispatcher;
+}
+
 export default connect(
   (state: ReduxState) => ({ value: state.user }),
   (dispatch: Dispatch<ReduxAction>) => ({ actions: new UserActionDispatcher(dispatch) })
-)(LoginForm);
+)(UserComponent);

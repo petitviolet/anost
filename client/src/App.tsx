@@ -1,22 +1,24 @@
 import * as React from 'react';
 import './App.css';
-// import User from './model/User';
 
-const logo = require('./logo.svg');
+import User from './user/Container';
+// import Post from './post/item/Container';
+import PostList from './post/list/Container';
+import Header from './component/Header'
 
-// const user = new User("id", "name", "email");
+// const logo = require('./logo.svg');
 
-class App extends React.Component<{}, {}> {
+class App extends React.Component {
   render() {
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+          <Header />
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+        <div className="App-Content">
+          <User />
+          <PostList />
+        </div>
       </div>
     );
   }

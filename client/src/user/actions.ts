@@ -1,5 +1,6 @@
 import { Action } from 'redux';
-import { User, Token } from './user';
+import { User } from './model/User';
+import { Token } from './model/Token';
 
 // kinds of action
 export enum UserAction {

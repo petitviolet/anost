@@ -1,5 +1,6 @@
 import { State } from '../state';
-import { User, Token } from './User';
+import { User} from './model/User';
+import { Token } from './model/Token';
 
 export interface UserState extends State {
   user: User | null;

@@ -1,14 +1,8 @@
 import * as React from 'react';
-import { UserState } from './state';
-import { UserActionDispatcher } from './Container';
+import { UserProps } from './Container';
 
-interface Props {
-  value: UserState;
-  actions: UserActionDispatcher;
-}
-
-export const LoginForm: React.StatelessComponent<Props> =
-  (props: Props) => {
+export const LoginForm: React.StatelessComponent<UserProps> =
+  (props) => {
     let email: string = '';
     let password: string = '';
 

@@ -16,12 +16,12 @@ const httpHeader = (token: string): Headers => {
   }
 };
 
-const ENDPOINT = `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT || 80}`;
+const ENDPOINT = `http://${process.env.REACT_APP_API_HOST || 'localhost'}:${process.env.REACT_APP_API_PORT || 80}`;
 
-export function apiRequest(method: HttpMethod, path: string, token: string): Promise<any> {
+export function apiRequest(method: HttpMethod, path: string, token: string = '', body: object = {}): Promise<any> {
   const url = `${ENDPOINT}${path}`;
   console.log(`url: ${url}`);
-  return fetch(url, { method: method, headers: httpHeader(token) })
+  return fetch(url, { method: method, headers: httpHeader(token), body: (body === {}) ? JSON.stringify(body) : null })
   .then(response => {
     if (response.status === 200) {
       // chain promise
