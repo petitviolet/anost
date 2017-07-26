@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { ReduxAction, ReduxState } from '../store';
-import { loginAction, startRequestAction } from './actions';
+import * as actions from './actions';
 import { apiRequest, HttpMethod } from '../util/request';
 import { connect } from 'react-redux';
 import { User, Token } from './User';
@@ -24,27 +24,44 @@ const toUser = (res: LoginResponse): User => {
 export class UserActionDispatcher {
   constructor(private dispatch: (action: ReduxAction) => void) {}
     
+  private onError(msg: string | Error): void {     
+    const err: Error = (typeof(msg) == 'string') ? new Error(msg) : msg
+    this.dispatch(actions.errorAction(err));
+  }
+  
+  public logout(): void {
+    this.dispatch(actions.logoutAction());
+  }
+  
   public async login(email: string, password: string): Promise<void> {
     const self = this;
-    self.dispatch(startRequestAction());
+    self.dispatch(actions.clearErrorAction());
+    if (!email || !password) {
+      self.onError("Email and Password must not be empty.");
+      return Promise.resolve();
+    }
 
     const path = `${UserPath.LOGIN}?email=${email}&password=${password}`;
     console.log(path);
 
+    self.dispatch(actions.startRequestAction());
     const p = apiRequest(HttpMethod.GET, path, '')
     .then(res => {
+      self.dispatch(actions.finishRequestAction())
       // cast
       const loginResponse: LoginResponse  = res;
       // if id exists, request/response are correct.
       if (loginResponse.hasOwnProperty('id')) {
         console.dir(loginResponse);
-        self.dispatch(loginAction(toUser(loginResponse)));
+        self.dispatch(actions.loginAction(toUser(loginResponse)));
       } else {
         console.log('token undifined');
+        self.onError("Login failed!");
       }
     })
     .catch(error => {
       console.log('ERROR: ' + error);
+      self.onError(error)
     });
     return p;
   }

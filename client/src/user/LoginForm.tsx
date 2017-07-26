@@ -9,8 +9,8 @@ interface Props {
 
 export const LoginForm: React.StatelessComponent<Props> =
   (props: Props) => {
-    let email: string;
-    let password: string;
+    let email: string = '';
+    let password: string = '';
 
     const onEmailChange = (e: any) => {
       email = e.target.value;
@@ -21,6 +21,7 @@ export const LoginForm: React.StatelessComponent<Props> =
     };
 
     const onClick = (e: any) => {
+      props.actions.logout();
       e.preventDefault();
       props.actions.login(email, password);
     };
@@ -43,6 +44,7 @@ export const LoginForm: React.StatelessComponent<Props> =
         </ul>
         { /** show only if token exists **/ }
         { (props.value.loading == true) ? <p> loading... </p> : null }
+        { (props.value.error == null) ? null : <p> error! { props.value.error.message } </p> }
         { (props.value.user == null) ? null : <p>current-token: {props.value.user.token.value}</p> }
       </div>
     );
