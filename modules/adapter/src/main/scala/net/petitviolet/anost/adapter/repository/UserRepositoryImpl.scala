@@ -45,7 +45,7 @@ object UserRepositoryImpl extends UserRepository with MixInLogger {
     AuthTokens.generateFor(user) |> AuthTokens.toModel
   }
 
-  override def login()(implicit ctx: AppContext): Kleisli[Future, (Email, Password), Option[AuthToken]] = kleisliF {
+  override def login()(implicit ctx: AppContext): Kleisli[Future, (Email, Password), Option[(User, AuthToken)]] = kleisliF {
     case (email, password) =>
       import ctx._
       Users.findBy {
@@ -53,7 +53,10 @@ object UserRepositoryImpl extends UserRepository with MixInLogger {
           .and
           .eq(u.password, password.value)
       }.map { users =>
-        users |> Users.toModel |> AuthTokens.generateFor |> AuthTokens.toModel
+        users
+          .|> { Users.toModel }
+          .|> { u => (u, AuthTokens.generateFor(u)) }
+          .|> { case (u, t) => (u, AuthTokens.toModel(t)) }
       }
   }
 }

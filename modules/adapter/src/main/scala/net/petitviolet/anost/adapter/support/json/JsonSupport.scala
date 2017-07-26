@@ -27,6 +27,8 @@ trait JsonSupport extends DefaultJsonProtocol {
   implicit lazy val loginUserArgJson = jsonFormat2(LoginUserArgs.apply)
   implicit lazy val authTokenJson = jsonFormat1(AuthTokenOutput.apply)
   implicit lazy val authTokenOpt = optionFormat[AuthTokenOutput]
+  implicit lazy val loginResultItemJson = jsonFormat4(LoginResultItem.apply)
+  implicit lazy val loginResultItemOpt = optionFormat[LoginResultItem]
   implicit lazy val loginResultJson = jsonFormat1(LoginResult.apply)
   //  implicit val findPostArgJson =
 }

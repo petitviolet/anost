@@ -8,7 +8,7 @@ import scalaz.Kleisli
 
 trait UserRepository extends Repository[User] {
 
-  def login()(implicit ctx: AppContext): Kleisli[Future, (Email, Password), Option[AuthToken]]
+  def login()(implicit ctx: AppContext): Kleisli[Future, (Email, Password), Option[(User, AuthToken)]]
 
   def findByToken(implicit ctx: AppContext): Kleisli[Future, AuthTokenValue, User]
 
