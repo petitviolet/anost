@@ -3,8 +3,17 @@ import { User } from './user';
 
 // kinds of action
 export enum UserAction {
+  REQUEST_START = "user/request_start",
   LOGIN = 'user/login',
 }
+
+interface StartRequestAction extends Action {
+  type: UserAction.REQUEST_START;
+}
+
+export const startRequestAction = (): StartRequestAction => ({
+  type: UserAction.REQUEST_START
+})
 
 interface LoginAction extends Action {
   type: UserAction.LOGIN;
@@ -18,4 +27,4 @@ export const loginAction = (user: User): LoginAction => ({
 });
 
 // all actions for user
-export type UserActions = LoginAction;
+export type UserActions = StartRequestAction | LoginAction;

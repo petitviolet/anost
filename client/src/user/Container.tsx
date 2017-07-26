@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { ReduxAction, ReduxState } from '../store';
-import { loginAction } from './actions';
+import { loginAction, startRequestAction } from './actions';
 import { apiRequest, HttpMethod } from '../util/request';
 import { connect } from 'react-redux';
 import { User, Token } from './User';
@@ -23,9 +23,11 @@ const toUser = (res: LoginResponse): User => {
 
 export class UserActionDispatcher {
   constructor(private dispatch: (action: ReduxAction) => void) {}
-
+    
   public async login(email: string, password: string): Promise<void> {
     const self = this;
+    self.dispatch(startRequestAction());
+
     const path = `${UserPath.LOGIN}?email=${email}&password=${password}`;
     console.log(path);
 
