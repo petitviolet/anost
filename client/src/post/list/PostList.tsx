@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { PostListProps } from './Container';
+import { Post } from '../model/Post';
 
 export const PostList: React.StatelessComponent<PostListProps> =
   (props: PostListProps) => {
@@ -8,7 +9,18 @@ export const PostList: React.StatelessComponent<PostListProps> =
         <QueryBox {...props} />
         {(props.value.loading == true) ? <p> loading... </p> : null}
         {(props.value.error == null) ? null : <p> error! {props.value.error.message} </p>}
-        {(props.value.items.length != 0) ? <p>{JSON.stringify(props.value.items)}</p> : null}
+        {(props.value.items.length != 0) ? <ol>{
+          props.value.items.map((post) => <li><PostItem {...post} /></li>)
+        }</ol> : null}
+      </div>
+    );
+  };
+
+const PostItem: React.StatelessComponent<Post> =
+  (post: Post) => {
+    return (
+      <div>
+        <a href="#">{post.title}</a>
       </div>
     );
   };
