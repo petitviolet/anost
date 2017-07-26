@@ -17,22 +17,22 @@ interface LoginResponse {
   token: Token
 }
 
-const toUser = (res: LoginResponse): User => { 
-  return new User(res.id, res.name, res.email, res.token); 
+const toUser = (res: LoginResponse): User => {
+  return new User(res.id, res.name, res.email);
 };
 
 export class UserActionDispatcher {
   constructor(private dispatch: (action: ReduxAction) => void) {}
-    
-  private onError(msg: string | Error): void {     
+
+  private onError(msg: string | Error): void {
     const err: Error = (typeof(msg) == 'string') ? new Error(msg) : msg
     this.dispatch(actions.errorAction(err));
   }
-  
+
   public logout(): void {
     this.dispatch(actions.logoutAction());
   }
-  
+
   public async login(email: string, password: string): Promise<void> {
     const self = this;
     self.dispatch(actions.clearErrorAction());
@@ -53,7 +53,7 @@ export class UserActionDispatcher {
       // if id exists, request/response are correct.
       if (loginResponse.hasOwnProperty('id')) {
         console.dir(loginResponse);
-        self.dispatch(actions.loginAction(toUser(loginResponse)));
+        self.dispatch(actions.loginAction(toUser(loginResponse), loginResponse.token));
       } else {
         console.log('token undifined');
         self.onError("Login failed!");

@@ -1,12 +1,12 @@
 import { Action } from 'redux';
-import { User } from './user';
+import { User, Token } from './user';
 
 // kinds of action
 export enum UserAction {
-  REQUEST_START = "user/request_start",
-  REQUEST_FINISH = "user/request_finish",
-  ERROR_OCCURRED = "user/error_occurred",
-  ERROR_CLEARD = "user/error/cleared",
+  REQUEST_START = 'user/request_start',
+  REQUEST_FINISH = 'user/request_finish',
+  ERROR_OCCURRED = 'user/error_occurred',
+  ERROR_CLEARD = 'user/error/cleared',
   LOGIN = 'user/login',
   LOGOUT = 'user/logout',
 }
@@ -17,7 +17,7 @@ interface StartRequestAction extends Action {
 
 export const startRequestAction = (): StartRequestAction => ({
   type: UserAction.REQUEST_START
-})
+});
 
 interface FinishRequestAction extends Action {
   type: UserAction.REQUEST_FINISH;
@@ -25,30 +25,32 @@ interface FinishRequestAction extends Action {
 
 export const finishRequestAction = (): FinishRequestAction => ({
   type: UserAction.REQUEST_FINISH
-})
+});
 
-interface ErrorAction extends Action {   
-  type: UserAction.ERROR_OCCURRED | UserAction.ERROR_CLEARD
-  error: Error | null
+interface ErrorAction extends Action {
+  type: UserAction.ERROR_OCCURRED | UserAction.ERROR_CLEARD;
+  error: Error | null;
 }
 export const errorAction = (err: Error): ErrorAction => ({
   type: UserAction.ERROR_OCCURRED,
   error: err,
-})
+});
 export const clearErrorAction = (): ErrorAction => ({
   type: UserAction.ERROR_CLEARD,
   error: null,
-})
+});
 
 interface LoginAction extends Action {
   type: UserAction.LOGIN;
-  user: User
+  user: User;
+  token: Token;
 }
 
 // factory of login action
-export const loginAction = (user: User): LoginAction => ({
+export const loginAction = (user: User, token: Token): LoginAction => ({
   type: UserAction.LOGIN,
   user: user,
+  token: token,
 });
 
 interface LogoutAction extends Action {

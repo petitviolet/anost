@@ -45,7 +45,7 @@ export const LoginForm: React.StatelessComponent<Props> =
         { /** show only if token exists **/ }
         { (props.value.loading == true) ? <p> loading... </p> : null }
         { (props.value.error == null) ? null : <p> error! { props.value.error.message } </p> }
-        { (props.value.user == null) ? null : <p>current-token: {props.value.user.token.value}</p> }
+        { (props.value.token == null) ? null : <p>current-token: {props.value.token.value}</p> }
       </div>
     );
   };
