@@ -43,7 +43,7 @@ export const LoginForm: React.StatelessComponent<Props> =
         </ul>
       { // show only if token exists
       }
-        { (props.value.token === '') ? null : <p>current-token: {props.value.token}</p> }
+        { (props.value.user == null) ? null : <p>current-token: {props.value.user.token.value}</p> }
       </div>
     );
   };

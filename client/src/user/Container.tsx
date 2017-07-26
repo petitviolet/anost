@@ -1,9 +1,9 @@
 import { Dispatch } from 'redux';
 import { ReduxAction, ReduxState } from '../store';
-import { saveTokenAction, loginAction } from './actions';
+import { loginAction } from './actions';
 import { apiRequest, HttpMethod } from '../util/request';
 import { connect } from 'react-redux';
-// import { User } from './user';
+import { User, Token } from './User';
 import { LoginForm } from './LoginForm';
 
 enum UserPath {
@@ -11,15 +11,18 @@ enum UserPath {
 }
 
 interface LoginResponse {
-  value: string
+  id: string
+  name: string
+  email: string
+  token: Token
 }
+
+const toUser = (res: LoginResponse): User => { 
+  return new User(res.id, res.name, res.email, res.token); 
+};
 
 export class UserActionDispatcher {
   constructor(private dispatch: (action: ReduxAction) => void) {}
-
-  public saveToken(token: string): void {
-    this.dispatch(saveTokenAction(token));
-  }
 
   public async login(email: string, password: string): Promise<void> {
     const self = this;
@@ -28,10 +31,12 @@ export class UserActionDispatcher {
 
     const p = apiRequest(HttpMethod.GET, path, '')
     .then(res => {
-      const token: LoginResponse  = res;
-      if (token.hasOwnProperty('value')) {
-        console.dir(token);
-        self.dispatch(loginAction(token.value));
+      // cast
+      const loginResponse: LoginResponse  = res;
+      // if id exists, request/response are correct.
+      if (loginResponse.hasOwnProperty('id')) {
+        console.dir(loginResponse);
+        self.dispatch(loginAction(toUser(loginResponse)));
       } else {
         console.log('token undifined');
       }

@@ -1,8 +1,8 @@
+import {User} from './User';
+
 export interface UserState {
-  name: string;
-  email: string;
-  token: string;
+  user: User | null;
 }
 
 // with empty token
-export const initialState: UserState = { name: '', email: '', token: '' };
+export const initialState: UserState = { user: null };

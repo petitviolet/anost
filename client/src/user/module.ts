@@ -1,13 +1,11 @@
-import { ActionNames, UserActions } from './actions';
+import { UserAction, UserActions } from './actions';
 import { UserState, initialState } from './state';
 
 // reducer endpoint for user
 export default function reducer(state: UserState = initialState, action: UserActions): UserState {
   switch (action.type) {
-    case ActionNames.SAVE_TOKEN_NAME:
-      return Object.assign({}, state, { token: action.newToken });
-    case ActionNames.LOGIN:
-      return Object.assign({}, state, { token: action.newToken });
+    case UserAction.LOGIN:
+      return Object.assign({}, state, { user: action.user });
     default:
       return state;
   }
