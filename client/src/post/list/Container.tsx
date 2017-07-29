@@ -12,22 +12,46 @@ enum PostListPath {
   List = '/post',
 }
 
-interface query {
-  query: string;
-  user: string;
+export interface RequestParam {
+  isEmpty(): boolean;
+  asParam(): string;
+}
+
+export class Query implements RequestParam {
+  constructor(private readonly title: string) {}
+  isEmpty(): boolean {
+    return (this.title) ? false : true;
+  }
+  asParam(): string {
+    const t = encodeURIComponent(this.title);
+    return `title=${t}`;
+  }
+}
+
+export class ByUser implements RequestParam {
+  private readonly userId: string;
+  constructor(userId: string) {
+    this.userId = userId;
+  }
+  isEmpty(): boolean {
+    return (this.userId) ? false : true;
+  }
+  asParam(): string {
+    return `user=${this.userId}`;
+  }
 }
 
 export class PostListActionDispatcher {
   constructor(private dispatch: (action: ReduxAction) => void) { }
 
-  public async list(query: query): Promise<void> {
+  public async list(param: RequestParam): Promise<void> {
     const self = this;
     self.dispatch(actions.clearErrorAction());
-    if (!query || !(query.query || query.user)) {
+    if (param.isEmpty()) {
       self.onError('Query must not be empty.');
       return Promise.resolve();
     }
-    const path = PostListPath.List + '?' + `title=${query.query}`;
+    const path = PostListPath.List + '?' + param.asParam();
     self.dispatch(actions.startRequestAction());
     const p = apiRequest(HttpMethod.GET, path)
       .then(res => {
