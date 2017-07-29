@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { UserProps } from './Container';
+import { Context } from '../component/Context';
 
 export const LoginForm: React.StatelessComponent<UserProps> =
   (props) => {
@@ -38,9 +39,8 @@ export const LoginForm: React.StatelessComponent<UserProps> =
         </ul>
         { // show only if token exists
         }
-        {(props.value.loading == true) ? <p> loading... </p> : null}
-        {(props.value.error == null) ? null : <p> error! {props.value.error.message} </p>}
-        {(props.value.token == null) ? null : <p>current-token: {props.value.token.value}</p>}
+        {(props.value.loading === true) ? <p> loading... </p> : null}
+        <Context {...props} />
       </div>
     );
   };
