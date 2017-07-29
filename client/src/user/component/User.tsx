@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { UserProps } from '../Container';
-import { LoginForm } from '../LoginForm'
+import { LoginForm } from '../LoginForm';
 import PostList from '../..//post/list/Container';
 
 export class User extends React.Component<UserProps, {}> {

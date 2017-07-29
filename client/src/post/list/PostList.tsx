@@ -9,9 +9,8 @@ export const PostList: React.StatelessComponent<PostListProps> =
       <div>
         <QueryBox {...props} />
         <Context {...props} />
-        {(props.value.items.length != 0) ? <ol>{
-          props.value.items.map((post) => <li><PostItem {...post} /></li>)
-        }</ol> : null}
+        {(props.value.items.length !== 0) ? <ol>{
+          props.value.items.map((post) => <li><PostItem {...post} /></li>)}</ol> : null}
       </div>
     );
   };
@@ -42,5 +41,5 @@ const QueryBox: React.StatelessComponent<PostListProps> =
         <input type="text" placeholder="タイトルで検索" onChange={onQueryChange} required />
         <button onClick={onClick}>Search</button>
       </div>
-    )
+    );
   };

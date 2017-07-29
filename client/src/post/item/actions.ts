@@ -24,7 +24,7 @@ export const finishRequestAction = (): ChangeRequestStatusAction => ({
 
 interface SavePostAction extends Action {
   type: PostAction.SAVE;
-  post: Post,
+  post: Post;
 }
 export const savePostAction = (post: Post): SavePostAction => ({
   type: PostAction.SAVE,
@@ -32,13 +32,13 @@ export const savePostAction = (post: Post): SavePostAction => ({
 });
 
 interface ShowPostAction extends Action {
-  type: PostAction.SHOW,
-  post: Post,
+  type: PostAction.SHOW;
+  post: Post;
 }
 export const showPostAction = (post: Post): ShowPostAction => ({
   type: PostAction.SHOW,
   post: post,
-})
+});
 
 interface ErrorAction extends Action {
   type: PostAction.ERROR_OCCURRED | PostAction.ERROR_CLEARD;
@@ -52,6 +52,5 @@ export const clearErrorAction = (): ErrorAction => ({
   type: PostAction.ERROR_CLEARD,
   error: null,
 });
-
 
 export type PostActions = ChangeRequestStatusAction | ErrorAction | SavePostAction | ShowPostAction;

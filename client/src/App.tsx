@@ -3,8 +3,7 @@ import './App.css';
 
 import User from './user/Container';
 // import Post from './post/item/Container';
-import PostList from './post/list/Container';
-import Header from './component/Header'
+import Header from './component/Header';
 
 // const logo = require('./logo.svg');
 
@@ -17,7 +16,6 @@ class App extends React.Component {
         </div>
         <div className="App-Content">
           <User />
-          <PostList />
         </div>
       </div>
     );

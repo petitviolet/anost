@@ -54,5 +54,4 @@ export const clearErrorAction = (): ErrorAction => ({
   error: null,
 });
 
-
 export type PostListActions = ChangeRequestStatusAction | ErrorAction | ListAction | UpdateQueryAction;

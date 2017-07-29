@@ -4,9 +4,8 @@ import * as actions from './actions';
 import { apiRequest, HttpMethod } from '../../util/request';
 import { connect } from 'react-redux';
 import { Post } from '../model/Post';
-import { PostList as PostListComponent } from './PostList'
+import { PostList as PostListComponent } from './PostList';
 import { PostListState } from './state';
-// import { LoginForm } from './LoginForm';
 
 enum PostListPath {
   List = '/post',
@@ -18,7 +17,7 @@ export interface RequestParam {
 }
 
 export class Query implements RequestParam {
-  constructor(private readonly title: string) {}
+  constructor(private readonly title: string) { }
   isEmpty(): boolean {
     return (this.title) ? false : true;
   }
@@ -78,7 +77,7 @@ export class PostListActionDispatcher {
   }
 
   private onError(msg: string | Error): void {
-    const err: Error = (typeof (msg) == 'string') ? new Error(msg) : msg;
+    const err: Error = (typeof (msg) === 'string') ? new Error(msg) : msg;
     this.dispatch(actions.errorAction(err));
   }
 }

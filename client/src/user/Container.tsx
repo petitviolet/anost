@@ -3,10 +3,10 @@ import { ReduxAction, ReduxState } from '../store';
 import * as actions from './actions';
 import { apiRequest, HttpMethod } from '../util/request';
 import { connect } from 'react-redux';
-import { User} from './model/User';
+import { User } from './model/User';
 import { Token } from './model/Token';
 import { UserState } from './state';
-import { User as UserComponent } from './component/User'
+import { User as UserComponent } from './component/User';
 
 enum UserPath {
   LOGIN = '/user/login',
@@ -64,7 +64,7 @@ export class UserActionDispatcher {
   }
 
   private onError(msg: string | Error): void {
-    const err: Error = (typeof (msg) == 'string') ? new Error(msg) : msg;
+    const err: Error = (typeof (msg) === 'string') ? new Error(msg) : msg;
     this.dispatch(actions.errorAction(err));
   }
 }
