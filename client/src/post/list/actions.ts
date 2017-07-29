@@ -8,7 +8,8 @@ export enum PostListAction {
   ERROR_OCCURRED = 'post-list/error_occurred',
   ERROR_CLEARD = 'post-list/error/cleared',
 
-  LIST = 'post/list',
+  LIST = 'post-list/list',
+  UPDATE_QUERY = 'post-list/update_query',
 }
 
 interface ChangeRequestStatusAction extends Action {
@@ -31,6 +32,15 @@ export const listAction = (items: Post[]): ListAction => ({
   items: items,
 });
 
+interface UpdateQueryAction extends Action {
+  type: PostListAction.UPDATE_QUERY;
+  query: string;
+}
+export const updateQuery = (query: string): UpdateQueryAction => ({
+  type: PostListAction.UPDATE_QUERY,
+  query: query,
+});
+
 interface ErrorAction extends Action {
   type: PostListAction.ERROR_OCCURRED | PostListAction.ERROR_CLEARD;
   error: Error | null;
@@ -45,4 +55,4 @@ export const clearErrorAction = (): ErrorAction => ({
 });
 
 
-export type PostListActions = ChangeRequestStatusAction | ErrorAction | ListAction;
+export type PostListActions = ChangeRequestStatusAction | ErrorAction | ListAction | UpdateQueryAction;

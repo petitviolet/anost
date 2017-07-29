@@ -13,6 +13,8 @@ export default function reducer(state: PostListState = initialPostListState, act
       return Object.assign({}, state, { error: action.error });
     case PostListAction.LIST:
       return Object.assign({}, state, { items: action.items });
+   case PostListAction.UPDATE_QUERY:
+      return Object.assign({}, state, { query: action.query });
     default:
       return state;
   }

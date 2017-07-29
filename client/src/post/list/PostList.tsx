@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PostListProps } from './Container';
+import { PostListProps, Query } from './Container';
 import { Post } from '../model/Post';
 
 export const PostList: React.StatelessComponent<PostListProps> =
@@ -27,14 +27,14 @@ const PostItem: React.StatelessComponent<Post> =
 
 const QueryBox: React.StatelessComponent<PostListProps> =
   (props) => {
-    let query: string = '';
     const onQueryChange = (e: any) => {
-      query = e.target.value;
+      props.actions.updateQuery(e.target.value);
     };
 
     const onClick = (e: any) => {
       e.preventDefault();
-      props.actions.list({ query: query, user: '' });
+      const param = new Query(props.value.query);
+      props.actions.list(param);
     };
 
     return (

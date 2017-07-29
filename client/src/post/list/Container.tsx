@@ -44,6 +44,10 @@ export class ByUser implements RequestParam {
 export class PostListActionDispatcher {
   constructor(private dispatch: (action: ReduxAction) => void) { }
 
+  public updateQuery(query: string): void {
+    this.dispatch(actions.updateQuery(query));
+  }
+
   public async list(param: RequestParam): Promise<void> {
     const self = this;
     self.dispatch(actions.clearErrorAction());
