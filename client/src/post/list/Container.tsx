@@ -88,7 +88,10 @@ export interface PostListProps {
   actions: PostListActionDispatcher;
 }
 
-export default connect(
-  (state: ReduxState) => ({ value: state.postList }),
+export default connect<any, any, { userId: string }>(
+  (state: ReduxState, ownProps?: { userId: string }) => {
+    const p = Object.assign({}, state.postList, ownProps);
+    return { value: p };
+  },
   (dispatch: Dispatch<ReduxAction>) => ({ actions: new PostListActionDispatcher(dispatch) })
 )(PostListComponent);
