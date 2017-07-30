@@ -1,17 +1,30 @@
 import * as React from 'react';
 import { UserProps } from '../Container';
+import { User as UserModel } from '../model/User';
 import { LoginForm } from '../LoginForm';
-import PostList from '../..//post/list/Container';
 
-export class User extends React.Component<UserProps, {}> {
+export class UserComponent extends React.Component<UserProps, {}> {
   render() {
     const { user, token } = this.props.value;
-    const userId = (user) ? user.id : '';
+        // {(user && token) ? <UserDetail user={user} /> : <Redirect to="/login" />}
     return (
       <div>
-        {(user && token) ? <PostList userId={userId} /> : <LoginForm {...this.props} />}
-
+        {(user && token) ? <UserDetail user={user} /> : <LoginForm {...this.props}/>}
       </div>
+    );
+  }
+}
+
+class UserDetail extends React.Component<{ user: UserModel }> {
+  render() {
+    const user = this.props.user;
+    return (
+      <table>
+        <tbody>
+        <tr><td>name</td><td>email</td></tr>
+        <tr><td>{user.name}</td>{user.email}</tr>
+        </tbody>
+      </table>
     );
   }
 }
