@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import { User } from './model/User';
 import { Token } from './model/Token';
 import { UserState } from './state';
-import { User as UserComponent } from './component/User';
+import { UserComponent } from './component/User';
+import { RouteComponentProps } from 'react-router-dom';
 
 enum UserPath {
   LOGIN = '/user/login',
@@ -69,7 +70,7 @@ export class UserActionDispatcher {
   }
 }
 
-export interface UserProps extends React.Props<{}> {
+export interface UserProps extends RouteComponentProps<{}> {
   value: UserState;
   actions: UserActionDispatcher;
 }
