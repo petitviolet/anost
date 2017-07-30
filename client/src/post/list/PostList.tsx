@@ -14,13 +14,13 @@ export const PostList: React.StatelessComponent<PostListProps> =
         <Context {...props} />
         <Switch>
           <Route path="/" render={(_) => <PostListComponent {...props} />} />
-          <Route path="/user/:userId/posts" render={(param: any) => {
+          <Route path="/user/:userId/posts" render={(param) => {
             console.dir(param);
-            return <PostListComponent {...updatePostListPropsWithUserId(props, param.userId)} />;
+            return <PostListComponent {...updatePostListPropsWithUserId(props, param.match.params.userId)} />;
           }} />
-          <Route path="/post/:postId" render={(param: any) => {
+          <Route path="/post/:postId" render={(param) => {
             console.dir(param);
-            const postId: string = param.postId;
+            const postId: string = param.match.params.postId;
             return <PostItem postId={postId}/>;
           }} />
           <Route component={NotFound} />
