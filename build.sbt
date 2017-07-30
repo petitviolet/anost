@@ -2,7 +2,7 @@ val projectName = "anost"
 
 val libVersion = "0.1.0"
 
-val scala = "2.12.2"
+val scala = "2.12.3"
 
 val organizationId = "net.petitviolet"
 
