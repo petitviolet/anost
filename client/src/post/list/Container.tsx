@@ -49,13 +49,14 @@ export class PostListActionDispatcher {
 
   public async list(param: RequestParam): Promise<void> {
     const self = this;
+    self.dispatch(actions.startRequestAction());
     self.dispatch(actions.clearErrorAction());
     if (param.isEmpty()) {
       self.onError('Query must not be empty.');
+      self.dispatch(actions.finishRequestAction());
       return Promise.resolve();
     }
     const path = PostListPath.List + '?' + param.asParam();
-    self.dispatch(actions.startRequestAction());
     const p = apiRequest(HttpMethod.GET, path)
       .then(res => {
         self.dispatch(actions.finishRequestAction());
@@ -86,6 +87,12 @@ export interface PostListProps {
   value: PostListState;
   actions: PostListActionDispatcher;
 }
+
+// update props with userId
+export const updatePostListPropsWithUserId = (props: PostListProps, userId?: string): PostListProps => {
+  const p = Object.assign({}, props.value, { userId: userId });
+  return Object.assign({}, props, { value: p });
+};
 
 export default connect<any, any, { userId: string }>(
   (state: ReduxState, ownProps?: { userId: string }) => {

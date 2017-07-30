@@ -1,32 +1,62 @@
 import * as React from 'react';
-import { PostListProps, Query, ByUser } from './Container';
+import { Link, Route, Switch } from 'react-router-dom';
+import { updatePostListPropsWithUserId, PostListProps, Query, ByUser } from './Container';
 import { Post } from '../model/Post';
 import { Context } from '../../component/Context';
+import { NotFound } from '../../component/NotFound';
+import PostItem from '../item/Container';
 
 export const PostList: React.StatelessComponent<PostListProps> =
   (props: PostListProps) => {
-    // on logged in, fetch and show user's post list.
-    const state = props.value;
-    if (state.items.length == 0 && !state.loading && !state.query && state.userId) {
-      const query = new ByUser(props.value.userId);
-      props.actions.list(query);
-      console.log("by user!: userId: " + props.value.userId);
-    }
     return (
       <div>
         <QueryBox {...props} />
         <Context {...props} />
-        {(props.value.items.length !== 0) ? <ol>{
-          props.value.items.map((post) => <li key={post.id}><PostItem {...post} /></li>)}</ol> : null}
+        <Switch>
+          <Route path="/" render={(_) => <PostListComponent {...props} />} />
+          <Route path="/user/:userId/posts" render={(param: any) => {
+            console.dir(param);
+            return <PostListComponent {...updatePostListPropsWithUserId(props, param.userId)} />;
+          }} />
+          <Route path="/post/:postId" render={(param: any) => {
+            console.dir(param);
+            const postId: string = param.postId;
+            return <PostItem postId={postId}/>;
+          }} />
+          <Route component={NotFound} />
+        </Switch>
       </div>
     );
   };
 
-const PostItem: React.StatelessComponent<Post> =
-  (post: Post) => {
+const PostListComponent: React.StatelessComponent<PostListProps> =
+  (props: PostListProps) => {
+    // on logged in, fetch and show user's post list.
+    const { items, loading, query, userId } = props.value;
+    if (items.length === 0 && !loading && !query && userId) {
+      const param = new ByUser(userId);
+      props.actions.list(param);
+      console.log('by user!: userId: ' + userId);
+    }
+
     return (
       <div>
-        <a href="#">{post.title}</a>
+        {(props.value.items.length !== 0) ? <ol>{
+          props.value.items.map((post) =>
+            <li key={post.id}>
+              <PostListItem {...post} />
+            </li>)
+        }</ol> : null}
+      </div>
+    );
+  };
+
+const PostListItem: React.StatelessComponent<Post> =
+  (post: Post) => {
+    const path = `/post/${post.id}`;
+    return (
+      <div>
+        <Link to={path}>{post.title}</Link>
       </div>
     );
   };
