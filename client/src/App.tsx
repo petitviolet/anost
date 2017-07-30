@@ -17,7 +17,9 @@ class App extends React.Component {
       <Router history={history}>
         <div className="App">
           <div className="App-header">
-            <Header />
+            <div className="App-header-inner">
+              <Header />
+            </div>
           </div>
           <div className="App-Content">
             <Switch>

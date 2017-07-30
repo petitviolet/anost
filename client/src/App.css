@@ -10,10 +10,25 @@
 .App-header {
   background-color: #292929;
   height: 40px;
-  padding: 0px;
+  width: 100%;
   color: white;
   text-align: center;
   vertical-align: middle;
+  display: table;
+}
+.App-header-inner {
+  height: 100%;
+  display: table-cell;
+  margin: 0 auto;
+  display: inline-block;
+  width: 100%;
+  vertical-align: middle;
+}
+#logout {
+  vertical-align: middle;
+  text-align: right;
+  color: #0999FF;
+  margin-left: 50%;
 }
 
 .App-Content {

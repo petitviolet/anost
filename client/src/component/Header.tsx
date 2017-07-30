@@ -10,10 +10,9 @@ const Header: React.StatelessComponent<UserProps> =
   (props) => {
     return (
       <div>
-        <p>Anost!
-        {(props.value.user && props.value.token) ? ` hello ${props.value.user.name}` : "not logged in"}
-          <Logout {...props} />
-        </p>
+        Anost!
+        {(props.value.user && props.value.token) ? `   hello ${props.value.user.name}` : null}
+        {(props.value.user && props.value.token) ? <Logout {...props} /> : null}
       </div>
     );
   };
