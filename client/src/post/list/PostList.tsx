@@ -1,16 +1,23 @@
 import * as React from 'react';
-import { PostListProps, Query } from './Container';
+import { PostListProps, Query, ByUser } from './Container';
 import { Post } from '../model/Post';
 import { Context } from '../../component/Context';
 
 export const PostList: React.StatelessComponent<PostListProps> =
   (props: PostListProps) => {
+    // on logged in, fetch and show user's post list.
+    const state = props.value;
+    if (state.items.length == 0 && !state.loading && !state.query && state.userId) {
+      const query = new ByUser(props.value.userId);
+      props.actions.list(query);
+      console.log("by user!: userId: " + props.value.userId);
+    }
     return (
       <div>
         <QueryBox {...props} />
         <Context {...props} />
         {(props.value.items.length !== 0) ? <ol>{
-          props.value.items.map((post) => <li><PostItem {...post} /></li>)}</ol> : null}
+          props.value.items.map((post) => <li key={post.id}><PostItem {...post} /></li>)}</ol> : null}
       </div>
     );
   };
