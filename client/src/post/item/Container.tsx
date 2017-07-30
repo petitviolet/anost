@@ -16,6 +16,35 @@ enum PostPath {
 export class PostActionDispatcher {
   constructor(private dispatch: (action: ReduxAction) => void) { }
 
+  public async show(postId: string): Promise<void> {
+    const self = this;
+    self.dispatch(actions.clearErrorAction());
+    if (!postId) {
+      self.onError('PostId must not be empty.');
+      return Promise.resolve();
+    }
+    self.dispatch(actions.startRequestAction());
+    const path = PostPath.SHOW + postId;
+    const p = apiRequest(HttpMethod.GET, path)
+      .then(res => {
+        self.dispatch(actions.finishRequestAction());
+        // cast
+        const post: Post = res.post;
+        // if id exists, request/response are correct.
+        if (!post) {
+          console.dir(post);
+          self.dispatch(actions.showPostAction(post));
+        } else {
+          self.onError(`fetch post(${postId}) failed!`);
+        }
+      })
+      .catch(error => {
+        console.log('ERROR: ' + error);
+        self.onError(error);
+      });
+    return p;
+  }
+
   public async save(title: string, fileType: string, contents: string, token: Token): Promise<void> {
     const self = this;
     self.dispatch(actions.clearErrorAction());
@@ -57,7 +86,7 @@ export interface PostProps {
   actions: PostActionDispatcher;
 }
 
-export default connect(
-  (state: ReduxState) => ({ value: state.post }),
+export default connect<any, any, {postId: string}>(
+  (state: ReduxState, ownProps?: { postId: string }) => ({ value: Object.assign({}, state.post, ownProps) }),
   (dispatch: Dispatch<ReduxAction>) => ({ actions: new PostActionDispatcher(dispatch) })
 )(PostComponent);
