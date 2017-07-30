@@ -1,5 +1,5 @@
 import { UserAction, UserActions } from './actions';
-import { UserState, initialState } from './state';
+import { UserState, initialState, clearLocal, saveLocal } from './state';
 
 // reducer endpoint for user
 export default function reducer(state: UserState = initialState, action: UserActions): UserState {
@@ -12,8 +12,11 @@ export default function reducer(state: UserState = initialState, action: UserAct
     case UserAction.ERROR_CLEARD:
       return Object.assign({}, state, { error: action.error });
     case UserAction.LOGIN:
-      return Object.assign({}, state, { user: action.user, token: action.token });
+      const newState = Object.assign({}, state, { user: action.user, token: action.token });
+      saveLocal(newState);
+      return newState;
     case UserAction.LOGOUT:
+      clearLocal();
       return Object.assign({}, state, { user: null });
     default:
       return state;
