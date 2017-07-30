@@ -13,7 +13,7 @@ export const PostList: React.StatelessComponent<PostListProps> =
         <QueryBox {...props} />
         <Context {...props} />
         <Switch>
-          <Route path="/" render={(_) => <PostListComponent {...props} />} />
+          <Route path="/user/me/posts" render={(_) => <PostListComponent {...props} />} />
           <Route path="/user/:userId/posts" render={(param) => {
             console.dir(param);
             return <PostListComponent {...updatePostListPropsWithUserId(props, param.match.params.userId)} />;

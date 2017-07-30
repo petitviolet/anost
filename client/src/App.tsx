@@ -7,6 +7,7 @@ import User from './user/Container';
 import { LoginForm } from './user/LoginForm';
 import Header from './component/Header';
 import { NotFound } from './component/NotFound';
+import PostList from './post/list/Container';
 
 // const logo = require('./logo.svg');
 
@@ -22,11 +23,14 @@ class App extends React.Component {
             </div>
           </div>
           <div className="App-Content">
-            <Switch>
-              <Route path="/" component={User} />
-              <Route exact path="/login" component={LoginForm} />
-              <Route component={NotFound} />
-            </Switch>
+            <Route path="/" >
+              <Switch>
+                <Route path="/" component={User} />
+                <Route path="/user/me/posts" component={PostList} />
+                <Route exact path="/login" component={LoginForm} />
+                <Route component={NotFound} />
+              </Switch>
+            </Route>
           </div>
         </div>
       </Router>

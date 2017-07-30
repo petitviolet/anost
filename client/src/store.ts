@@ -8,12 +8,14 @@ import { PostActions } from './post/item/actions';
 import { PostState } from './post/item/state';
 import { PostListActions } from './post/list/actions';
 import { PostListState } from './post/list/state';
+import { routerReducer } from 'react-router-redux';
 
 export default createStore(
   combineReducers({
     user,
     post,
     postList,
+    routing: routerReducer,
   })
 );
 
