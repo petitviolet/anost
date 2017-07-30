@@ -5,7 +5,7 @@ import { apiRequest, HttpMethod } from '../../util/request';
 import { connect } from 'react-redux';
 import { Post } from '../model/Post';
 import { Token } from '../../user/model/Token';
-import { Post as PostComponent } from './Post'
+import { Post as PostComponent } from './Post';
 import { PostState } from './state';
 
 enum PostPath {
@@ -76,7 +76,7 @@ export class PostActionDispatcher {
   }
 
   private onError(msg: string | Error): void {
-    const err: Error = (typeof (msg) == 'string') ? new Error(msg) : msg;
+    const err: Error = (typeof (msg) === 'string') ? new Error(msg) : msg;
     this.dispatch(actions.errorAction(err));
   }
 }

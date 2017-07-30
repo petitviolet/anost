@@ -11,11 +11,11 @@ export class LoginForm extends React.Component<UserProps, { email: string, passw
 
   onEmailChange(e: any) {
     this.setState({ email: e.target.value });
-  };
+  }
 
   onPasswordChange(e: any) {
     this.setState({ password: e.target.value });
-  };
+  }
 
   onClick(e: any) {
     console.dir(this);
@@ -28,7 +28,7 @@ export class LoginForm extends React.Component<UserProps, { email: string, passw
       // for local development
       this.props.actions.login('aa@aa.aa', 'password');
     }
-  };
+  }
 
   render() {
     return (
@@ -53,5 +53,5 @@ export class LoginForm extends React.Component<UserProps, { email: string, passw
         <Context {...this.props} />
       </div>
     );
-  };
+  }
 }
