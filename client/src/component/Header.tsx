@@ -1,11 +1,8 @@
 import * as React from 'react';
-import { UserProps, UserActionDispatcher } from '../user/Container';
-import { Logout } from '../user/Logout';
-import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
-import { ReduxAction, ReduxState } from '../store';
+import { UserProps } from '../action/UserAction';
+import { Logout } from './Logout';
 
-const Header: React.StatelessComponent<UserProps> =
+export const Header: React.StatelessComponent<UserProps> =
   // const user = this.props.value.user;
   (props) => {
     return (
@@ -16,8 +13,3 @@ const Header: React.StatelessComponent<UserProps> =
       </div>
     );
   };
-
-export default connect(
-  (state: ReduxState) => ({ value: state.user }),
-  (dispatch: Dispatch<ReduxAction>) => ({ actions: new UserActionDispatcher(dispatch) })
-)(Header);

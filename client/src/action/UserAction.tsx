@@ -1,12 +1,8 @@
-import { Dispatch } from 'redux';
-import { ReduxAction, ReduxState } from '../store';
-import * as actions from './actions';
+import { ReduxAction, } from '../store';
+import * as actions from '../module/UserModule';
 import { apiRequest, HttpMethod } from '../util/request';
-import { connect } from 'react-redux';
-import { User } from './model/User';
-import { Token } from './model/Token';
-import { UserState } from './state';
-import { UserComponent } from './component/User';
+import { User, Token } from '../model';
+import { UserState } from '../module/UserState';
 import { RouteComponentProps } from 'react-router-dom';
 
 enum UserPath {
@@ -75,7 +71,3 @@ export interface UserProps extends RouteComponentProps<{}> {
   actions: UserActionDispatcher;
 }
 
-export default connect(
-  (state: ReduxState) => ({ value: state.user }),
-  (dispatch: Dispatch<ReduxAction>) => ({ actions: new UserActionDispatcher(dispatch) })
-)(UserComponent);

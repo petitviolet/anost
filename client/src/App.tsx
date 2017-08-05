@@ -3,15 +3,14 @@ import './App.css';
 import createBrowserHistory from 'history/createBrowserHistory';
 import { Router, Route, Switch } from 'react-router-dom';
 
-import User from './user/Container';
-import { LoginForm } from './user/LoginForm';
-import Header from './component/Header';
-import { NotFound } from './component/NotFound';
-import PostList from './post/list/Container';
+import User from './container/UserContainer';
+import PostList from './container/PostListContainer';
+import Header from './container/HeaderContainer';
+import { LoginForm, NotFound } from './component';
 
 // const logo = require('./logo.svg');
 
-class App extends React.Component {
+export default class App extends React.Component {
   render() {
     const history = createBrowserHistory();
     return (
@@ -36,6 +35,4 @@ class App extends React.Component {
       </Router>
     );
   }
-}
-
-export default App;
+};

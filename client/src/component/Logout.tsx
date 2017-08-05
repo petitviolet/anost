@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { UserProps } from './Container';
+import { UserProps } from '../action/UserAction';
 import { Link } from 'react-router-dom';
 
 export const Logout: React.StatelessComponent<UserProps> =

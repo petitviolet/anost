@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { PostProps } from './Container';
-import { NotFound } from '../../component/NotFound';
+import { PostProps } from '../action/PostItemAction';
+import { NotFound } from './NotFound';
 import { Post as PostModel } from '../model/Post';
 
 export const Post: React.StatelessComponent<PostProps> =

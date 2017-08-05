@@ -1,11 +1,7 @@
-import { Dispatch } from 'redux';
-import { ReduxAction, ReduxState } from '../../store';
-import * as actions from './actions';
-import { apiRequest, HttpMethod } from '../../util/request';
-import { connect } from 'react-redux';
-import { Post } from '../model/Post';
-import { PostList as PostListComponent } from './PostList';
-import { PostListState } from './state';
+import * as actions from '../module/PostListModule';
+import { apiRequest, HttpMethod } from '../util/request';
+import { Post } from '../model';
+import { ReduxAction } from '../store';
 
 enum PostListPath {
   List = '/post',
@@ -82,22 +78,3 @@ export class PostListActionDispatcher {
     this.dispatch(actions.errorAction(err));
   }
 }
-
-export interface PostListProps {
-  value: PostListState;
-  actions: PostListActionDispatcher;
-}
-
-// update props with userId
-export const updatePostListPropsWithUserId = (props: PostListProps, userId?: string): PostListProps => {
-  const p = Object.assign({}, props.value, { userId: userId });
-  return Object.assign({}, props, { value: p });
-};
-
-export default connect<any, any, { userId: string }>(
-  (state: ReduxState, ownProps?: { userId: string }) => {
-    const p = Object.assign({}, state.postList, ownProps);
-    return { value: p };
-  },
-  (dispatch: Dispatch<ReduxAction>) => ({ actions: new PostListActionDispatcher(dispatch) })
-)(PostListComponent);

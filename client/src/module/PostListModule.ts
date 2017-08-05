@@ -1,5 +1,7 @@
+import { PostListState, initialPostListState } from './PostListState';
+
 import { Action } from 'redux';
-import { Post } from '../model/Post';
+import { Post } from '../model';
 
 // kinds of action
 export enum PostListAction {
@@ -55,3 +57,21 @@ export const clearErrorAction = (): ErrorAction => ({
 });
 
 export type PostListActions = ChangeRequestStatusAction | ErrorAction | ListAction | UpdateQueryAction;
+// reducer endpoint for user
+export default function reducer(state: PostListState = initialPostListState, action: PostListActions): PostListState {
+  switch (action.type) {
+    case PostListAction.REQUEST_START:
+      return Object.assign({}, state, { loading: true });
+    case PostListAction.REQUEST_FINISH:
+      return Object.assign({}, state, { loading: false });
+    case PostListAction.ERROR_OCCURRED:
+    case PostListAction.ERROR_CLEARD:
+      return Object.assign({}, state, { error: action.error });
+    case PostListAction.LIST:
+      return Object.assign({}, state, { items: action.items });
+   case PostListAction.UPDATE_QUERY:
+      return Object.assign({}, state, { query: action.query });
+    default:
+      return state;
+  }
+}

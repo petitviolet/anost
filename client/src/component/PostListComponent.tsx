@@ -1,11 +1,23 @@
 import * as React from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
-import { updatePostListPropsWithUserId, PostListProps, Query, ByUser } from './Container';
+import {  Query, ByUser , PostListActionDispatcher } from '../action/PostListAction';
 import { Post } from '../model/Post';
-import { Context } from '../../component/Context';
-import { NotFound } from '../../component/NotFound';
-import PostItem from '../item/Container';
+import { Context } from './Context';
+import { NotFound } from './NotFound';
+import PostItem from '../container/PostItemContainer';
 
+import { PostListState } from '../module';
+
+export interface PostListProps {
+  value: PostListState;
+  actions: PostListActionDispatcher;
+}
+
+// update props with userId
+export const updatePostListPropsWithUserId = (props: PostListProps, userId?: string): PostListProps => {
+  const p = Object.assign({}, props.value, { userId: userId });
+  return Object.assign({}, props, { value: p });
+};
 export const PostList: React.StatelessComponent<PostListProps> =
   (props: PostListProps) => {
     return (

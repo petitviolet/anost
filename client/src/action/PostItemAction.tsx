@@ -1,12 +1,9 @@
-import { Dispatch } from 'redux';
-import { ReduxAction, ReduxState } from '../../store';
-import * as actions from './actions';
-import { apiRequest, HttpMethod } from '../../util/request';
-import { connect } from 'react-redux';
+import * as actions from '../module/PostItemModule';
+import { apiRequest, HttpMethod } from '../util/request';
 import { Post } from '../model/Post';
-import { Token } from '../../user/model/Token';
-import { Post as PostComponent } from './Post';
-import { PostState } from './state';
+import { Token } from '../model';
+import { PostState } from '../module/PostItemState';
+import { ReduxAction } from '../store';
 
 enum PostPath {
   SAVE = '/post',
@@ -85,8 +82,3 @@ export interface PostProps {
   value: PostState;
   actions: PostActionDispatcher;
 }
-
-export default connect<any, any, {postId: string}>(
-  (state: ReduxState, ownProps?: { postId: string }) => ({ value: Object.assign({}, state.post, ownProps) }),
-  (dispatch: Dispatch<ReduxAction>) => ({ actions: new PostActionDispatcher(dispatch) })
-)(PostComponent);

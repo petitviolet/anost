@@ -1,13 +1,8 @@
-import user from './user/module';
-import post from './post/item/module';
-import postList from './post/list/module';
-import { UserState } from './user/state';
-import { UserActions } from './user/actions';
+import user from './module/UserModule';
+import post from './module/PostItemModule';
+import postList from './module/PostListModule';
+import * as m from './module';
 import { createStore, combineReducers, Action } from 'redux';
-import { PostActions } from './post/item/actions';
-import { PostState } from './post/item/state';
-import { PostListActions } from './post/list/actions';
-import { PostListState } from './post/list/state';
 import { routerReducer } from 'react-router-redux';
 
 export default createStore(
@@ -20,9 +15,9 @@ export default createStore(
 );
 
 export type ReduxState = {
-  user: UserState;
-  post: PostState;
-  postList: PostListState;
+  user: m.UserState;
+  post: m.PostState;
+  postList: m.PostListState;
 };
 
-export type ReduxAction = UserActions | PostActions | PostListActions | Action;
+export type ReduxAction = m.UserActions | m.PostActions | m.PostListActions | Action;

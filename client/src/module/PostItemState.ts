@@ -1,5 +1,5 @@
-import { Post } from '../model/Post';
-import { State } from '../../state';
+import { Post } from '../model';
+import { State } from './state';
 
 export interface PostState extends State {
   postId: string;
