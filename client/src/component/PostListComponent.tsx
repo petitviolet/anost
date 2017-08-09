@@ -4,7 +4,6 @@ import { Query, ByUser, PostListActionDispatcher } from '../action/PostListActio
 import { Post } from '../model/Post';
 import { Context } from './Context';
 import { NotFound } from './NotFound';
-import PostItem from '../container/PostItemContainer';
 
 import { PostListState } from '../module';
 
@@ -34,11 +33,6 @@ export const PostList: React.StatelessComponent<PostListProps> =
             console.log('/posts/user/:userId');
             console.dir(param);
             return <PostListComponent {...updatePostListPropsWithUserId(props, param.match.params.userId) } />;
-          }} />
-          <Route path="/posts/:postId" render={(param) => {
-            console.dir(param);
-            const postId: string = param.match.params.postId;
-            return <PostItem postId={postId} />;
           }} />
           <Route component={NotFound} />
         </Switch>
@@ -72,7 +66,7 @@ const PostListComponent: React.StatelessComponent<PostListProps> =
 
 const PostListItem: React.StatelessComponent<Post> =
   (post: Post) => {
-    const path = `/post/${post.id}`;
+    const path = `/posts/${post.id}`;
     return (
       <div>
         <Link to={path}>{post.title}</Link>
