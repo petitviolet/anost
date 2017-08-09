@@ -15,24 +15,26 @@ export class PostActionDispatcher {
 
   public async show(postId: string): Promise<void> {
     const self = this;
+    self.dispatch(actions.startRequestAction());
     self.dispatch(actions.clearErrorAction());
     if (!postId) {
       self.onError('PostId must not be empty.');
+      self.dispatch(actions.finishRequestAction());
       return Promise.resolve();
     }
-    self.dispatch(actions.startRequestAction());
-    const path = PostPath.SHOW + postId;
+    const path = `${PostPath.SHOW}/${postId}`;
     const p = apiRequest(HttpMethod.GET, path)
       .then(res => {
-        self.dispatch(actions.finishRequestAction());
         // cast
-        const post: Post = res.post;
+        const post: Post = res;
+        console.dir(post);
         // if id exists, request/response are correct.
-        if (!post) {
-          console.dir(post);
+        if (post && post.id) {
           self.dispatch(actions.showPostAction(post));
+          self.dispatch(actions.finishRequestAction());
         } else {
           self.onError(`fetch post(${postId}) failed!`);
+          self.dispatch(actions.finishRequestAction());
         }
       })
       .catch(error => {
@@ -56,11 +58,11 @@ export class PostActionDispatcher {
       .then(res => {
         self.dispatch(actions.finishRequestAction());
         // cast
-        const response: Post = res;
+        const post: Post = res;
         // if id exists, request/response are correct.
-        if (response != null) {
-          console.dir(response);
-          self.dispatch(actions.savePostAction(response));
+        if (post) {
+          console.dir(post);
+          self.dispatch(actions.savePostAction(post));
         } else {
           self.onError('Save post failed!');
         }
