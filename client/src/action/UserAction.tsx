@@ -70,4 +70,3 @@ export interface UserProps extends RouteComponentProps<{}> {
   value: UserState;
   actions: UserActionDispatcher;
 }
-

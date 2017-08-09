@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './App.css';
-import createBrowserHistory from 'history/createBrowserHistory';
-import { Router, Route, Switch } from 'react-router-dom';
+// import createBrowserHistory from 'history/createBrowserHistory';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import User from './container/UserContainer';
 import PostList from './container/PostListContainer';
@@ -12,9 +12,9 @@ import { LoginForm, NotFound } from './component';
 
 export default class App extends React.Component {
   render() {
-    const history = createBrowserHistory();
+    // const history = createBrowserHistory();
     return (
-      <Router history={history}>
+      <BrowserRouter>
         <div className="App">
           <div className="App-header">
             <div className="App-header-inner">
@@ -22,17 +22,16 @@ export default class App extends React.Component {
             </div>
           </div>
           <div className="App-Content">
-            <Route path="/" >
-              <Switch>
-                <Route path="/" component={User} />
-                <Route path="/user/me/posts" component={PostList} />
-                <Route exact path="/login" component={LoginForm} />
-                <Route component={NotFound} />
-              </Switch>
-            </Route>
+            <Switch>
+              <Route exact path="/" component={User} />
+              <Route exact path="/user/*" component={User} />
+              <Route path="/posts/*" component={PostList} />
+              <Route exact path="/login" component={LoginForm} />
+              <Route component={NotFound} />
+            </Switch>
           </div>
         </div>
-      </Router>
+      </BrowserRouter>
     );
   }
-};
+}

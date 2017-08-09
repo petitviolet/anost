@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
-import {  Query, ByUser , PostListActionDispatcher } from '../action/PostListAction';
+import { Query, ByUser, PostListActionDispatcher } from '../action/PostListAction';
 import { Post } from '../model/Post';
 import { Context } from './Context';
 import { NotFound } from './NotFound';
@@ -25,15 +25,20 @@ export const PostList: React.StatelessComponent<PostListProps> =
         <QueryBox {...props} />
         <Context {...props} />
         <Switch>
-          <Route path="/user/me/posts" render={(_) => <PostListComponent {...props} />} />
-          <Route path="/user/:userId/posts" render={(param) => {
+          <Route exact path="/posts/user/me" render={(param) => {
+            console.log('/posts/user/me');
             console.dir(param);
-            return <PostListComponent {...updatePostListPropsWithUserId(props, param.match.params.userId)} />;
+            return <PostListComponent {...props} />;
           }} />
-          <Route path="/post/:postId" render={(param) => {
+          <Route path="/posts/user/:userId" render={(param) => {
+            console.log('/posts/user/:userId');
+            console.dir(param);
+            return <PostListComponent {...updatePostListPropsWithUserId(props, param.match.params.userId) } />;
+          }} />
+          <Route path="/posts/:postId" render={(param) => {
             console.dir(param);
             const postId: string = param.match.params.postId;
-            return <PostItem postId={postId}/>;
+            return <PostItem postId={postId} />;
           }} />
           <Route component={NotFound} />
         </Switch>
@@ -50,6 +55,8 @@ const PostListComponent: React.StatelessComponent<PostListProps> =
       props.actions.list(param);
       console.log('by user!: userId: ' + userId);
     }
+    console.log('PostListComponent');
+    console.dir(props.value);
 
     return (
       <div>
