@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import User from './container/UserContainer';
 import PostList from './container/PostListContainer';
 import Header from './container/HeaderContainer';
+import PostItem from './container/PostItemContainer';
 import { LoginForm, NotFound } from './component';
 
 // const logo = require('./logo.svg');
@@ -25,7 +26,9 @@ export default class App extends React.Component {
             <Switch>
               <Route exact path="/" component={User} />
               <Route exact path="/user/*" component={User} />
-              <Route path="/posts/*" component={PostList} />
+              <Route path="/posts/user" component={PostList} />
+              <Route path="/posts/search" component={PostList} />
+              <Route exact path="/posts/:id" component={PostItem} />
               <Route exact path="/login" component={LoginForm} />
               <Route component={NotFound} />
             </Switch>
