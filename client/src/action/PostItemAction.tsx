@@ -31,11 +31,10 @@ export class PostActionDispatcher {
         // if id exists, request/response are correct.
         if (post && post.id) {
           self.dispatch(actions.showPostAction(post));
-          self.dispatch(actions.finishRequestAction());
         } else {
           self.onError(`fetch post(${postId}) failed!`);
-          self.dispatch(actions.finishRequestAction());
         }
+        self.dispatch(actions.finishRequestAction());
       })
       .catch(error => {
         console.log('ERROR: ' + error);
@@ -48,10 +47,11 @@ export class PostActionDispatcher {
     const self = this;
     self.dispatch(actions.clearErrorAction());
     if (!title || !fileType || !contents) {
+      console.log(`title: ${title}, fileType: ${fileType}, contents: ${contents}`);
       self.onError('Title, FileType, Contents must not be empty.');
       return Promise.resolve();
     }
-    const body = { title: title, file_type: fileType, contents: contents };
+    const body = { title: title, fileType: fileType, contents: contents };
 
     self.dispatch(actions.startRequestAction());
     const p = apiRequest(HttpMethod.POST, PostPath.SAVE, token.value, body)
@@ -60,7 +60,8 @@ export class PostActionDispatcher {
         // cast
         const post: Post = res;
         // if id exists, request/response are correct.
-        if (post) {
+        console.log(`post save: ${post}`);
+        if (post && post.id) {
           console.dir(post);
           self.dispatch(actions.savePostAction(post));
         } else {
@@ -74,7 +75,7 @@ export class PostActionDispatcher {
     return p;
   }
 
-  private onError(msg: string | Error): void {
+  public onError(msg: string | Error): void {
     const err: Error = (typeof (msg) === 'string') ? new Error(msg) : msg;
     this.dispatch(actions.errorAction(err));
   }

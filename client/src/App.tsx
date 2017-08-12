@@ -28,7 +28,7 @@ export default class App extends React.Component {
               <Route exact path="/user/*" component={User} />
               <Route path="/posts/user" component={PostList} />
               <Route path="/posts/search" component={PostList} />
-              <Route exact path="/posts/:id" component={PostItem} />
+              <Route path="/posts/:id*" component={PostItem} />
               <Route exact path="/login" component={LoginForm} />
               <Route component={NotFound} />
             </Switch>
