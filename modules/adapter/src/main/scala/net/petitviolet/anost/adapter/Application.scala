@@ -146,8 +146,10 @@ private object AppController extends AnostController with MixInLogger {
 
   protected lazy val route =
     Route.seal {
-      (options & path(Segments)) { _ =>
+      (options & path(Segments) & extractRequest) { (segments, request) =>
         respondWithHeaders(defaultHeaders: _*) {
+          val path = s"/${segments.mkString("/")}"
+          aLogger.debug(s"option request. path: $path, request: $request")
           complete("OK")
         }
       } ~
