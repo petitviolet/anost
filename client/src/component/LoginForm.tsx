@@ -9,15 +9,15 @@ export class LoginForm extends React.Component<UserProps, { email: string, passw
     this.state = { email: '', password: '' };
   }
 
-  onEmailChange(e: any) {
+  private onEmailChange(e: any) {
     this.setState({ email: e.target.value });
   }
 
-  onPasswordChange(e: any) {
+  private onPasswordChange(e: any) {
     this.setState({ password: e.target.value });
   }
 
-  onClick(e: any) {
+  private onClick(e: any) {
     console.dir(this);
     this.props.actions.logout();
     e.preventDefault();
