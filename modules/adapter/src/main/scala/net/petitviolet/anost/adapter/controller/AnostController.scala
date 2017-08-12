@@ -164,12 +164,12 @@ object AnostController {
   //  val extract: Directive[(HttpRequest, IP, UserAgent)] =
   //    extractRequest & IP.extractIp & UserAgent.extractUserAgent
 
-  val defaultHeaders: Seq[HttpHeader] = {
+  val defaultHeaders: collection.immutable.Seq[HttpHeader] = {
     val server = Server.apply("anost")
     val cors = `Access-Control-Allow-Origin`(HttpOriginRange.*)
     import HttpMethods._
     val allow = `Access-Control-Allow-Methods`(GET :: POST :: HEAD :: OPTIONS :: Nil)
-    val allowHeader = `Access-Control-Allow-Headers`("Origin, X-Requested-With, Content-Type, Accept")
+    val allowHeader = `Access-Control-Allow-Headers`("Origin, X-Requested-With, Content-Type, Accept, Authorization")
 
     server :: cors :: allow :: allowHeader :: Nil
   }
