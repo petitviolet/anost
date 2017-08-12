@@ -7,4 +7,4 @@ export interface PostListState extends State {
   items: Post[];
 }
 
-export const initialPostListState: PostListState = { loading: false, error: null, query: '', userId: '', items: [] };
+export const initialPostListState: PostListState = { query: '', userId: '', items: [] };
