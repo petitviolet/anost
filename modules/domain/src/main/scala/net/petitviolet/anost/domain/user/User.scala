@@ -3,9 +3,12 @@ package net.petitviolet.anost.domain.user
 import net.petitviolet.anost.domain._
 import net.petitviolet.anost.domain.support.Entity
 import net.petitviolet.anost.support.Id
-import net.petitviolet.operator._
+import net.petitviolet.anost.support.contracts.AppContext
+import net.petitviolet.operator.toBoolOps
 
-import scalaz.Scalaz._
+import scala.concurrent.Future
+import scalaz._
+import Scalaz._
 
 case class User(id: Id[User], name: UserName, email: Email, password: Password) extends Entity {
   type ID = Id[User]
@@ -18,6 +21,7 @@ case class Password(value: String) extends AnyVal
 case class Email(value: String) extends AnyVal
 
 object User {
+  type UserOps[A] = Kleisli[Future, UserRepository, A]
 
   import UserSpecification._
 
@@ -26,6 +30,14 @@ object User {
       emailSpec(email) |@|
       passwordSpec(password))(User(Id.generate(), _, _, _))
 
+  def register(user: User)(implicit ctx: AppContext): UserOps[AuthToken] = Kleisli {
+    repo =>
+      (repo.store >==> repo.generateToken).apply(user)
+  }
+
+  def login(email: Email, password: Password)(implicit ctx: AppContext): UserOps[Option[(User, AuthToken)]] = Kleisli {
+    repo => repo.login.run((email, password))
+  }
 }
 
 private object UserSpecification {

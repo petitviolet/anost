@@ -5,19 +5,15 @@ import net.petitviolet.anost.domain.user.{ User, UsesUserRepository }
 import net.petitviolet.anost.usecase._
 
 import scala.concurrent.Future
-import scalaz.Scalaz._
 
 trait RegisterUserUseCase extends AnostUseCase[RegisterUserArgs, AuthTokenOutput]
     with UsesUserRepository {
   override protected def call(arg: In)(implicit ctx: Ctx): Future[Out] = {
     import ctx._
     arg.asModel().fold[Future[Out]](toFutureFailed, { user =>
-      (for {
-        _ <- userRepository.store
-        token <- userRepository.generateToken
-      } yield {
+      User.register(user).run(userRepository) map { token =>
         AuthTokenOutput(token.tokenValue.value)
-      }).run(user)
+      }
     })
   }
 }

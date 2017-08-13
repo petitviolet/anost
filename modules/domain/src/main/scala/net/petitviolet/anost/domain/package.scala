@@ -1,5 +1,8 @@
 package net.petitviolet.anost
 
+import net.petitviolet.anost.support.contracts.AppContext
+
+import scala.concurrent.Future
 import scalaz._
 
 package object domain {
@@ -13,4 +16,9 @@ package object domain {
   def fail[A](msg: String): Validated[A] = Validation.failure(NonEmptyList(msg))
   def success[A](obj: A): Validated[A] = Validation.success(obj)
 
+  implicit def futureBind(implicit ctx: AppContext) = new Bind[Future] {
+    import ctx.executionContext
+    override def bind[A, B](fa: Future[A])(f: (A) => Future[B]): Future[B] = fa flatMap f
+    override def map[A, B](fa: Future[A])(f: (A) => B): Future[B] = fa map f
+  }
 }

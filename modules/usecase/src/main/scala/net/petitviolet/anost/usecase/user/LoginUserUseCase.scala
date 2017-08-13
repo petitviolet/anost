@@ -11,16 +11,16 @@ trait LoginUserUseCase extends AnostUseCase[LoginUserArgs, LoginResult]
     with UsesUserRepository {
   override protected def call(arg: In)(implicit ctx: Ctx): Future[Out] = {
     import ctx._
-    userRepository.login.map {
+    val (email, password) = arg.asModel
+    User.login(email, password).run(userRepository) map {
       _.map {
         case (user, token) =>
           LoginResultItem(
             user.id, user.name.value, user.email.value,
             AuthTokenOutput(token.tokenValue.value)
           )
-      }
-        .|> { LoginResult.apply }
-    }.run(arg.asModel)
+      } |> { LoginResult.apply }
+    }
   }
 }
 
