@@ -1,9 +1,10 @@
 package net.petitviolet.anost.usecase.post
 
-import net.petitviolet.anost.domain.post.UsesPostRepository
+import net.petitviolet.anost.domain.post.{ Post, Title, UsesPostRepository }
 import net.petitviolet.anost.domain.user.User
 import net.petitviolet.anost.support.Id
 import net.petitviolet.anost.usecase.{ AnostUseCase, In, ValidationError }
+import net.petitviolet.operator._
 
 import scala.concurrent.Future
 
@@ -12,9 +13,10 @@ trait FindPostUseCase extends AnostUseCase[FindPostArg, PostsOutput]
   override protected def call(arg: In)(implicit ctx: Ctx): Future[Out] = {
     import ctx._
     (arg match {
-      case PostOfUserArg(userId) => postRepository.findByUserId.run(userId)
-      case PostLikeTitleArg(titleQuery) => postRepository.findByTitle.run(titleQuery)
-    }) map { PostsOutput.fromModels }
+      case PostOfUserArg(userId) => Post.ofUser(userId)
+      case PostLikeTitleArg(titleQuery) => Post.searchByTitle(Title(titleQuery))
+    }) |> { _.run(postRepository) } map { PostsOutput.fromModels }
+
   }
 }
 

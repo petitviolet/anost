@@ -11,7 +11,7 @@ import scalaz.Kleisli
 trait PostRepository extends Repository[Post] {
   def findByUserId(implicit ctx: AppContext): Kleisli[Future, Id[User], Seq[Post]]
 
-  def findByTitle(implicit ctx: AppContext): Kleisli[Future, String, Seq[Post]]
+  def findByTitle(implicit ctx: AppContext): Kleisli[Future, Title, Seq[Post]]
 }
 
 trait UsesPostRepository {

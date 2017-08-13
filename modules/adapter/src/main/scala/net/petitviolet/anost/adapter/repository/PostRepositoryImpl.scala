@@ -1,7 +1,7 @@
 package net.petitviolet.anost.adapter.repository
 
 import net.petitviolet.anost.adapter.repository.dao.Posts
-import net.petitviolet.anost.domain.post.{ Post, PostRepository }
+import net.petitviolet.anost.domain.post.{ Post, PostRepository, Title }
 import net.petitviolet.anost.domain.user.User
 import net.petitviolet.anost.support.contracts.AppContext
 import net.petitviolet.anost.support.{ Id, MixInLogger }
@@ -41,10 +41,10 @@ object PostRepositoryImpl extends PostRepository with MixInLogger {
       postss map { Posts.toModel }
   }
 
-  override def findByTitle(implicit ctx: AppContext): Kleisli[Future, String, Seq[Post]] = kleisliF {
+  override def findByTitle(implicit ctx: AppContext): Kleisli[Future, Title, Seq[Post]] = kleisliF {
     title =>
       import ctx._
-      val postss = Posts.findAllLikeTitle(title)
+      val postss = Posts.findAllLikeTitle(title.value)
       postss map { Posts.toModel }
   }
 }
