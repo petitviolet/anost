@@ -28,27 +28,26 @@ val akkaHttpDependencies = Seq(
   "com.typesafe.akka" %% "akka-http-spray-json" % akka,
   "com.typesafe.akka" %% "akka-http-testkit" % akka % "test"
 )
-val SKINNY_VERSION = "2.3.7"
+val SKINNY_VERSION = "2.4.0"
 val dbDependencies = Seq(
   "org.skinny-framework" %% "skinny-orm" % SKINNY_VERSION,
   "org.skinny-framework" %% "skinny-task" % SKINNY_VERSION,
-  "org.scalikejdbc" %% "scalikejdbc-jsr310" % "2.5.0",
-  "mysql" % "mysql-connector-java" % "5.1.41",
-  "com.zaxxer" % "HikariCP" % "2.6.1"
+  "mysql" % "mysql-connector-java" % "5.1.40", // 6.0.6 not working...
+  "com.zaxxer" % "HikariCP" % "2.6.3"
 )
 
 val loggerDependencies = Seq(
-  "org.slf4j" % "slf4j-api" % "1.7.21",
-  "ch.qos.logback" % "logback-classic" % "1.1.7",
-  "ch.qos.logback" % "logback-core" % "1.1.7"
+  "org.slf4j" % "slf4j-api" % "1.7.25",
+  "ch.qos.logback" % "logback-classic" % "1.2.3",
+  "ch.qos.logback" % "logback-core" % "1.2.3"
 )
 
 val commonDependencies = Seq(
   "org.scalaz" %% "scalaz-core" % "7.2.14",
   "com.github.pureconfig" %% "pureconfig" % "0.7.2",
-  "com.lihaoyi" %% "sourcecode" % "0.1.3",
+  "com.lihaoyi" %% "sourcecode" % "0.1.4",
   "com.beachape" %% "enumeratum" % "1.5.12",
-  "net.petitviolet" %% "operator" % "0.2.2",
+  "net.petitviolet" %% "operator" % "0.2.3",
 
   "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 ) ++ loggerDependencies ++ dbDependencies
