@@ -1,16 +1,17 @@
 package net.petitviolet.anost.adapter.repository.dao
 
+import java.time.LocalDateTime
+
 import net.petitviolet.anost.adapter.repository.AnostMapper
 import net.petitviolet.anost.domain.post._
 import net.petitviolet.anost.domain.user.User
 import net.petitviolet.anost.support.Id
-import org.joda.time.DateTime
 import scalikejdbc._
 import skinny.orm.Alias
 
 case class Posts(id: Id[Posts], ownerId: Id[Users],
   title: String, fileType: String, content: String,
-  createdAt: DateTime, updatedAt: DateTime)
+  createdAt: LocalDateTime, updatedAt: LocalDateTime)
 
 object Posts extends AnostMapper[Posts] {
   override def tableName: String = "posts"

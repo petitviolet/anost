@@ -1,16 +1,14 @@
 package net.petitviolet.anost.adapter.repository
 
 import java.sql.ResultSet
-import java.time.{ LocalDateTime, ZoneId, ZoneOffset }
-import java.util.Locale
+import java.time.{ LocalDateTime, ZoneId }
 
 import net.petitviolet.anost.domain.user.AuthTokenValue
 import net.petitviolet.anost.support.Id
-import org.joda.time.{ DateTime, DateTimeZone }
 import scalikejdbc._
 
 package object dao {
-  def now(): DateTime = DateTime.now(DateTimeZone.getDefault)
+  def now(): LocalDateTime = LocalDateTime.now(ZoneId.systemDefault())
 
   private object BinderBuilder {
     /**
@@ -24,35 +22,15 @@ package object dao {
         constructor(rs.getObject[B](columnLabel, m.runtimeClass.asInstanceOf[Class[B]]))
     }
 
-    def intTypeBinder[A] = typeBinder[A, Int]
-    def longTypeBinder[A] = typeBinder[A, Long]
-    def stringTypeBinder[A] = typeBinder[A, String]
+    def intTypeBinder[A]: ((Int) => A) => TypeBinder[A] = typeBinder[A, Int]
+    def longTypeBinder[A]: ((Long) => A) => TypeBinder[A] = typeBinder[A, Long]
+    def stringTypeBinder[A]: ((String) => A) => TypeBinder[A] = typeBinder[A, String]
   }
   import BinderBuilder._
 
-  implicit def idB[A] = stringTypeBinder(Id.apply[A])
+  implicit def idB[A]: TypeBinder[Id[A]] = stringTypeBinder(Id.apply[A])
 
-  implicit def idBinder[A] = Binders.string.xmap[Id[A]](Id.apply[A], _.value)
-  implicit val tokenBinder = Binders.string.xmap[AuthTokenValue](AuthTokenValue.apply, _.value)
-
-  implicit class DateTimeConverter(val ldt: LocalDateTime) extends AnyVal {
-    def asJoda: DateTime = {
-      val instant = ldt.atZone(ZoneId.systemDefault()).toInstant
-      new DateTime(instant.toEpochMilli)
-    }
-  }
-
-  implicit class JodaConverter(val jdt: DateTime) extends AnyVal {
-    def asLocalDateTime: LocalDateTime = {
-      LocalDateTime.of(
-        jdt.getYear,
-        jdt.getMonthOfYear,
-        jdt.getDayOfMonth,
-        jdt.getHourOfDay,
-        jdt.getMinuteOfHour,
-        jdt.getSecondOfMinute,
-        jdt.getMillisOfSecond * 1000000
-      )
-    }
-  }
+  implicit def idBinder[A]: Binders[Id[A]] = Binders.string.xmap[Id[A]](Id.apply[A], _.value)
+  implicit val tokenBinder: Binders[AuthTokenValue] = Binders.string.xmap[AuthTokenValue](AuthTokenValue.apply, _.value)
+  implicit val dateBinder: Binders[LocalDateTime] = Binders.javaTimeLocalDateTime
 }
