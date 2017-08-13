@@ -24,7 +24,15 @@ object PostRepositoryImpl extends PostRepository with MixInLogger {
     post
   }
 
-  override def update(implicit ctx: AppContext): Kleisli[Future, Post, Post] = ???
+  override def update(implicit ctx: AppContext): Kleisli[Future, Post, Post] = kleisliF { post =>
+    import ctx._
+    val id = Posts.updateById(post.id.as[Posts]).withAttributes(
+      'title -> post.title.value,
+      'file_type -> post.fileType.value,
+      'content -> post.contents.value
+    )
+    post
+  }
 
   override def findByUserId(implicit ctx: AppContext): Kleisli[Future, Id[User], Seq[Post]] = kleisliF {
     userId =>

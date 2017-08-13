@@ -10,7 +10,7 @@ import net.petitviolet.anost.usecase.AuthArg
 import net.petitviolet.anost.usecase.post._
 
 trait PostController extends AnostController with UsesLogger
-    with UsesSavePostUseCase with UsesPostPresenter with UsesPostsPresenter
+    with UsesSavePostUseCase with UsesUpdatePostUseCase with UsesPostPresenter with UsesPostsPresenter
     with UsesGetPostUseCase with UsesFindPostUseCase {
   override def configKey: String = "post"
 
@@ -21,6 +21,11 @@ trait PostController extends AnostController with UsesLogger
         val out = postPresenter.execute(savePostUseCase.execute(AuthArg(token, arg)))
         onCompleteResponse("/post", out) { ok }
       } ~
+        (pathEnd & put & withAuth & entity(as[UpdatePostArg])) { (token, arg) =>
+          implicit val ctx = createContext(Anost.writeSession, token)
+          val out = postPresenter.execute(updatePostUseCase.execute(AuthArg(token, arg)))
+          onCompleteResponse("/post", out) { ok }
+        } ~
         (path(Segment) & get).as(GetPostArg.fromString _) { arg: GetPostArg =>
           implicit val ctx = createContext(Anost.readSession)
           val out = postPresenter.execute(getPostUseCase.execute(arg))
@@ -40,6 +45,7 @@ object PostControllerImpl extends PostController with MixInLogger
     with MixInPostPresenter
     with MixInPostsPresenter {
   override val savePostUseCase: SavePostUseCase = new SavePostUseCase with MixInPostRepository with MixInUserRepository with MixInLogger
+  override val updatePostUseCase: UpdatePostUseCase = new UpdatePostUseCase with MixInPostRepository with MixInUserRepository with MixInLogger
   override val getPostUseCase: GetPostUseCase = new GetPostUseCase with MixInPostRepository
   override val findPostUseCase: FindPostUseCase = new FindPostUseCase with MixInPostRepository
 }

@@ -28,6 +28,11 @@ case class FileType(value: String) extends AnyVal
 object Post {
   import PostSpecification._
 
+  def create(postId: Id[Post], ownerId: Id[User], title: String, fileType: String, contents: String): Validated[Post] =
+    (titleSpec(title) |@|
+      fileTypeSpec(fileType) |@|
+      contentsSpec(contents))(Post(postId, ownerId, _, _, _))
+
   def create(ownerId: Id[User], title: String, fileType: String, contents: String): Validated[Post] =
     (titleSpec(title) |@|
       fileTypeSpec(fileType) |@|
@@ -35,6 +40,10 @@ object Post {
 
   def save(post: Post)(implicit ctx: AppContext): Kleisli[Future, PostRepository, Post] = Kleisli {
     repo => repo.store.run(post)
+  }
+
+  def update(post: Post)(implicit ctx: AppContext): Kleisli[Future, PostRepository, Post] = Kleisli {
+    repo => repo.update.run(post)
   }
 }
 
