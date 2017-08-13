@@ -10,10 +10,12 @@ interface PostComponentState {
   isEditing: boolean;
 }
 class PostEdit {
+  readonly id: string;
   title: string;
   fileType: string;
   contents: string;
-  constructor(title: string, fileType: string, contents: string) {
+  constructor(id: string, title: string, fileType: string, contents: string) {
+    this.id = id;
     this.title = title;
     this.fileType = fileType;
     this.contents = contents;
@@ -35,10 +37,10 @@ export class Post extends React.Component<PostProps, PostComponentState> {
     console.dir(e);
     this.setState({ isEditing: false });
 
-    const { title, fileType, contents } = editedPost;
+    const { id, title, fileType, contents } = editedPost;
     const token = this.props.value.token;
     if (token) {
-      this.props.actions.save(title, fileType, contents, token);
+      this.props.actions.update(id, title, fileType, contents, token);
     } else {
       this.props.actions.onError("User not logged in.");
     }
@@ -74,7 +76,7 @@ class PostItemEdit extends React.Component<{ post: PostModel, submitEdit: any, c
   constructor(props: { post: PostModel, submitEdit: any, cancelEdit: any }) {
     super(props);
     console.log("PostItemEdit");
-    this.state = { postEdit: new PostEdit(props.post.title, props.post.fileType, props.post.contents), editor: null };
+    this.state = { postEdit: new PostEdit(props.post.id, props.post.title, props.post.fileType, props.post.contents), editor: null };
     console.dir(this.state);
   }
 

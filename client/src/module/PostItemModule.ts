@@ -11,6 +11,7 @@ export enum PostAction {
 
   SAVE = 'post/save',
   SHOW = 'post/show',
+  UPDATE = 'post/update',
 }
 
 interface ChangeRequestStatusAction extends Action {
@@ -29,6 +30,15 @@ interface SavePostAction extends Action {
 }
 export const savePostAction = (post: Post): SavePostAction => ({
   type: PostAction.SAVE,
+  post: post,
+});
+
+interface UpdatePostAction extends Action {
+  type: PostAction.UPDATE;
+  post: Post;
+}
+export const updatePostAction = (post: Post): UpdatePostAction => ({
+  type: PostAction.UPDATE,
   post: post,
 });
 
@@ -54,7 +64,7 @@ export const clearErrorAction = (): ErrorAction => ({
   error: null,
 });
 
-export type PostActions = ChangeRequestStatusAction | ErrorAction | SavePostAction | ShowPostAction;
+export type PostActions = ChangeRequestStatusAction | ErrorAction | SavePostAction | ShowPostAction | UpdatePostAction;
 
 // reducer endpoint for user
 export default function reducer(state: PostState = initialPostState, action: PostActions): PostState {
@@ -67,6 +77,8 @@ export default function reducer(state: PostState = initialPostState, action: Pos
     case PostAction.ERROR_CLEARD:
       return Object.assign({}, state, { error: action.error });
     case PostAction.SAVE:
+      return Object.assign({}, state, { post: action.post });
+    case PostAction.UPDATE:
       return Object.assign({}, state, { post: action.post });
     case PostAction.SHOW:
       return Object.assign({}, state, { post: action.post });

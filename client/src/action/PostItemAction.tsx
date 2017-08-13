@@ -7,6 +7,7 @@ import { ReduxAction } from '../store';
 
 enum PostPath {
   SAVE = '/post',
+  UPDATE = '/post',
   SHOW = '/post',
 }
 
@@ -35,6 +36,38 @@ export class PostActionDispatcher {
           self.onError(`fetch post(${postId}) failed!`);
         }
         self.dispatch(actions.finishRequestAction());
+      })
+      .catch(error => {
+        console.log('ERROR: ' + error);
+        self.onError(error);
+      });
+    return p;
+  }
+
+  public async update(id: string, title: string, fileType: string, contents: string, token: Token): Promise<void> {
+    const self = this;
+    self.dispatch(actions.clearErrorAction());
+    if (!id || !title || !fileType || !contents) {
+      console.log(`id: ${id}, title: ${title}, fileType: ${fileType}, contents: ${contents}`);
+      self.onError('Id, Title, FileType, Contents must not be empty.');
+      return Promise.resolve();
+    }
+    const body = { id: id, title: title, fileType: fileType, contents: contents };
+
+    self.dispatch(actions.startRequestAction());
+    const p = apiRequest(HttpMethod.PUT, PostPath.UPDATE, token.value, body)
+      .then(res => {
+        self.dispatch(actions.finishRequestAction());
+        // cast
+        const post: Post = res;
+        // if id exists, request/response are correct.
+        console.log(`post update: ${post}`);
+        if (post && post.id) {
+          console.dir(post);
+          self.dispatch(actions.updatePostAction(post));
+        } else {
+          self.onError('Save post failed!');
+        }
       })
       .catch(error => {
         console.log('ERROR: ' + error);
