@@ -2,12 +2,12 @@
 ANOST_HOME=.
 
 # DB
-## condor-db
+## anost-db
 ANOST_DB_HOST=localhost
 ANOST_DB_PORT=3306
 ANOST_DB_USERNAME=root
 ANOST_DB_PASSWORD=
 
 # Logging
-RAVEN_LOG_DIR=./log
+ANOST_LOG_DIR=./log
 LOG_LEVEL=DEBUG
