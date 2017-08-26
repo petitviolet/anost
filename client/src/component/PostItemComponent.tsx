@@ -107,7 +107,7 @@ class PostItemEdit extends React.Component<{ post: PostModel, submitEdit: any, c
       <div>
         <textarea onChange={this.onTitleChange}>{post.title}</textarea>
         <textarea onChange={this.onFileTypeChange}>{post.fileType}</textarea>
-        <PostItemEditor {...{post: postEdit, onChange: this.onContentsChange}} />
+        <PostItemEditor {...{ post: postEdit, onChange: this.onContentsChange }} />
         <Link to="#" onClick={(e) => {
           submitEdit(e, this.state.postEdit)
         }}>Submit</Link>
@@ -145,8 +145,31 @@ const PostItem: React.StatelessComponent<{ post: PostModel, startEdit: any }> =
     return (
       <div>
         <p>{post.title}[{post.fileType}]</p>
-        <code>{post.contents}</code>
         <Link to={"#"} onClick={(e) => startEdit(e)}>Edit</Link>
+        <PostItemViewer {...post} />
       </div>
     );
   };
+
+const PostItemViewer: React.StatelessComponent<PostModel> =
+  (post: PostModel) => {
+    try {
+      require(`brace/mode/${post.fileType}`)
+      console.log(`new mode: ${post.fileType}`);
+    } catch (e) {
+      console.log('error new mode: ' + e);
+    }
+    const lines = post.contents.split('\n').length;
+    console.log('lines', lines);
+    return (
+      <AceEditor
+        mode={post.fileType}
+        theme="github"
+        editorProps={{ $blockScrolling: true }}
+        value={post.contents}
+        minLines={lines}
+        maxLines={lines}
+        readOnly={true}
+      />
+    )
+  }
