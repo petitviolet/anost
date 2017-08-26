@@ -24,6 +24,10 @@ class Application() extends MixInLogger with UsesHttpConfig with MixInActorSyste
   private var bind: Future[ServerBinding] = _
   private lazy val (host, port) = (httpConfig.host, httpConfig.port)
 
+  private final val controllers = {
+    UserControllerImpl :: PostControllerImpl :: Nil
+  }
+
   /**
    * HTTPサーバーの起動
    */
@@ -31,7 +35,7 @@ class Application() extends MixInLogger with UsesHttpConfig with MixInActorSyste
     aLogger.info(s"application starting...")
 
     val http = Http()(system)
-    bind = http.bindAndHandle(AppController, host, port)
+    bind = http.bindAndHandle(AppController.create(controllers), host, port)
 
     // DB初期化
     Database.setup()
@@ -112,10 +116,19 @@ object ApplicationMain extends App {
   app.stopServer()
 }
 
-private object AppController extends AnostController with MixInLogger {
+private object AppController {
+  def create(controllers: Seq[AnostController]): AppController = new AppController(controllers)
+}
+
+private class AppController private (routes: Seq[Route])
+    extends AnostController with MixInLogger {
+
   import AnostController._
   override def configKey: String = "root"
 
+  /**
+   * used on some exception occurred.
+   */
   override protected def exceptionHandler(implicit s: sourcecode.File) = ExceptionHandler {
     case t: Throwable =>
       //      logger.debugStackTrace(t)
@@ -126,6 +139,9 @@ private object AppController extends AnostController with MixInLogger {
       }
   }
 
+  /**
+   * used on some rejection(e.g. invalid method)
+   */
   private val rejectionHandler =
     RejectionHandler.newBuilder
       .handleNotFound(NOT_FOUND)
@@ -141,10 +157,10 @@ private object AppController extends AnostController with MixInLogger {
       }
       .result()
 
-  private val routingSettings = RoutingSettings(ConfigContainer.config)
-  private val parserSettings = ParserSettings(ConfigContainer.config)
+  protected lazy val route: Route = {
+    def routingSettings = RoutingSettings(ConfigContainer.config)
+    def parserSettings = ParserSettings(ConfigContainer.config)
 
-  protected lazy val route =
     Route.seal {
       (options & path(Segments) & extractRequest) { (segments, request) =>
         respondWithHeaders(corsHeaders: _*) {
@@ -152,9 +168,8 @@ private object AppController extends AnostController with MixInLogger {
           aLogger.debug(s"option request. path: $path, request: $request")
           complete("OK")
         }
-      } ~
-        UserControllerImpl ~
-        PostControllerImpl
+      } ~ routes.reduce { _ ~ _ }
     }(routingSettings, parserSettings, rejectionHandler, exceptionHandler)
+  }
 }
 
