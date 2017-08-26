@@ -3,6 +3,7 @@ package net.petitviolet.anost.adapter
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.Http.ServerBinding
 import akka.http.scaladsl.model._
+import akka.http.scaladsl.model.headers._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 import akka.http.scaladsl.settings.{ ParserSettings, RoutingSettings }
@@ -144,10 +145,19 @@ private object AppController extends AnostController with MixInLogger {
   private val routingSettings = RoutingSettings(ConfigContainer.config)
   private val parserSettings = ParserSettings(ConfigContainer.config)
 
+  private val corsHeaders: collection.immutable.Seq[HttpHeader] = {
+    val cors = `Access-Control-Allow-Origin`(HttpOriginRange.*)
+    import HttpMethods._
+    val allow = `Access-Control-Allow-Methods`(GET :: POST :: PUT :: DELETE :: HEAD :: OPTIONS :: Nil)
+    val allowHeader = `Access-Control-Allow-Headers`("Origin, X-Requested-With, Content-Type, Accept, Authorization")
+
+    cors +: allow +: allowHeader +: defaultHeaders
+  }
+
   protected lazy val route =
     Route.seal {
       (options & path(Segments) & extractRequest) { (segments, request) =>
-        respondWithHeaders(defaultHeaders: _*) {
+        respondWithHeaders(corsHeaders: _*) {
           val path = s"/${segments.mkString("/")}"
           aLogger.debug(s"option request. path: $path, request: $request")
           complete("OK")

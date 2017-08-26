@@ -166,12 +166,7 @@ object AnostController {
 
   val defaultHeaders: collection.immutable.Seq[HttpHeader] = {
     val server = Server.apply("anost")
-    val cors = `Access-Control-Allow-Origin`(HttpOriginRange.*)
-    import HttpMethods._
-    val allow = `Access-Control-Allow-Methods`(GET :: POST :: PUT :: DELETE :: HEAD :: OPTIONS :: Nil)
-    val allowHeader = `Access-Control-Allow-Headers`("Origin, X-Requested-With, Content-Type, Accept, Authorization")
-
-    server :: cors :: allow :: allowHeader :: Nil
+    server +: Nil
   }
 
   val NOT_FOUND: Route =
