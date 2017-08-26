@@ -6,6 +6,7 @@ import { NotFound } from './NotFound';
 import AceEditor from 'react-ace';
 import { Link } from 'react-router-dom';
 
+// state of PostComponent
 interface PostComponentState {
   isEditing: boolean;
 }
@@ -72,21 +73,15 @@ export class Post extends React.Component<PostProps, PostComponentState> {
   };
 }
 
+// a component for editing Post
 class PostItemEdit extends React.Component<{ post: PostModel, submitEdit: any, cancelEdit: any }, { postEdit: PostEdit, editor: any }> {
   constructor(props: { post: PostModel, submitEdit: any, cancelEdit: any }) {
     super(props);
     console.log("PostItemEdit");
     this.state = { postEdit: new PostEdit(props.post.id, props.post.title, props.post.fileType, props.post.contents), editor: null };
-    console.dir(this.state);
+    require('brace/theme/github');
+    require(`brace/mode/${props.post.fileType}`)
   }
-
-  registerEditor = (editor: any) => {
-    this.setState({ editor: editor });
-    // initial contents
-    editor.insert(this.state.postEdit.contents);
-    console.log("register!");
-    console.dir(this.state);
-  };
 
   onTitleChange = (e: any) => {
     const edit = this.state.postEdit;
@@ -99,39 +94,53 @@ class PostItemEdit extends React.Component<{ post: PostModel, submitEdit: any, c
     this.setState({ postEdit: edit });
   }
   onContentsChange = (value: string, event?: any) => {
-    if (!this.state.editor) { return ; }
-    console.dir(event);
-    console.dir(this.state);
-    const edit = this.state.postEdit;
-    edit.contents = value;
-    this.setState({ postEdit: edit });
+    const newPostEdit = this.state.postEdit;
+    newPostEdit.contents = value;
+    this.setState({ postEdit: newPostEdit });
+    console.dir(this.state.postEdit);
   }
 
   render() {
     const { post, submitEdit, cancelEdit } = this.props;
+    const postEdit = this.state.postEdit;
     return (
       <div>
         <textarea onChange={this.onTitleChange}>{post.title}</textarea>
         <textarea onChange={this.onFileTypeChange}>{post.fileType}</textarea>
-        <AceEditor
-          mode={post.fileType}
-          theme="github"
-          editorProps={{ $blockScrolling: true }}
-          onLoad={(e) => this.registerEditor(e)}
-          onChange={(value, event) => this.onContentsChange(value, event)}
-        />
-        <Link to="#" onClick={(e) => submitEdit(e, this.state.postEdit)}>Submit</Link>
+        <PostItemEditor {...{post: postEdit, onChange: this.onContentsChange}} />
+        <Link to="#" onClick={(e) => {
+          submitEdit(e, this.state.postEdit)
+        }}>Submit</Link>
         <Link to="#" onClick={(e) => cancelEdit(e)}>Cancel</Link>
       </div>
     );
   };
 }
 
+const PostItemEditor: React.StatelessComponent<{ post: PostEdit, onChange: any }> =
+  (props: { post: PostEdit, onChange: any }) => {
+    const { post, onChange } = props;
+    try {
+      require(`brace/mode/${post.fileType}`)
+      console.log(`new mode: ${post.fileType}`);
+    } catch (e) {
+      console.log('error new mode: ' + e);
+    }
+    return (
+      <AceEditor
+        mode={post.fileType}
+        theme="github"
+        editorProps={{ $blockScrolling: true }}
+        value={post.contents}
+        onChange={(value) => onChange(value)}
+      />
+    )
+  }
+
 
 const PostItem: React.StatelessComponent<{ post: PostModel, startEdit: any }> =
   (props: { post: PostModel, startEdit: any }) => {
     const { post, startEdit } = props;
-    console.log("PostItem");
     console.dir(post);
     return (
       <div>
