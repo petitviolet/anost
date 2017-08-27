@@ -120,22 +120,7 @@ class PostItemEdit extends React.Component<{ post: PostModel, submitEdit: any, c
 
 const PostItemEditor: React.StatelessComponent<{ post: PostEdit, onChange: any }> =
   (props: { post: PostEdit, onChange: any }) => {
-    const { post, onChange } = props;
-    try {
-      require(`brace/mode/${post.fileType}`)
-      console.log(`new mode: ${post.fileType}`);
-    } catch (e) {
-      console.log('error new mode: ' + e);
-    }
-    return (
-      <AceEditor
-        mode={post.fileType}
-        theme="monokai"
-        editorProps={{ $blockScrolling: true }}
-        value={post.contents}
-        onChange={(value) => onChange(value)}
-      />
-    )
+    return createEditor(props.post, true, props.onChange);
   }
 
 
@@ -154,24 +139,36 @@ const PostItem: React.StatelessComponent<{ post: PostModel, startEdit: any }> =
 
 const PostItemViewer: React.StatelessComponent<PostModel> =
   (post: PostModel) => {
+    return createEditor(post, true);
+  };
+
+
+ interface editorData {
+   fileType: string;
+   title: string;
+   contents: string;
+ }
+ const createEditor = (post: editorData, readOnly: boolean, onChange?: (value: string) => void): JSX.Element => {
     try {
       require(`brace/mode/${post.fileType}`)
       console.log(`new mode: ${post.fileType}`);
     } catch (e) {
       console.log('error new mode: ' + e);
     }
-    const lines = post.contents.split('\n').length;
-    console.log('lines', lines);
+    const lines = function(){
+      const lineNum = post.contents.split('\n').length;
+      return (lineNum < 50) ? lineNum : 50;
+    }();
     return (
       <AceEditor
         mode={post.fileType}
         theme="monokai"
-        // editorProps={{ $blockScrolling: true }}
         value={post.contents}
         minLines={lines}
         maxLines={lines}
-        readOnly={true}
+        readOnly={readOnly}
         focus={false}
+        onChange={onChange}
       />
     )
-  }
+ };
