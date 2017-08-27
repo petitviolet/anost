@@ -5,6 +5,7 @@ import { Context } from './Context';
 import { NotFound } from './NotFound';
 import AceEditor from 'react-ace';
 import { Link } from 'react-router-dom';
+import 'brace/theme/monokai';
 
 // state of PostComponent
 interface PostComponentState {
@@ -79,7 +80,6 @@ class PostItemEdit extends React.Component<{ post: PostModel, submitEdit: any, c
     super(props);
     console.log("PostItemEdit");
     this.state = { postEdit: new PostEdit(props.post.id, props.post.title, props.post.fileType, props.post.contents), editor: null };
-    require('brace/theme/github');
     require(`brace/mode/${props.post.fileType}`)
   }
 
@@ -101,17 +101,18 @@ class PostItemEdit extends React.Component<{ post: PostModel, submitEdit: any, c
   }
 
   render() {
-    const { post, submitEdit, cancelEdit } = this.props;
-    const postEdit = this.state.postEdit;
+    const { submitEdit, cancelEdit } = this.props;
+    const post = this.state.postEdit;
+    const inputStyle = { fontSize: '18px', paddingBottom: '5px', margin: '8px', border: 'none', borderBottom: 'solid 2px blue' };
     return (
       <div>
-        <textarea onChange={this.onTitleChange}>{post.title}</textarea>
-        <textarea onChange={this.onFileTypeChange}>{post.fileType}</textarea>
-        <PostItemEditor {...{ post: postEdit, onChange: this.onContentsChange }} />
+        <input type="text" placeholder="file name" style={inputStyle} onChange={this.onTitleChange} value={post.title} />
+        <input type="text" placeholder="file type" style={inputStyle} onChange={this.onFileTypeChange} value={post.fileType} />
+        <PostItemEditor {...{ post: post, onChange: this.onContentsChange }} />
         <Link to="#" onClick={(e) => {
           submitEdit(e, this.state.postEdit)
-        }}>Submit</Link>
-        <Link to="#" onClick={(e) => cancelEdit(e)}>Cancel</Link>
+        }}><div style={{ color: "blue", paddint: "3px" }}>Submit</div></Link>
+        <Link to="#" onClick={(e) => cancelEdit(e)}><div style={{ color: "red", paddint: "3px" }}>Cancel</div></Link>
       </div>
     );
   };
@@ -129,7 +130,7 @@ const PostItemEditor: React.StatelessComponent<{ post: PostEdit, onChange: any }
     return (
       <AceEditor
         mode={post.fileType}
-        theme="github"
+        theme="monokai"
         editorProps={{ $blockScrolling: true }}
         value={post.contents}
         onChange={(value) => onChange(value)}
@@ -145,7 +146,7 @@ const PostItem: React.StatelessComponent<{ post: PostModel, startEdit: any }> =
     return (
       <div>
         <p>{post.title}[{post.fileType}]</p>
-        <Link to={"#"} onClick={(e) => startEdit(e)}>Edit</Link>
+        <Link to={"#"} onClick={startEdit}>Edit</Link>
         <PostItemViewer {...post} />
       </div>
     );
@@ -164,12 +165,13 @@ const PostItemViewer: React.StatelessComponent<PostModel> =
     return (
       <AceEditor
         mode={post.fileType}
-        theme="github"
-        editorProps={{ $blockScrolling: true }}
+        theme="monokai"
+        // editorProps={{ $blockScrolling: true }}
         value={post.contents}
         minLines={lines}
         maxLines={lines}
         readOnly={true}
+        focus={false}
       />
     )
   }
