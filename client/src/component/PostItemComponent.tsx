@@ -3,9 +3,8 @@ import { PostProps } from '../action/PostItemAction';
 import { Post as PostModel } from '../model/Post';
 import { Context } from './Context';
 import { NotFound } from './NotFound';
-import AceEditor from 'react-ace';
 import { Link } from 'react-router-dom';
-import 'brace/theme/monokai';
+import { createEditor, onEditorChange } from './CodeEditor';
 
 // state of PostComponent
 interface PostComponentState {
@@ -23,6 +22,9 @@ class PostEdit {
     this.contents = contents;
   }
 }
+const fromModel = (post: PostModel): PostEdit => {
+  return new PostEdit(post.id, post.title, post.fileType, post.contents);
+};
 
 export class Post extends React.Component<PostProps, PostComponentState> {
   constructor(props: PostProps) {
@@ -44,7 +46,7 @@ export class Post extends React.Component<PostProps, PostComponentState> {
     if (token) {
       this.props.actions.update(id, title, fileType, contents, token);
     } else {
-      this.props.actions.onError("User not logged in.");
+      this.props.actions.onError('User not logged in.');
     }
   }
 
@@ -71,16 +73,25 @@ export class Post extends React.Component<PostProps, PostComponentState> {
           : (props.loading || props.error) ? null : <NotFound />}
       </div>
     );
-  };
+  }
 }
 
 // a component for editing Post
-class PostItemEdit extends React.Component<{ post: PostModel, submitEdit: any, cancelEdit: any }, { postEdit: PostEdit, editor: any }> {
+interface PostItemEditProps {
+  post: PostModel;
+  submitEdit: any;
+  cancelEdit: any;
+}
+interface PostItemEditState {
+  postEdit: PostEdit;
+  editor: any;
+}
+
+class PostItemEdit extends React.Component<PostItemEditProps, PostItemEditState> {
   constructor(props: { post: PostModel, submitEdit: any, cancelEdit: any }) {
     super(props);
-    console.log("PostItemEdit");
-    this.state = { postEdit: new PostEdit(props.post.id, props.post.title, props.post.fileType, props.post.contents), editor: null };
-    require(`brace/mode/${props.post.fileType}`)
+    this.state = { postEdit: fromModel(props.post), editor: null };
+    require(`brace/mode/${props.post.fileType}`);
   }
 
   onTitleChange = (e: any) => {
@@ -103,26 +114,31 @@ class PostItemEdit extends React.Component<{ post: PostModel, submitEdit: any, c
   render() {
     const { submitEdit, cancelEdit } = this.props;
     const post = this.state.postEdit;
-    const inputStyle = { fontSize: '18px', paddingBottom: '5px', margin: '8px', border: 'none', borderBottom: 'solid 2px blue' };
+    const inputStyle = {
+      fontSize: '18px', paddingBottom: '5px', margin: '8px',
+      border: 'none', borderBottom: 'solid 2px blue'
+    };
     return (
       <div>
-        <input type="text" placeholder="file name" style={inputStyle} onChange={this.onTitleChange} value={post.title} />
-        <input type="text" placeholder="file type" style={inputStyle} onChange={this.onFileTypeChange} value={post.fileType} />
+        <input type="text" placeholder="file name" style={inputStyle}
+          onChange={this.onTitleChange} value={post.title} />
+        <input type="text" placeholder="file type" style={inputStyle}
+          onChange={this.onFileTypeChange} value={post.fileType} />
         <PostItemEditor {...{ post: post, onChange: this.onContentsChange }} />
-        <Link to="#" onClick={(e) => {
-          submitEdit(e, this.state.postEdit)
-        }}><div style={{ color: "blue", paddint: "3px" }}>Submit</div></Link>
-        <Link to="#" onClick={(e) => cancelEdit(e)}><div style={{ color: "red", paddint: "3px" }}>Cancel</div></Link>
+        <div style={{ color: 'blue', padding: '3px' }}>
+          <Link to="#" onClick={(e) => {
+            submitEdit(e, this.state.postEdit);
+          }}>Submit</Link></div>
+        <div style={{ color: 'red', padding: '3px' }}><Link to="#" onClick={(e) => cancelEdit(e)}>Cancel</Link></div>
       </div>
     );
-  };
+  }
 }
 
-const PostItemEditor: React.StatelessComponent<{ post: PostEdit, onChange: any }> =
-  (props: { post: PostEdit, onChange: any }) => {
-    return createEditor(props.post, true, props.onChange);
-  }
-
+const PostItemEditor: React.StatelessComponent<{ post: PostEdit, onChange: onEditorChange }> =
+  (props: { post: PostEdit, onChange: onEditorChange }) => {
+    return createEditor(props.post, false, props.onChange);
+  };
 
 const PostItem: React.StatelessComponent<{ post: PostModel, startEdit: any }> =
   (props: { post: PostModel, startEdit: any }) => {
@@ -131,7 +147,7 @@ const PostItem: React.StatelessComponent<{ post: PostModel, startEdit: any }> =
     return (
       <div>
         <p>{post.title}[{post.fileType}]</p>
-        <Link to={"#"} onClick={startEdit}>Edit</Link>
+        <Link to="#" onClick={startEdit}>Edit</Link>
         <PostItemViewer {...post} />
       </div>
     );
@@ -141,34 +157,3 @@ const PostItemViewer: React.StatelessComponent<PostModel> =
   (post: PostModel) => {
     return createEditor(post, true);
   };
-
-
- interface editorData {
-   fileType: string;
-   title: string;
-   contents: string;
- }
- const createEditor = (post: editorData, readOnly: boolean, onChange?: (value: string) => void): JSX.Element => {
-    try {
-      require(`brace/mode/${post.fileType}`)
-      console.log(`new mode: ${post.fileType}`);
-    } catch (e) {
-      console.log('error new mode: ' + e);
-    }
-    const lines = function(){
-      const lineNum = post.contents.split('\n').length;
-      return (lineNum < 50) ? lineNum : 50;
-    }();
-    return (
-      <AceEditor
-        mode={post.fileType}
-        theme="monokai"
-        value={post.contents}
-        minLines={lines}
-        maxLines={lines}
-        readOnly={readOnly}
-        focus={false}
-        onChange={onChange}
-      />
-    )
- };
