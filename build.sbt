@@ -2,7 +2,7 @@ val projectName = "anost"
 
 val libVersion = "0.1.0"
 
-val scala = "2.12.3"
+val scala = "2.12.2"
 
 val organizationId = "net.petitviolet"
 
@@ -48,6 +48,8 @@ val commonDependencies = Seq(
   "com.lihaoyi" %% "sourcecode" % "0.1.4",
   "com.beachape" %% "enumeratum" % "1.5.12",
   "net.petitviolet" %% "operator" % "0.2.3",
+  "net.petitviolet" %% "logging" % "0.2.0",
+  "net.petitviolet" %% "acase" % "0.4.0",
 
   "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 ) ++ loggerDependencies ++ dbDependencies
@@ -61,6 +63,16 @@ val commonResolvers = Seq(
   "Sonatype OSS Releases" at "http://oss.sonatype.org/content/repositories/releases/"
 )
 
+lazy val metaMacroSettings: Seq[Def.Setting[_]] = Seq(
+  resolvers += Resolver.sonatypeRepo("releases"),
+  resolvers += Resolver.bintrayIvyRepo("scalameta", "maven"),
+  addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M9" cross CrossVersion.full),
+  scalacOptions ++= Seq(
+    "-Xplugin-require:macroparadise",
+    "-Ymacro-debug-lite"
+  )
+)
+
 def commonSettings(projectName: String) = Seq(
   name := projectName,
   organization := organizationId,
@@ -71,7 +83,7 @@ def commonSettings(projectName: String) = Seq(
   resolvers ++= commonResolvers,
   libraryDependencies ++= commonDependencies,
   parallelExecution in Test := false
-)
+) ++ metaMacroSettings
 
 lazy val root = (project in file("."))
   .settings(commonSettings("anost"))
