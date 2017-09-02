@@ -10,7 +10,7 @@ import scalikejdbc._
 import skinny.orm.Alias
 
 case class Posts(id: Id[Posts], ownerId: Id[Users],
-  title: String, fileType: String, content: String,
+  title: String, fileType: String, content: String, comments: Seq[Comments] = Nil,
   createdAt: LocalDateTime, updatedAt: LocalDateTime)
 
 object Posts extends AnostMapper[Posts] {
@@ -19,6 +19,12 @@ object Posts extends AnostMapper[Posts] {
 
   private def p: Alias[Posts] = defaultAlias
 
+  lazy val comments = hasMany[Comments](
+    many = Comments -> Comments.defaultAlias,
+    on = (p, c) => sqls.eq(p.id, c.postId),
+    merge = (p, cs) => p.copy(comments = cs)
+  )
+
   override def extract(rs: WrappedResultSet, rn: ResultName[Posts]): Posts = {
     Posts(
       Id(rs.get(rn.id)),
@@ -26,6 +32,7 @@ object Posts extends AnostMapper[Posts] {
       rs.get(rn.title),
       rs.get(rn.fileType),
       rs.get(rn.content),
+      Nil,
       rs.get(rn.createdAt),
       rs.get(rn.updatedAt)
     )

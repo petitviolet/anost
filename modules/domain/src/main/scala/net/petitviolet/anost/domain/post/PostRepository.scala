@@ -12,6 +12,8 @@ trait PostRepository extends Repository[Post] {
   def findByUserId(implicit ctx: AppContext): Kleisli[Future, Id[User], Seq[Post]]
 
   def findByTitle(implicit ctx: AppContext): Kleisli[Future, Title, Seq[Post]]
+
+  def addComment(implicit ctx: AppContext): Kleisli[Future, (Post, Comment), Post]
 }
 
 trait UsesPostRepository {

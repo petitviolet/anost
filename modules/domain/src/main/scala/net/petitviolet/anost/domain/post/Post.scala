@@ -15,7 +15,8 @@ case class Post(
     ownerId: Id[User],
     title: Title,
     fileType: FileType,
-    contents: Contents
+    contents: Contents,
+    comments: Seq[Comment] = Nil
 ) extends Entity {
   type ID = Id[Post]
 }
@@ -51,8 +52,16 @@ object Post {
     repo => repo.findByUserId.run(userId)
   }
 
+  def findById(postId: Id[Post])(implicit ctx: AppContext): PostOps[Post] = Kleisli {
+    repo => repo.resolve.run(postId)
+  }
+
   def searchByTitle(title: Title)(implicit ctx: AppContext): PostOps[Seq[Post]] = Kleisli {
     repo => repo.findByTitle.run(title)
+  }
+
+  def addComment(post: Post, comment: Comment)(implicit ctx: AppContext): PostOps[Post] = Kleisli {
+    repo => repo.addComment.run((post, comment))
   }
 }
 
