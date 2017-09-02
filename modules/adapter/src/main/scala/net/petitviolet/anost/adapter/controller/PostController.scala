@@ -26,7 +26,7 @@ trait PostController extends AnostController with UsesLogger
           val out = postPresenter.execute(updatePostUseCase.execute(AuthArg(token, arg)))
           onCompleteResponse("/post", out) { ok }
         } ~
-        (path(Segment) & get).as(GetPostArg.fromString _) { arg: GetPostArg =>
+        (path(Segment) & pathEnd & get).as(GetPostArg.fromString _) { arg: GetPostArg =>
           implicit val ctx = createContext(Anost.readSession)
           val out = postPresenter.execute(getPostUseCase.execute(arg))
           onCompleteResponse(s"/post/${arg.postId}", out) { ok }
