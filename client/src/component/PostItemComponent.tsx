@@ -57,7 +57,8 @@ export class Post extends React.Component<PostProps, PostComponentState> {
 
   render() {
     const { value: props, actions: actions } = this.props;
-    if (!props.error && !props.loading && !props.post && props.match) {
+    if (!props.error && !props.loading &&
+      props.match && (!props.post || props.post.id !== props.match.params.id)) {
       const id: string = props.match.params.id;
       console.log('from route! id: ' + id);
       console.dir(props);
@@ -91,7 +92,6 @@ class PostItemEdit extends React.Component<PostItemEditProps, PostItemEditState>
   constructor(props: { post: PostModel, submitEdit: any, cancelEdit: any }) {
     super(props);
     this.state = { postEdit: fromModel(props.post), editor: null };
-    require(`brace/mode/${props.post.fileType}`);
   }
 
   onTitleChange = (e: any) => {
