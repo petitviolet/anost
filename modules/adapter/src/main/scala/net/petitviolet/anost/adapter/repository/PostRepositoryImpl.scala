@@ -5,19 +5,15 @@ import net.petitviolet.anost.domain.post.{ Comment, Post, PostRepository, Title 
 import net.petitviolet.anost.domain.user.User
 import net.petitviolet.anost.support.contracts.AppContext
 import net.petitviolet.anost.support.{ Id, MixInLogger }
-import skinny.orm.feature.CRUDFeatureWithId
 
 import scala.concurrent.Future
 import scalaz.Kleisli
 
 object PostRepositoryImpl extends PostRepository with MixInLogger {
-  private lazy val PostsWithComments: CRUDFeatureWithId[Id[Posts], Posts] =
-    Posts.joins(Posts.comments)
-
   override def resolve(implicit ctx: AppContext): Kleisli[Future, Id[Post], Post] = kleisliF {
     id: Id[Post] =>
       import ctx._
-      val postOpt = PostsWithComments.findById(id.as[Posts])
+      val postOpt = Posts.joins(Posts.comments).findById(id.as[Posts].value)
       postOpt.map { Posts.toModel } getOrElse { throw NotFound(s"post($id) does not exist") }
   }
 
