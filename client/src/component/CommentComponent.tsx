@@ -14,7 +14,7 @@ export const Comment: React.StatelessComponent<CommentModel> =
           </thead>
           <tbody>
             <tr>
-              <td>{props.userId}</td>
+              <td>{props.owner.userName}</td>
               <td>{props.sentence}</td>
             </tr>
           </tbody>

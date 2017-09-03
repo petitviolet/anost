@@ -8,7 +8,12 @@ export class Post {
 }
 
 export class Comment {
-  readonly userId: string;
+  readonly owner: CommentOwner;
   readonly postId: string;
   readonly sentence: string;
+}
+
+export class CommentOwner {
+  readonly userId: string;
+  readonly userName: string;
 }
