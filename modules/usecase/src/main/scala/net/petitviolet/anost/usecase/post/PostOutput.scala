@@ -7,19 +7,21 @@ import net.petitviolet.anost.usecase.Out
 
 case class PostOutput(id: Id[Post], ownerId: Id[User],
   title: String, fileType: String,
-  contents: String, comments: Seq[CommentOutput] = Nil) extends Out
+  contents: String, comments: Seq[CommentOutput]) extends Out
 
 case class CommentOutput(userId: Id[User], sentence: String)
 
-// contentsが重いのでそこは削る
+// eliminate contents and comments
 case class PostElement(id: Id[Post], ownerId: Id[User], title: String, fileType: String) extends Out
 case class PostsOutput(posts: Seq[PostElement]) extends Out
 
 object PostOutput {
-  def fromModel(post: Post): PostOutput = PostOutput(
-    post.id, post.ownerId, post.title.value, post.fileType.value,
-    post.contents.value, post.comments.map { c => CommentOutput(c.userId, c.sentence.value) }
-  )
+  def fromModel(post: Post): PostOutput = {
+    PostOutput(
+      post.id, post.ownerId, post.title.value, post.fileType.value,
+      post.contents.value, post.comments.map { c => CommentOutput(c.userId, c.sentence.value) }
+    )
+  }
 }
 
 object PostsOutput {

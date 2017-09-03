@@ -43,7 +43,8 @@ object Posts extends AnostMapper[Posts] {
     posts.ownerId.as[User],
     Title(posts.title),
     FileType(posts.fileType),
-    Contents(posts.content)
+    Contents(posts.content),
+    posts.comments.map { Comments.toModel }
   )
 
   private[repository] def insert(post: Post)(implicit s: DBSession): Id[Posts] = {

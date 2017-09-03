@@ -10,7 +10,7 @@ trait GetPostUseCase extends AnostUseCase[GetPostArg, PostOutput]
     with UsesPostRepository {
   override protected def call(arg: In)(implicit ctx: Ctx): Future[Out] = {
     import ctx._
-    postRepository.resolve.run(arg.postId) map { PostOutput.fromModel }
+    Post.findById(arg.postId).run(postRepository) map { PostOutput.fromModel }
   }
 }
 
