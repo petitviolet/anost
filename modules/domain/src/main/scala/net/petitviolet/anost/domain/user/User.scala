@@ -38,6 +38,14 @@ object User {
   def login(email: Email, password: Password)(implicit ctx: AppContext): UserOps[Option[(User, AuthToken)]] = Kleisli {
     repo => repo.login.run((email, password))
   }
+
+  def findById(userId: Id[User])(implicit ctx: AppContext): UserOps[User] = Kleisli {
+    repo => repo.resolve.run(userId)
+  }
+
+  def findByIds(userIds: Seq[Id[User]])(implicit ctx: AppContext): UserOps[Seq[User]] = Kleisli {
+    repo => repo.findByIds.run(userIds)
+  }
 }
 
 private object UserSpecification {

@@ -21,6 +21,13 @@ object UserRepositoryImpl extends UserRepository with MixInLogger {
       .getOrElse { notFound(s"user not found by id($userId)") }
   }
 
+  override def findByIds(implicit ctx: AppContext): Kleisli[Future, Seq[Id[User]], Seq[User]] =
+    kleisliF { userIds =>
+      import ctx._
+      Users.findAllByIds(userIds.map { _.as[Users] }: _*)
+        .map { Users.toModel }
+    }
+
   override def store(implicit ctx: AppContext): Kleisli[Future, User, User] = kleisliF { user =>
     import ctx._
     val id = Users.insert(user)
@@ -29,7 +36,6 @@ object UserRepositoryImpl extends UserRepository with MixInLogger {
   }
 
   override def update(implicit ctx: AppContext): Kleisli[Future, User, User] = Kleisli { user =>
-
     ???
   }
 
