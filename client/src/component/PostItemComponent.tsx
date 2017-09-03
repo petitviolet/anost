@@ -5,6 +5,7 @@ import { Context } from './Context';
 import { NotFound } from './NotFound';
 import { Link } from 'react-router-dom';
 import { createEditor, onEditorChange } from './CodeEditor';
+import { Comment as CommentComponent }  from './CommentComponent';
 
 // state of PostComponent
 interface PostComponentState {
@@ -33,12 +34,10 @@ export class Post extends React.Component<PostProps, PostComponentState> {
   }
 
   startEdit = (e: any) => {
-    console.dir(e);
     this.setState({ isEditing: true });
   }
 
   submitEdit = (e: any, editedPost: PostEdit) => {
-    console.dir(e);
     this.setState({ isEditing: false });
 
     const { id, title, fileType, contents } = editedPost;
@@ -51,7 +50,6 @@ export class Post extends React.Component<PostProps, PostComponentState> {
   }
 
   cancelEdit = (e: any) => {
-    console.dir(e);
     this.setState({ isEditing: false });
   }
 
@@ -149,6 +147,10 @@ const PostItem: React.StatelessComponent<{ post: PostModel, startEdit: any }> =
         <p>{post.title}[{post.fileType}]</p>
         <Link to="#" onClick={startEdit}>Edit</Link>
         <PostItemViewer {...post} />
+        {(post.comments.length > 0) ?
+          post.comments.map(comment => <CommentComponent {...comment} />) :
+          <div>no comments.</div>
+        }
       </div>
     );
   };

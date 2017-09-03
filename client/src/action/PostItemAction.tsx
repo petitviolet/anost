@@ -28,7 +28,6 @@ export class PostActionDispatcher {
       .then(res => {
         // cast
         const post: Post = res;
-        console.dir(post);
         // if id exists, request/response are correct.
         if (post && post.id) {
           self.dispatch(actions.showPostAction(post));
