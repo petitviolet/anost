@@ -85,15 +85,16 @@ trait AnostController extends Route with UsesLogger with UsesControllerConfig
   }
 
   protected def onCompleteResponse[O <: PresenterOutput](
-    path: String,
+    path: => String,
     resultF: Future[O],
-    headers: Seq[HttpHeader] = AnostController.defaultHeaders
+    headers: => Seq[HttpHeader] = AnostController.defaultHeaders
   )(toResponse: => O => (Route)) = {
     import scala.util.{ Failure, Success }
 
     onComplete(resultF) {
       case Success(output) =>
         val resRoute: Route = toResponse(output)
+        aLogger.debug(s"path: $path, output: $output")
         doResponse(output, resRoute, headers)
       case Failure(t) =>
         onFailure(path, t)
