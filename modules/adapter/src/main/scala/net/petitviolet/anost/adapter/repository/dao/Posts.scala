@@ -8,6 +8,7 @@ import net.petitviolet.anost.domain.user.User
 import net.petitviolet.anost.support.Id
 import scalikejdbc._
 import skinny.orm.Alias
+import skinny.orm.feature.associations.HasManyAssociation
 
 case class Posts(id: Id[Posts], ownerId: Id[Users],
   title: String, fileType: String, content: String, comments: Seq[Comments] = Nil,
@@ -19,7 +20,7 @@ object Posts extends AnostMapper[Posts] {
 
   private def p: Alias[Posts] = defaultAlias
 
-  lazy val comments = hasMany[Comments](
+  lazy val comments: HasManyAssociation[Posts] = hasMany[Comments](
     many = Comments -> Comments.defaultAlias,
     on = (p, c) => sqls.eq(p.id, c.postId),
     merge = (p, cs) => p.copy(comments = cs)

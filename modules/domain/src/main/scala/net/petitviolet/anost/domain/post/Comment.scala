@@ -1,10 +1,8 @@
 package net.petitviolet.anost.domain.post
 
-import net.petitviolet.anost.domain.{ ::>, Validated, validation }
 import net.petitviolet.anost.domain.user.User
+import net.petitviolet.anost.domain.{ ::>, Validated, validation }
 import net.petitviolet.anost.support.Id
-import scalaz.Kleisli
-import scalaz.Scalaz._
 
 case class Comment(postId: Id[Post], userId: Id[User], sentence: Sentence)
 

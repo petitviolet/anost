@@ -46,6 +46,6 @@ object PostControllerImpl extends PostController with MixInLogger
     with MixInPostsPresenter {
   override val savePostUseCase: SavePostUseCase = new SavePostUseCase with MixInPostRepository with MixInUserRepository with MixInLogger
   override val updatePostUseCase: UpdatePostUseCase = new UpdatePostUseCase with MixInPostRepository with MixInUserRepository with MixInLogger
-  override val getPostUseCase: GetPostUseCase = new GetPostUseCase with MixInPostRepository
+  override val getPostUseCase: GetPostUseCase = new GetPostUseCase with MixInPostRepository with MixInUserRepository
   override val findPostUseCase: FindPostUseCase = new FindPostUseCase with MixInPostRepository
 }
