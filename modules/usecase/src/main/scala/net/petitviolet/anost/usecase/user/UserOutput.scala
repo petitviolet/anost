@@ -6,6 +6,8 @@ import net.petitviolet.anost.usecase.Out
 
 case class UserOutput(id: Id[User], name: String, email: String) extends Out
 
+case class MaybeUserOutput(userOpt: Option[UserOutput]) extends Out
+
 case class AuthTokenOutput(value: String) extends Out
 
 object UserOutput {
