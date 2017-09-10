@@ -1,6 +1,7 @@
 package net.petitviolet.anost.adapter.repository
 
 import net.petitviolet.anost.adapter.repository.dao.{ AuthTokens, Users }
+import net.petitviolet.anost.domain.support.Repository.NotFound
 import net.petitviolet.anost.domain.user._
 import net.petitviolet.anost.support.contracts.AppContext
 import net.petitviolet.anost.support.{ Id, MixInLogger }
@@ -14,11 +15,10 @@ object UserRepositoryImpl extends UserRepository with MixInLogger {
   private lazy val u = Users.defaultAlias
   private lazy val at = AuthTokens.defaultAlias
 
-  override def resolve(implicit ctx: AppContext): Kleisli[Future, Id[User], User] = kleisliF { userId =>
+  override def resolve(implicit ctx: AppContext): Kleisli[Future, Id[User], Option[User]] = kleisliF { userId =>
     import ctx._
     Users.findById(userId.as[Users])
       .map { Users.toModel }
-      .getOrElse { notFound(s"user not found by id($userId)") }
   }
 
   override def findByIds(implicit ctx: AppContext): Kleisli[Future, Seq[Id[User]], Seq[User]] =
@@ -44,7 +44,7 @@ object UserRepositoryImpl extends UserRepository with MixInLogger {
     Users.findByAutoToken(token).collect {
       case (users, tokens) // if expired, result will be None. else Some(user)
       if AuthTokens.toModel(tokens).isExpired => Users.toModel(users)
-    } getOrElse { notFound(s"user not found for token($token)") }
+    } getOrElse { throw NotFound(s"user not found for token($token)") }
   }
 
   override def generateToken(implicit ctx: AppContext): Kleisli[Future, User, AuthToken] = kleisliF { user =>

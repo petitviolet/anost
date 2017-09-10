@@ -1,6 +1,7 @@
 package net.petitviolet.anost.usecase.post
 
 import net.petitviolet.anost.domain.post.{ Post, UsesPostRepository }
+import net.petitviolet.anost.domain.support.Repository.NotFound
 import net.petitviolet.anost.domain.user.{ User, UserRepository, UsesUserRepository }
 import net.petitviolet.anost.support.Id
 import net.petitviolet.anost.usecase.{ AnostUseCase, In, futureBind }
@@ -19,11 +20,15 @@ trait GetPostUseCase extends AnostUseCase[GetPostArg, PostOutput]
     }
   }
 
-  private def findUsers(implicit ctx: Ctx): Kleisli[Future, Post, (Post, Seq[User])] = Kleisli { post =>
-    import ctx._
-    User.findByIds(post.comments.map { _.userId })
-      .run(userRepository).map { users => (post, users) }
-  }
+  private def findUsers(implicit ctx: Ctx): Kleisli[Future, Option[Post], (Post, Seq[User])] =
+    Kleisli { postOpt =>
+      import ctx._
+      postOpt.map {
+        post =>
+          User.findByIds(post.comments.map { _.userId })
+            .run(userRepository).map { users => (post, users) }
+      }.getOrElse { Future.failed(NotFound("post not found")) }
+    }
 }
 
 case class GetPostArg(postId: Id[Post]) extends In

@@ -51,7 +51,7 @@ object Post {
     repo => repo.findByUserId.run(userId)
   }
 
-  def findById(postId: Id[Post])(implicit ctx: AppContext): PostOps[Post] = Kleisli {
+  def findById(postId: Id[Post])(implicit ctx: AppContext): PostOps[Option[Post]] = Kleisli {
     repo => repo.resolve.run(postId)
   }
 

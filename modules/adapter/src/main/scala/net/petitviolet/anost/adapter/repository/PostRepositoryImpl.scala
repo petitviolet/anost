@@ -10,11 +10,11 @@ import scala.concurrent.Future
 import scalaz.Kleisli
 
 object PostRepositoryImpl extends PostRepository with MixInLogger {
-  override def resolve(implicit ctx: AppContext): Kleisli[Future, Id[Post], Post] = kleisliF {
+  override def resolve(implicit ctx: AppContext): Kleisli[Future, Id[Post], Option[Post]] = kleisliF {
     id: Id[Post] =>
       import ctx._
       val postOpt = Posts.joins(Posts.comments).findById(id.as[Posts].value)
-      postOpt.map { Posts.toModel } getOrElse { throw NotFound(s"post($id) does not exist") }
+      postOpt.map { Posts.toModel } // getOrElse { throw NotFound(s"post($id) does not exist") }
   }
 
   override def store(implicit ctx: AppContext): Kleisli[Future, Post, Post] = kleisliF { post =>

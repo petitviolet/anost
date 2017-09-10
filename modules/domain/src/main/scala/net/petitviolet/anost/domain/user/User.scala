@@ -39,7 +39,7 @@ object User {
     repo => repo.login.run((email, password))
   }
 
-  def findById(userId: Id[User])(implicit ctx: AppContext): UserOps[User] = Kleisli {
+  def findById(userId: Id[User])(implicit ctx: AppContext): UserOps[Option[User]] = Kleisli {
     repo => repo.resolve.run(userId)
   }
 
