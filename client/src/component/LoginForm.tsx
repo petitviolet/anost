@@ -27,7 +27,7 @@ export class LoginForm extends React.Component<UserProps, { email: string, passw
     } else {
       // for local development
       this.props.actions.login('aa@aa.aa', 'password');
-      this.props.history.push('/posts/user/me');
+      // this.props.history.push('/posts/user/me');
     }
   }
 

@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 export const User: React.StatelessComponent<UserProps> =
   (props: UserProps) => {
     const { user, token } = props.value;
+    const userId = (props.value.match) ?  props.value.match.params.id : user!.id;
     if (user && token && props.location.pathname === '/login') { props.history.push('/user/me'); }
     return (
       <div>
@@ -26,7 +27,7 @@ const UserDetail: React.StatelessComponent<{ user: UserModel }> =
             <tr><td>{user.name}</td>{user.email}</tr>
           </tbody>
         </table>
-        <p><Link to="/posts/user/me">post list</Link></p>
+        <p><Link to={"/posts/user/" + user.id}>post list</Link></p>
       </div>
     );
   };

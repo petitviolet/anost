@@ -66,7 +66,7 @@ export class UserActionDispatcher {
   }
 }
 
-export interface UserProps extends RouteComponentProps<{}> {
+export interface UserProps {
   value: UserState;
   actions: UserActionDispatcher;
 }

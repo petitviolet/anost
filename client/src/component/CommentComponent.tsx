@@ -8,12 +8,14 @@ export const Comment: React.StatelessComponent<CommentModel> =
           <table>
           <thead>
             <tr>
+              <th>Id</th>
               <th>User</th>
               <th>Comment</th>
             </tr>
           </thead>
           <tbody>
             <tr>
+              <td>{props.owner.userId}</td>
               <td>{props.owner.userName}</td>
               <td>{props.sentence}</td>
             </tr>
