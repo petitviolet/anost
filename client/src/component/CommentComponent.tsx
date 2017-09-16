@@ -4,23 +4,17 @@ import { Comment as CommentModel } from '../model/Post';
 export const Comment: React.StatelessComponent<CommentModel> =
     (props: CommentModel) => {
       return (
-        <div>
-          <table>
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>User</th>
-              <th>Comment</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{props.owner.userId}</td>
-              <td>{props.owner.userName}</td>
-              <td>{props.sentence}</td>
-            </tr>
-          </tbody>
-          </table>
+        <div style={commentStyle}>
+          <div style={commentUserStyle}>Mr. {props.owner.userName.charAt(0)}</div>
+          <div>{props.sentence}</div>
         </div>
       );
     };
+
+const commentStyle = {
+  border: "1px solid #999",
+  margin: "2px",
+};
+const commentUserStyle = {
+  textDecoration: "underline",
+}
