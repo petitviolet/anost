@@ -3,6 +3,7 @@ package net.petitviolet.anost.adapter.repository.dao
 import java.time.LocalDateTime
 
 import net.petitviolet.anost.adapter.repository.AnostMapper
+import net.petitviolet.anost.domain.comment.{ Comment, Sentence }
 import net.petitviolet.anost.domain.post._
 import net.petitviolet.anost.domain.user.User
 import net.petitviolet.anost.support.Id
@@ -30,16 +31,17 @@ object Comments extends AnostMapper[Comments] {
     )
   }
 
-  def toModel(comments: Comments): Comment = Comment(
-    comments.postId.as[Post],
-    comments.userId.as[User],
-    Sentence(comments.sentence)
+  def toModel(c: Comments): Comment = Comment(
+    c.id.as[Comment],
+    c.postId.as[Post],
+    c.userId.as[User],
+    Sentence(c.sentence)
   )
 
   private[repository] def insert(comment: Comment)(implicit s: DBSession): Id[Comments] = {
     val dt = now()
     Comments.createWithAttributes(
-      //      'id -> comment.id, // auto-increment
+      'id -> comment.id,
       'post_id -> comment.postId.value,
       'user_id -> comment.userId.value,
       'sentence -> comment.sentence.value,
@@ -54,4 +56,16 @@ object Comments extends AnostMapper[Comments] {
     }
   }
 
+  private[repository] def insert(post: Post)(implicit s: DBSession): Id[Posts] = {
+    val dt = now()
+    Posts.createWithAttributes(
+      'id -> post.id,
+      'owner_id -> post.ownerId.value,
+      'title -> post.title.value,
+      'file_type -> post.fileType.value,
+      'content -> post.contents.value,
+      'created_at -> dt,
+      'updated_at -> dt
+    )
+  }
 }

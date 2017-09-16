@@ -3,6 +3,7 @@ package net.petitviolet.anost.adapter.repository.dao
 import java.time.LocalDateTime
 
 import net.petitviolet.anost.adapter.repository.AnostMapper
+import net.petitviolet.anost.domain.comment.Comment
 import net.petitviolet.anost.domain.post._
 import net.petitviolet.anost.domain.user.User
 import net.petitviolet.anost.support.Id
@@ -11,7 +12,7 @@ import skinny.orm.Alias
 import skinny.orm.feature.associations.HasManyAssociation
 
 case class Posts(id: Id[Posts], ownerId: Id[Users],
-  title: String, fileType: String, content: String, comments: Seq[Comments] = Nil,
+  title: String, fileType: String, content: String, commentIds: Seq[Id[Comments]] = Nil,
   createdAt: LocalDateTime, updatedAt: LocalDateTime)
 
 object Posts extends AnostMapper[Posts] {
@@ -23,7 +24,7 @@ object Posts extends AnostMapper[Posts] {
   lazy val comments: HasManyAssociation[Posts] = hasMany[Comments](
     many = Comments -> Comments.defaultAlias,
     on = (p, c) => sqls.eq(p.id, c.postId),
-    merge = (p, cs) => p.copy(comments = cs)
+    merge = (p, cs) => p.copy(commentIds = cs.map { _.id })
   )
 
   override def extract(rs: WrappedResultSet, rn: ResultName[Posts]): Posts = {
@@ -45,7 +46,7 @@ object Posts extends AnostMapper[Posts] {
     Title(posts.title),
     FileType(posts.fileType),
     Contents(posts.content),
-    posts.comments.map { Comments.toModel }
+    posts.commentIds.map { _.as[Comment] }
   )
 
   private[repository] def insert(post: Post)(implicit s: DBSession): Id[Posts] = {

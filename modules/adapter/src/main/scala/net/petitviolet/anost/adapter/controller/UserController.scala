@@ -18,16 +18,16 @@ trait UserController extends AnostController with UsesLogger
   override protected def route: Route = {
     pathPrefix("user") {
       // for anonymous, cannot fetch other users information
-//      (path(Segment) & pathEnd & get) { userId =>
-//        implicit val ctx = createContext(Anost.writeSession)
-//        val out = maybeUserPresenter.execute(getUserUseCase.execute(GetUserArgs(userId)))
-//        onCompleteResponse("/user", out) { ok }
-//      } ~
-        (pathEnd & post & entity(as[RegisterUserArgs])) { arg =>
-          implicit val ctx = createContext(Anost.writeSession)
-          val out = authTokenPresenter.execute(registerUserUseCase.execute(arg))
-          onCompleteResponse("/user", out) { ok }
-        } ~
+      //      (path(Segment) & pathEnd & get) { userId =>
+      //        implicit val ctx = createContext(Anost.writeSession)
+      //        val out = maybeUserPresenter.execute(getUserUseCase.execute(GetUserArgs(userId)))
+      //        onCompleteResponse("/user", out) { ok }
+      //      } ~
+      (pathEnd & post & entity(as[RegisterUserArgs])) { arg =>
+        implicit val ctx = createContext(Anost.writeSession)
+        val out = authTokenPresenter.execute(registerUserUseCase.execute(arg))
+        onCompleteResponse("/user", out) { ok }
+      } ~
         (path("login") & get & pathEnd & parameters('email.as[String], 'password.as[String])).as(LoginUserArgs.apply) { arg =>
           implicit val ctx = createContext(Anost.readSession)
           val out = loginUserPresenter.execute(loginUserUseCase.execute(arg))

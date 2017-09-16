@@ -2,6 +2,7 @@ package net.petitviolet.anost.adapter.support.json
 
 import net.petitviolet.anost.domain.user.{ AuthTokenValue, User }
 import net.petitviolet.anost.support.Id
+import net.petitviolet.anost.usecase.comment._
 import net.petitviolet.anost.usecase.post._
 import net.petitviolet.anost.usecase.user._
 import spray.json._
@@ -23,7 +24,7 @@ trait JsonSupport extends DefaultJsonProtocol {
   implicit lazy val savePostArgJson = jsonFormat3(SavePostArg.apply)
   implicit lazy val updatePostArgJson = jsonFormat4(UpdatePostArg.apply)
   implicit lazy val commentOwnerJson = jsonFormat2(CommentOwner.apply)
-  implicit lazy val commentOutputJson = jsonFormat2(CommentOutput.apply)
+  implicit lazy val commentOutputJson = jsonFormat4(CommentOutput.apply)
   implicit lazy val postOutputJson = jsonFormat6(PostOutput.apply)
   implicit lazy val postElementJson = jsonFormat4(PostElement.apply)
   implicit lazy val postsOutputJson = jsonFormat1(PostsOutput.apply)

@@ -4,7 +4,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import net.petitviolet.anost.adapter.presenter._
 import net.petitviolet.anost.adapter.repository.Database.Anost
-import net.petitviolet.anost.adapter.repository.{ MixInPostRepository, MixInUserRepository }
+import net.petitviolet.anost.adapter.repository.{ MixInCommentRepository, MixInPostRepository, MixInUserRepository }
 import net.petitviolet.anost.support._
 import net.petitviolet.anost.usecase.AuthArg
 import net.petitviolet.anost.usecase.post._
@@ -46,6 +46,6 @@ object PostControllerImpl extends PostController with MixInLogger
     with MixInPostsPresenter {
   override val savePostUseCase: SavePostUseCase = new SavePostUseCase with MixInPostRepository with MixInUserRepository with MixInLogger
   override val updatePostUseCase: UpdatePostUseCase = new UpdatePostUseCase with MixInPostRepository with MixInUserRepository with MixInLogger
-  override val getPostUseCase: GetPostUseCase = new GetPostUseCase with MixInPostRepository with MixInUserRepository
+  override val getPostUseCase: GetPostUseCase = new GetPostUseCase with MixInPostRepository with MixInUserRepository with MixInCommentRepository
   override val findPostUseCase: FindPostUseCase = new FindPostUseCase with MixInPostRepository
 }

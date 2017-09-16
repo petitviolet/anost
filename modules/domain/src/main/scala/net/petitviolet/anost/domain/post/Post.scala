@@ -1,10 +1,12 @@
 package net.petitviolet.anost.domain.post
 
 import net.petitviolet.anost.domain._
+import net.petitviolet.anost.domain.comment.Comment
 import net.petitviolet.anost.domain.support.Entity
 import net.petitviolet.anost.domain.user.User
 import net.petitviolet.anost.support.Id
 import net.petitviolet.anost.support.contracts.AppContext
+
 import scala.concurrent.Future
 import scalaz.Kleisli
 import scalaz.Scalaz._
@@ -15,7 +17,7 @@ case class Post(
     title: Title,
     fileType: FileType,
     contents: Contents,
-    comments: Seq[Comment] = Nil
+    commentIds: Seq[Id[Comment]] = Nil
 ) extends Entity {
   type ID = Id[Post]
 }
@@ -58,10 +60,10 @@ object Post {
   def searchByTitle(title: Title)(implicit ctx: AppContext): PostOps[Seq[Post]] = Kleisli {
     repo => repo.findByTitle.run(title)
   }
-
-  def addComment(post: Post, comment: Comment)(implicit ctx: AppContext): PostOps[Post] = Kleisli {
-    repo => repo.addComment.run((post, comment))
-  }
+  //
+  //  def addComment(post: Post, comment: Comment)(implicit ctx: AppContext): PostOps[Post] = Kleisli {
+  //    repo => repo.addComment.run((post, comment))
+  //  }
 }
 
 private object PostSpecification {
