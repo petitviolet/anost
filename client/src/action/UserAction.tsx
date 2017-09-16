@@ -3,7 +3,6 @@ import * as actions from '../module/UserModule';
 import { apiRequest, HttpMethod } from '../util/request';
 import { User, Token } from '../model';
 import { UserState } from '../module/UserState';
-import { RouteComponentProps } from 'react-router-dom';
 
 enum UserPath {
   LOGIN = '/user/login',

@@ -6,9 +6,8 @@ import { Link } from 'react-router-dom';
 
 export const User: React.StatelessComponent<UserProps> =
   (props: UserProps) => {
-    const { user, token } = props.value;
-    const userId = (props.value.match) ?  props.value.match.params.id : user!.id;
-    if (user && token && props.location.pathname === '/login') { props.history.push('/user/me'); }
+    const { user, token, location, history } = props.value;
+    if (user && token && location && history && location.pathname === '/login') { history.push('/user/me'); }
     return (
       <div>
         {(user && token) ? <UserDetail user={user} /> : <LoginForm {...props} />}
