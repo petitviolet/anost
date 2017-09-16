@@ -148,7 +148,7 @@ const PostItem: React.StatelessComponent<{ post: PostModel, startEdit: any }> =
         <Link to="#" onClick={startEdit}>Edit</Link>
         <PostItemViewer {...post} />
         {(post.comments.length > 0) ?
-          post.comments.map(comment => <CommentComponent {...comment} />) :
+          post.comments.map((comment, idx) => <CommentComponent key={idx} {...comment} />) :
           <div>no comments.</div>
         }
       </div>
