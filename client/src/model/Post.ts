@@ -4,10 +4,11 @@ export class Post {
   readonly title: string;
   readonly fileType: string;
   readonly contents: string;
-  readonly comments: [Comment];
+  readonly comments: Comment[];
 }
 
 export class Comment {
+  readonly id: string;
   readonly owner: CommentOwner;
   readonly postId: string;
   readonly sentence: string;

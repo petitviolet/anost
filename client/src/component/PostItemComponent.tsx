@@ -5,7 +5,7 @@ import { Context } from './Context';
 import { NotFound } from './NotFound';
 import { Link } from 'react-router-dom';
 import { createEditor, onEditorChange } from './CodeEditor';
-import { Comment as CommentComponent }  from './CommentComponent';
+import { Comments as CommentsComponent }  from './CommentComponent';
 
 // state of PostComponent
 interface PostComponentState {
@@ -58,8 +58,6 @@ export class Post extends React.Component<PostProps, PostComponentState> {
     if (!props.error && !props.loading &&
       props.match && (!props.post || props.post.id !== props.match.params.id)) {
       const id: string = props.match.params.id;
-      console.log('from route! id: ' + id);
-      console.dir(props);
       actions.show(id);
     }
     return (
@@ -106,7 +104,6 @@ class PostItemEdit extends React.Component<PostItemEditProps, PostItemEditState>
     const newPostEdit = this.state.postEdit;
     newPostEdit.contents = value;
     this.setState({ postEdit: newPostEdit });
-    console.dir(this.state.postEdit);
   }
 
   render() {
@@ -117,7 +114,7 @@ class PostItemEdit extends React.Component<PostItemEditProps, PostItemEditState>
       border: 'none', borderBottom: 'solid 2px blue'
     };
     return (
-      <div>
+      <div className="App-Width">
         <input type="text" placeholder="file name" style={inputStyle}
           onChange={this.onTitleChange} value={post.title} />
         <input type="text" placeholder="file type" style={inputStyle}
@@ -141,16 +138,12 @@ const PostItemEditor: React.StatelessComponent<{ post: PostEdit, onChange: onEdi
 const PostItem: React.StatelessComponent<{ post: PostModel, startEdit: any }> =
   (props: { post: PostModel, startEdit: any }) => {
     const { post, startEdit } = props;
-    console.dir(post);
     return (
       <div>
         <p>{post.title}[{post.fileType}]</p>
         <Link to="#" onClick={startEdit}>Edit</Link>
         <PostItemViewer {...post} />
-        {(post.comments.length > 0) ?
-          post.comments.map((comment, idx) => <CommentComponent key={idx} {...comment} />) :
-          <div>no comments.</div>
-        }
+        <CommentsComponent {...post} />
       </div>
     );
   };
