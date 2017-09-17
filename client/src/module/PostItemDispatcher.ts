@@ -1,4 +1,4 @@
-import * as actions from '../module/PostItemModule';
+import * as actions from '../action/PostItemAction';
 import { apiRequest, HttpMethod } from '../util/request';
 import { Post } from '../model/Post';
 import { Token } from '../model';

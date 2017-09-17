@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { UserProps } from '../action/UserAction';
+import { UserProps } from '../module/';
 import { Context } from '../component/Context';
 
 export class LoginForm extends React.Component<UserProps, { email: string, password: string }> {

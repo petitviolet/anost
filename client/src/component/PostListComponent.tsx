@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
-import { Query, ByUser, PostListActionDispatcher } from '../action/PostListAction';
+import { Query, ByUser, PostListActionDispatcher } from '../module';
 import { Post } from '../model/Post';
 import { Context } from './Context';
 import { NotFound } from './NotFound';

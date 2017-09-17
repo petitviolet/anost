@@ -1,5 +1,5 @@
 import { ReduxAction, } from '../store';
-import * as actions from '../module/UserModule';
+import * as actions from '../action/UserAction';
 import { apiRequest, HttpMethod } from '../util/request';
 import { User, Token } from '../model';
 import { UserState } from '../module/UserState';

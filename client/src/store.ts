@@ -1,6 +1,5 @@
-import user from './module/UserModule';
-import post from './module/PostItemModule';
-import postList from './module/PostListModule';
+import { user, post, postList } from './reducer';
+import * as a from './action';
 import * as m from './module';
 import { createStore, combineReducers, Action } from 'redux';
 import { routerReducer } from 'react-router-redux';
@@ -26,4 +25,4 @@ export const withToken = (s: ReduxState, props: any) => {
   return Object.assign({}, props, { token: token });
 }
 
-export type ReduxAction = m.UserActions | m.PostActions | m.PostListActions | Action;
+export type ReduxAction = a.UserActions | a.PostActions | a.PostListActions | Action;

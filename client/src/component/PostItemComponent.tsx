@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PostProps } from '../action/PostItemAction';
+import { PostProps } from '../module';
 import { Post as PostModel } from '../model/Post';
 import { Context } from './Context';
 import { NotFound } from './NotFound';

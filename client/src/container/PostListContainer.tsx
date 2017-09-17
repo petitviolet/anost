@@ -2,7 +2,7 @@ import { Dispatch } from 'redux';
 import { ReduxAction, ReduxState, withToken } from '../store';
 import { connect } from 'react-redux';
 import { PostListComponent } from '../component';
-import { PostListActionDispatcher } from '../action/PostListAction';
+import { PostListActionDispatcher } from '../module/';
 
 export default connect<any, any, { userId: string }>(
   (state: ReduxState, ownProps?: { userId: string}) => {
