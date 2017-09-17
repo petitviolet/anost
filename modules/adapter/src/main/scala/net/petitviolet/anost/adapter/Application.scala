@@ -6,7 +6,7 @@ import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 import akka.http.scaladsl.settings.{ ParserSettings, RoutingSettings }
-import net.petitviolet.anost.adapter.controller.{ AnostController, PostControllerImpl, UserControllerImpl }
+import net.petitviolet.anost.adapter.controller._
 import net.petitviolet.anost.adapter.repository.Database
 import net.petitviolet.anost.adapter.support._
 import net.petitviolet.anost.support.MixInLogger
@@ -25,7 +25,7 @@ class Application() extends MixInLogger with UsesHttpConfig with MixInActorSyste
   private lazy val (host, port) = (httpConfig.host, httpConfig.port)
 
   private final val controllers = {
-    UserControllerImpl :: PostControllerImpl :: Nil
+    UserControllerImpl :: PostControllerImpl :: CommentControllerImpl :: Nil
   }
 
   /**

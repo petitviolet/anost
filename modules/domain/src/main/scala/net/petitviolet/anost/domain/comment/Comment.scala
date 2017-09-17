@@ -11,7 +11,7 @@ import scala.concurrent.Future
 import scalaz.Kleisli
 
 case class Comment(
-  id: Id[Comment],
+    id: Id[Comment],
     postId: Id[Post],
     userId: Id[User],
     sentence: Sentence
@@ -29,6 +29,10 @@ object Comment {
 
   def findByPost(postId: Id[Post])(implicit ctx: AppContext): CommentOps[Seq[Comment]] = Kleisli {
     repo => repo.findAllByPostId.run(postId)
+  }
+
+  def store(comment: Comment)(implicit ctx: AppContext): CommentOps[Comment] = Kleisli {
+    repo => repo.store.run(comment)
   }
 }
 

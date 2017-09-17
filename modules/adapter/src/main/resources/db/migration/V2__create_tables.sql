@@ -11,7 +11,7 @@ CREATE TABLE posts (
 );
 
 CREATE TABLE comments (
-    id BIGINT NOT NULL AUTO_INCREMENT,
+    id VARCHAR(36) NOT NULL,
     post_id VARCHAR(36) NOT NULL,
     user_id VARCHAR(36) NOT NULL,
     sentence TEXT NOT NULL,
