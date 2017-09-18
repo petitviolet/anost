@@ -66,7 +66,7 @@ export class Post extends React.Component<PostProps, PostComponentState> {
         {(props.post)
           ? ((this.state.isEditing)
             ? <PostItemEdit {...{ post: props.post, submitEdit: this.submitEdit, cancelEdit: this.cancelEdit }} />
-            : <PostItem {...{ post: props.post, startEdit: this.startEdit }} />)
+            : <PostItem {...{ postProps: this.props, startEdit: this.startEdit }} />)
           : (props.loading || props.error) ? null : <NotFound />}
       </div>
     );
@@ -135,15 +135,17 @@ const PostItemEditor: React.StatelessComponent<{ post: PostEdit, onChange: onEdi
     return createEditor(props.post, false, props.onChange);
   };
 
-const PostItem: React.StatelessComponent<{ post: PostModel, startEdit: any }> =
-  (props: { post: PostModel, startEdit: any }) => {
-    const { post, startEdit } = props;
+const PostItem: React.StatelessComponent<{ postProps: PostProps, startEdit: any }> =
+  (props: { postProps: PostProps, startEdit: any }) => {
+    const { postProps, startEdit } = props;
+    if (!postProps.value.post) return null;
+    const post = postProps.value.post;
     return (
       <div>
         <p>{post.title}[{post.fileType}]</p>
         <Link to="#" onClick={startEdit}>Edit</Link>
         <PostItemViewer {...post} />
-        <CommentsComponent {...post} />
+        <CommentsComponent {...postProps} />
       </div>
     );
   };

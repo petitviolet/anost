@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { Post } from '../model';
+import { Post, Comment } from '../model';
 
 // kinds of action
 export enum PostAction {
@@ -11,6 +11,7 @@ export enum PostAction {
   SAVE = 'post/save',
   SHOW = 'post/show',
   UPDATE = 'post/update',
+  ADD_COMMENT = 'post/comment/add',
 }
 
 interface ChangeRequestStatusAction extends Action {
@@ -50,6 +51,15 @@ export const showPostAction = (post: Post): ShowPostAction => ({
   post: post,
 });
 
+interface AddCommentAction extends Action {
+  type: PostAction.ADD_COMMENT;
+  comment: Comment;
+}
+export const addCommentAction = (comment: Comment): AddCommentAction => ({
+  type: PostAction.ADD_COMMENT,
+  comment: comment,
+});
+
 interface ErrorAction extends Action {
   type: PostAction.ERROR_OCCURRED | PostAction.ERROR_CLEARD;
   error: Error | null;
@@ -63,5 +73,5 @@ export const clearErrorAction = (): ErrorAction => ({
   error: null,
 });
 
-export type PostActions = ChangeRequestStatusAction | ErrorAction | SavePostAction | ShowPostAction | UpdatePostAction;
+export type PostActions = ChangeRequestStatusAction | ErrorAction | SavePostAction | ShowPostAction | UpdatePostAction | AddCommentAction;
 

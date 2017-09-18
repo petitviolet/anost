@@ -1,7 +1,6 @@
 import * as actions from '../action/PostItemAction';
 import { apiRequest, HttpMethod } from '../util/request';
-import { Post } from '../model/Post';
-import { Token } from '../model';
+import { Token, Post, Comment } from '../model';
 import { PostState } from '../module/PostItemState';
 import { ReduxAction } from '../store';
 
@@ -9,6 +8,7 @@ enum PostPath {
   SAVE = '/post',
   UPDATE = '/post',
   SHOW = '/post',
+  COMMENT = '/comment',
 }
 
 export class PostActionDispatcher {
@@ -106,6 +106,38 @@ export class PostActionDispatcher {
       });
     return p;
   }
+
+  public async addComment(post: Post, sentence: string, token: Token): Promise<void> {
+    const self = this;
+    self.dispatch(actions.clearErrorAction());
+    if (!sentence) {
+      self.onError('sentence must not be empty.');
+      return Promise.resolve();
+    }
+    const body = { postId: post.id, sentence: sentence };
+
+    self.dispatch(actions.startRequestAction());
+    const p = apiRequest(HttpMethod.POST, PostPath.COMMENT, token.value, body)
+      .then(res => {
+        self.dispatch(actions.finishRequestAction());
+        // cast
+        const comment: Comment = res;
+        // if id exists, request/response are correct.
+        console.log(`commented: ${comment}`);
+        if (comment && comment.id) {
+          console.dir(comment);
+          self.dispatch(actions.addCommentAction(comment));
+        } else {
+          self.onError('comment failed!');
+        }
+      })
+      .catch(error => {
+        console.log('ERROR: ' + error);
+        self.onError(error);
+      });
+    return p;
+  }
+
 
   public onError(msg: string | Error): void {
     const err: Error = (typeof (msg) === 'string') ? new Error(msg) : msg;

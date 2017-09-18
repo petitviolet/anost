@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Comment as CommentModel } from '../model/Post';
+import { Comment as CommentModel } from '../model';
 import { Link } from 'react-router-dom';
+import { PostProps } from '../module/';
 
-export const Comments: React.StatelessComponent<{comments: CommentModel[]}> =
-  (props: {comments: CommentModel[]}) => {
-    const { comments } = props
+export const Comments: React.StatelessComponent<PostProps> =
+  (props: PostProps) => {
+    const { comments: comments } = props.value.post!;
     console.log('comments');
-    console.dir(props);
     console.dir(comments);
     return (
       <div>
@@ -14,14 +14,40 @@ export const Comments: React.StatelessComponent<{comments: CommentModel[]}> =
           comments.map((comment, idx) => <Comment key={idx} {...comment} />)
           : <div>no comments.</div>
         }
-        <div>
-          <Link to="#" onClick={(e) => {
-            // submitEdit(e, this.state.postEdit);
-          }}>Add comment</Link>
-        </div>
+        <AddComment {...props} />
       </div>
     );
   };
+
+class AddComment extends React.Component<PostProps, { input: string }> {
+  constructor(props: PostProps) {
+    super(props);
+    this.state = { input: '' };
+  }
+
+  onInputChange = (e: any) => {
+    this.setState({ input: e.target.value });
+  }
+
+  render() {
+    console.log(this.props);
+    const { value: propsValue, actions: actions } = this.props;
+    return (
+      <div>
+        <input type="text" placeholder="comment" value={this.state.input} onChange={this.onInputChange} />
+        {(propsValue.post && propsValue.token) ?
+          <div>
+            <Link to="#" onClick={(e) => {
+              actions.addComment(propsValue.post!, this.state.input, propsValue.token!);
+              this.setState({ input: '' });
+            }}>Add comment</Link>
+          </div>
+          : null
+        }
+      </div>
+    );
+  }
+}
 
 const Comment: React.StatelessComponent<CommentModel> =
   (props: CommentModel) => {

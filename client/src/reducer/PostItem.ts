@@ -1,5 +1,6 @@
 import { PostAction, PostActions } from '../action/PostItemAction';
 import { initialPostState, PostState } from '../module/PostItemState';
+import { Comment } from '../model';
 
 // reducer endpoint for user
 export function reducer(state: PostState = initialPostState, action: PostActions): PostState {
@@ -17,6 +18,10 @@ export function reducer(state: PostState = initialPostState, action: PostActions
       return Object.assign({}, state, { post: action.post });
     case PostAction.SHOW:
       return Object.assign({}, state, { post: action.post });
+    case PostAction.ADD_COMMENT:
+      const comments: Comment[] = (state.post) ? state.post.comments.concat([action.comment]) : [action.comment];
+      const newPost = Object.assign({}, state.post, { comments: comments });
+      return Object.assign({}, state, { post: newPost });
     default:
       return state;
   }
