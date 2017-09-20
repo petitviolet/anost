@@ -8,8 +8,8 @@ export const Header: React.StatelessComponent<UserProps> =
     return (
       <div>
         Anost!
-        {(props.value.user && props.value.token) ? `   hello ${props.value.user.name}` : null}
-        {(props.value.user && props.value.token) ? <Logout {...props} /> : null}
+        {(props.value.user && props.value.login) ? `   hello ${props.value.user.name}` : null}
+        {(props.value.user && props.value.login) ? <Logout {...props} /> : null}
       </div>
     );
   };

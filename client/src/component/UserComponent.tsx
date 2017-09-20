@@ -6,11 +6,11 @@ import { Link } from 'react-router-dom';
 
 export const User: React.StatelessComponent<UserProps> =
   (props: UserProps) => {
-    const { user, token, location, history } = props.value;
-    if (user && token && location && history && location.pathname === '/login') { history.push('/user/me'); }
+    const { user, login, location, history } = props.value;
+    if (user && login && location && history && location.pathname === '/login') { history.push('/user/me'); }
     return (
       <div>
-        {(user && token) ? <UserDetail user={user} /> : <LoginForm {...props} />}
+        {(user && login) ? <UserDetail user={user} /> : <LoginForm {...props} />}
       </div>
     );
   };

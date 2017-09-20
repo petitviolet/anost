@@ -1,4 +1,4 @@
-import { State } from './state';
+import { State , LoginInfo } from './state';
 import { User, Token } from '../model';
 
 export interface UserState extends State {
@@ -6,7 +6,7 @@ export interface UserState extends State {
 }
 export const saveLocal = (state: UserState): void => {
   localStorage.setItem('user', JSON.stringify(state.user));
-  localStorage.setItem('token', JSON.stringify(state.token));
+  localStorage.setItem('token', JSON.stringify(state.login));
 };
 export const clearLocal = (): void => {
   localStorage.removeItem('user');
@@ -23,6 +23,7 @@ const loadFromLocal = (): { user: User | null, token?: Token } => {
 // empty state
 const createInitialState = (): UserState => {
   const { user, token } = loadFromLocal();
-  return { user: user, token: token };
+  const login: LoginInfo | undefined = (user && token) ? { user: user, token: token } : undefined;
+  return { user: user, login: login };
 };
 export const initialState = createInitialState();

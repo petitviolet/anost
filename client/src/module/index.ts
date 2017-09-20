@@ -1,3 +1,4 @@
+export { State, LoginInfo } from './state';
 export { PostListState } from './PostListState';
 // export { PostListProps } from './PostListDispatcher';
 export { PostState } from './PostItemState';
