@@ -3,9 +3,9 @@ package net.petitviolet.anost.usecase.post
 import net.petitviolet.anost.domain.comment.{ Comment, UsesCommentRepository }
 import net.petitviolet.anost.domain.post.{ Post, UsesPostRepository }
 import net.petitviolet.anost.domain.support.Repository.NotFound
-import net.petitviolet.anost.domain.user.{ User, UserRepository, UsesUserRepository }
+import net.petitviolet.anost.domain.user.{ User, UsesUserRepository }
 import net.petitviolet.anost.support.Id
-import net.petitviolet.anost.usecase.{ AnostUseCase, In, futureBind }
+import net.petitviolet.anost.usecase.{ AnostUseCase, In }
 
 import scala.concurrent.Future
 import scalaz._
