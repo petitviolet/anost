@@ -24,7 +24,7 @@ export function reducer(state: PostState = initialPostState, action: PostActions
       return Object.assign({}, state, { post: newPost });
     case PostAction.DELETE_COMMENT:
       const deleted = action.comment;
-      const cs: Comment[] = (state.post && state.post.comments) ? state.post.comments.filter(c => c.id != deleted.id) : [];
+      const cs: Comment[] = (state.post && state.post.comments) ? state.post.comments.filter(c => c.id !== deleted.id) : [];
       const np = Object.assign({}, state.post, { comments: cs });
       return Object.assign({}, state, { post: np });
     default:

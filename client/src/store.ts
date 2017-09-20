@@ -22,6 +22,6 @@ export type ReduxState = {
 export const withLogin = (s: ReduxState, props: any) => {
   const login = s.user.login;
   return Object.assign({}, props, { login: login });
-}
+};
 
 export type ReduxAction = a.UserActions | a.PostActions | a.PostListActions | Action;

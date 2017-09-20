@@ -58,12 +58,12 @@ interface CommentProps {
 
 const Comment: React.StatelessComponent<CommentProps> =
   (props: CommentProps) => {
-    const { comment: comment, actions: actions, login: login } = props
+    const { comment: comment, actions: actions, login: login } = props;
     return (
       <div style={commentStyle}>
         <div style={commentUserStyle}>
           Mr. {comment.owner.userName.charAt(0)}
-          {(login && comment.owner.userId == login.user.id) ?
+          {(login && comment.owner.userId === login.user.id) ?
               <input style={commentDeleteButtonStyle} type="button" onClick={(e) => actions.deleteComment(comment, login.token)} value="☓"/>
               : null
             }
@@ -82,10 +82,10 @@ const commentStyle = {
 
 const commentUserStyle = {
   textDecoration: 'underline',
-}
+};
 
 const commentDeleteButtonStyle = {
   backgroundColor: 'rgba(240, 240, 240, 220)',
   float: 'right',
   border: '1px solid #EEEEEE',
-}
+};

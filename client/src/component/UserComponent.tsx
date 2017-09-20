@@ -26,7 +26,7 @@ const UserDetail: React.StatelessComponent<{ user: UserModel }> =
             <tr><td>{user.name}</td>{user.email}</tr>
           </tbody>
         </table>
-        <p><Link to={"/posts/user/" + user.id}>post list</Link></p>
+        <p><Link to={'/posts/user/' + user.id}>post list</Link></p>
       </div>
     );
   };

@@ -32,7 +32,7 @@ export const PostList: React.StatelessComponent<PostListProps> =
           <Route path="/posts/user/:userId" render={(param) => {
             const userId = param.match.params.userId;
             console.log(`/posts/user/${userId}`);
-            if (props.value.userId && props.value.userId != userId) {
+            if (props.value.userId && props.value.userId !== userId) {
               props.actions.updateByUser(userId);
               return null;
             }
