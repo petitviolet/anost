@@ -34,6 +34,10 @@ object Comment {
   def store(comment: Comment)(implicit ctx: AppContext): CommentOps[Comment] = Kleisli {
     repo => repo.store.run(comment)
   }
+
+  def delete(userId: Id[User], commentId: Id[Comment])(implicit ctx: AppContext): CommentOps[Boolean] = Kleisli {
+    repo => repo.delete(userId).run(commentId)
+  }
 }
 
 private object CommentSpecification {

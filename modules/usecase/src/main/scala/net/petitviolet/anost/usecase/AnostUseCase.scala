@@ -26,3 +26,8 @@ trait In extends Any
 trait Out extends Any
 
 case class AuthArg[I <: In](token: AuthTokenValue, in: I) extends In
+
+sealed trait UnitOut extends Out
+case object UnitOut extends UnitOut
+
+case class BoolOut(success: Boolean) extends Out
