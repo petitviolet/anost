@@ -1,7 +1,7 @@
 import * as actions from '../action/PostItemAction';
 import { apiRequest, HttpMethod } from '../util/request';
 import { Token, Post, Comment } from '../model';
-import { PostState } from '../module/PostItemState';
+import { PostState } from '../module';
 import { ReduxAction } from '../store';
 
 enum PostPath {
@@ -138,6 +138,31 @@ export class PostActionDispatcher {
     return p;
   }
 
+  public async deleteComment(comment: Comment, token: Token): Promise<void> {
+    const self = this;
+    self.dispatch(actions.clearErrorAction());
+    const body = { commentId: comment.id };
+    self.dispatch(actions.startRequestAction());
+    const p = apiRequest(HttpMethod.DELETE, PostPath.COMMENT, token.value, body)
+      .then(res => {
+        self.dispatch(actions.finishRequestAction());
+        // cast
+        const result: { result: boolean } = res;
+        // if id exists, request/response are correct.
+        console.log(`deleted comment: ${comment.id} result: ${result.result}`);
+        if (comment && comment.id) {
+          console.dir(comment);
+          self.dispatch(actions.deleteCommentAction(comment));
+        } else {
+          self.onError('delete comment failed!');
+        }
+      })
+      .catch(error => {
+        console.log('ERROR: ' + error);
+        self.onError(error);
+      });
+    return p;
+  }
 
   public onError(msg: string | Error): void {
     const err: Error = (typeof (msg) === 'string') ? new Error(msg) : msg;

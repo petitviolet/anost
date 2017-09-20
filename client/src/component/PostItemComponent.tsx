@@ -41,9 +41,9 @@ export class Post extends React.Component<PostProps, PostComponentState> {
     this.setState({ isEditing: false });
 
     const { id, title, fileType, contents } = editedPost;
-    const token = this.props.value.token;
-    if (token) {
-      this.props.actions.update(id, title, fileType, contents, token);
+    const login = this.props.value.login;
+    if (login) {
+      this.props.actions.update(id, title, fileType, contents, login.token);
     } else {
       this.props.actions.onError('User not logged in.');
     }

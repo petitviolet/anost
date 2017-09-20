@@ -12,6 +12,7 @@ export enum PostAction {
   SHOW = 'post/show',
   UPDATE = 'post/update',
   ADD_COMMENT = 'post/comment/add',
+  DELETE_COMMENT = 'post/comment/delete',
 }
 
 interface ChangeRequestStatusAction extends Action {
@@ -60,6 +61,15 @@ export const addCommentAction = (comment: Comment): AddCommentAction => ({
   comment: comment,
 });
 
+interface DeleteCommentAction extends Action {
+  type: PostAction.DELETE_COMMENT;
+  comment: Comment;
+}
+export const deleteCommentAction = (comment: Comment): DeleteCommentAction => ({
+  type: PostAction.DELETE_COMMENT,
+  comment: comment,
+});
+
 interface ErrorAction extends Action {
   type: PostAction.ERROR_OCCURRED | PostAction.ERROR_CLEARD;
   error: Error | null;
@@ -73,5 +83,6 @@ export const clearErrorAction = (): ErrorAction => ({
   error: null,
 });
 
-export type PostActions = ChangeRequestStatusAction | ErrorAction | SavePostAction | ShowPostAction | UpdatePostAction | AddCommentAction;
-
+export type PostActions = ChangeRequestStatusAction | ErrorAction |
+            SavePostAction | ShowPostAction | UpdatePostAction |
+            AddCommentAction | DeleteCommentAction ;

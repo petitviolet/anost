@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Comment as CommentModel } from '../model';
 import { Link } from 'react-router-dom';
-import { PostProps } from '../module/';
+import { LoginInfo, PostProps } from '../module/';
+import { PostActionDispatcher } from '../module/PostItemDispatcher';
 
 export const Comments: React.StatelessComponent<PostProps> =
   (props: PostProps) => {
@@ -11,7 +12,7 @@ export const Comments: React.StatelessComponent<PostProps> =
     return (
       <div>
         {(comments.length > 0) ?
-          comments.map((comment, idx) => <Comment key={idx} {...comment} />)
+          comments.map((comment, idx) => <Comment key={idx} {...{comment: comment, actions: props.actions, login: props.value.login}} />)
           : <div>no comments.</div>
         }
         <AddComment {...props} />
@@ -35,10 +36,10 @@ class AddComment extends React.Component<PostProps, { input: string }> {
     return (
       <div>
         <input type="text" placeholder="comment" value={this.state.input} onChange={this.onInputChange} />
-        {(propsValue.post && propsValue.token) ?
+        {(propsValue.post && propsValue.login) ?
           <div>
             <Link to="#" onClick={(e) => {
-              actions.addComment(propsValue.post!, this.state.input, propsValue.token!);
+              actions.addComment(propsValue.post!, this.state.input, propsValue.login!.token);
               this.setState({ input: '' });
             }}>Add comment</Link>
           </div>
@@ -49,12 +50,25 @@ class AddComment extends React.Component<PostProps, { input: string }> {
   }
 }
 
-const Comment: React.StatelessComponent<CommentModel> =
-  (props: CommentModel) => {
+interface CommentProps {
+  comment: CommentModel;
+  actions: PostActionDispatcher;
+  login?: LoginInfo;
+}
+
+const Comment: React.StatelessComponent<CommentProps> =
+  (props: CommentProps) => {
+    const { comment: comment, actions: actions, login: login } = props
     return (
       <div style={commentStyle}>
-        <div style={commentUserStyle}>Mr. {props.owner.userName.charAt(0)}</div>
-        <div>{props.sentence}</div>
+        <div style={commentUserStyle}>
+          Mr. {comment.owner.userName.charAt(0)}
+          {(login && comment.owner.userId == login.user.id) ?
+              <input style={commentDeleteButtonStyle} type="button" onClick={(e) => actions.deleteComment(comment, login.token)} value="☓"/>
+              : null
+            }
+        </div>
+        <div>{comment.sentence}</div>
       </div>
     );
   };
@@ -65,6 +79,13 @@ const commentStyle = {
   marginTop: '5px',
   width: '60%',
 };
+
 const commentUserStyle = {
   textDecoration: 'underline',
+}
+
+const commentDeleteButtonStyle = {
+  backgroundColor: 'rgba(240, 240, 240, 220)',
+  float: 'right',
+  border: '1px solid #EEEEEE',
 }
