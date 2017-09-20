@@ -4,7 +4,7 @@ import { State } from './state';
 export interface PostListState extends State {
   query: string;
   userId: string;
-  items: Post[];
+  items?: Post[];
 }
 
-export const initialPostListState: PostListState = { query: '', userId: '', items: [] };
+export const initialPostListState: PostListState = { query: '', userId: '', items: undefined };

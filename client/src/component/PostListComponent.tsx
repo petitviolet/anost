@@ -30,9 +30,13 @@ export const PostList: React.StatelessComponent<PostListProps> =
             return <PostListComponent {...props} />;
           }} />
           <Route path="/posts/user/:userId" render={(param) => {
-            console.log('/posts/user/:userId');
-            console.dir(param);
-            return <PostListComponent {...updatePostListPropsWithUserId(props, param.match.params.userId) } />;
+            const userId = param.match.params.userId;
+            console.log(`/posts/user/${userId}`);
+            if (props.value.userId && props.value.userId != userId) {
+              props.actions.updateByUser(userId);
+              return null;
+            }
+            return <PostListComponent {...props} />;
           }} />
           <Route component={NotFound} />
         </Switch>
@@ -44,22 +48,23 @@ const PostListComponent: React.StatelessComponent<PostListProps> =
   (props: PostListProps) => {
     // on logged in, fetch and show user's post list.
     const { items, loading, query, userId } = props.value;
-    if (items.length === 0 && !loading && !query && userId) {
+    if (!items && !loading && !query && userId) {
       const param = new ByUser(userId);
       props.actions.list(param);
       console.log('by user!: userId: ' + userId);
+      return <div></div>;
     }
     console.log('PostListComponent');
     console.dir(props.value);
 
     return (
       <div>
-        {(props.value.items.length !== 0) ? <ol>{
+        {(props.value.items && props.value.items.length !== 0) ? <ul>{
           props.value.items.map((post) =>
             <li key={post.id}>
               <PostListItem {...post} />
             </li>)
-        }</ol> : null}
+        }</ul> : <div>no posts.</div>}
       </div>
     );
   };

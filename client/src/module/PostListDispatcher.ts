@@ -43,6 +43,10 @@ export class PostListActionDispatcher {
     this.dispatch(actions.updateQuery(query));
   }
 
+  public updateByUser(userId: string): void {
+    this.dispatch(actions.updateByUser(userId));
+  }
+
   public async list(param: RequestParam): Promise<void> {
     const self = this;
     self.dispatch(actions.startRequestAction());

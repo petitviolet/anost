@@ -15,6 +15,8 @@ export function reducer(state: PostListState = initialPostListState, action: Pos
       return Object.assign({}, state, { items: action.items });
     case PostListAction.UPDATE_QUERY:
       return Object.assign({}, state, { query: action.query });
+    case PostListAction.UPDATE_BYUSER:
+      return Object.assign({}, state, { userId: action.userId });
     default:
       return state;
   }
