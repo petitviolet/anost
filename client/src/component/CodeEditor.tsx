@@ -12,8 +12,10 @@ export type onEditorChange = (value: string) => void;
 
 export const createEditor = (post: EditorData, readOnly: boolean, onChange?: onEditorChange): JSX.Element => {
   try {
-    require(`brace/mode/${post.fileType}`);
-    console.log(`new mode: ${post.fileType}`);
+    if (post.fileType) {
+      require(`brace/mode/${post.fileType}`);
+      console.log(`new mode: ${post.fileType}`);
+    }
   } catch (e) {
     console.log('error new mode: ' + e);
   }
