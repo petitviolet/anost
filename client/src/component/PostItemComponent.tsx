@@ -5,12 +5,14 @@ import { Context } from './Context';
 import { NotFound } from './NotFound';
 import { Link } from 'react-router-dom';
 import { createEditor, onEditorChange } from './CodeEditor';
-import { Comments as CommentsComponent }  from './CommentComponent';
+import { Comments as CommentsComponent } from './CommentComponent';
+import { locationPush } from '../util';
 
 // state of PostComponent
 interface PostComponentState {
   isEditing: boolean;
 }
+
 class PostEdit {
   readonly id: string;
   title: string;
@@ -23,14 +25,18 @@ class PostEdit {
     this.contents = contents;
   }
 }
-const fromModel = (post: PostModel): PostEdit => {
-  return new PostEdit(post.id, post.title, post.fileType, post.contents);
+const fromModel = (post: PostModel | null): PostEdit => {
+  if (post) {
+    return new PostEdit(post.id, post.title, post.fileType, post.contents);
+  } else {
+    return new PostEdit('', '', '', '');
+  }
 };
 
 export class Post extends React.Component<PostProps, PostComponentState> {
   constructor(props: PostProps) {
     super(props);
-    this.state = { isEditing: false };
+    this.state = { isEditing: props.value.isEditing };
   }
 
   startEdit = (e: any) => {
@@ -42,8 +48,10 @@ export class Post extends React.Component<PostProps, PostComponentState> {
 
     const { id, title, fileType, contents } = editedPost;
     const login = this.props.value.login;
-    if (login) {
+    if (login && id) {
       this.props.actions.update(id, title, fileType, contents, login.token);
+    } else if (login && !id) {
+      this.props.actions.save(title, fileType, contents, login.token);
     } else {
       this.props.actions.onError('User not logged in.');
     }
@@ -55,19 +63,28 @@ export class Post extends React.Component<PostProps, PostComponentState> {
 
   render() {
     const { value: props, actions: actions } = this.props;
-    if (!props.error && !props.loading &&
-      props.match && (!props.post || props.post.id !== props.match.params.id)) {
-      const id: string = props.match.params.id;
-      actions.show(id);
+    if (!props.error && !props.loading) {
+      if (props.match && (!props.post || props.post.id !== props.match.params.id)) {
+        const id: string = props.match.params.id;
+        actions.show(id);
+      } else if (props.post && !props.postId) {
+        console.log('push', props);
+        locationPush(`/posts/${props.post.id}`);
+      } else {
+        console.log(props)
+      }
     }
+    // console.log('state', this.state);
+    // console.log('props', this.props);
     return (
       <div>
         <Context {...this.props} />
-        {(props.post)
-          ? ((this.state.isEditing)
-            ? <PostItemEdit {...{ post: props.post, submitEdit: this.submitEdit, cancelEdit: this.cancelEdit }} />
-            : <PostItem {...{ postProps: this.props, startEdit: this.startEdit }} />)
-          : (props.loading || props.error) ? null : <NotFound />}
+        {(this.state.isEditing)
+          ? <PostItemEdit {...{ post: props.post, submitEdit: this.submitEdit, cancelEdit: this.cancelEdit }} />
+          : (props.post)
+            ? <PostItem {...{ postProps: this.props, startEdit: this.startEdit }} />
+            : (props.loading || props.error) ? null : <NotFound />
+        }
       </div>
     );
   }
@@ -75,7 +92,7 @@ export class Post extends React.Component<PostProps, PostComponentState> {
 
 // a component for editing Post
 interface PostItemEditProps {
-  post: PostModel;
+  post: PostModel | null;
   submitEdit: any;
   cancelEdit: any;
 }
@@ -84,7 +101,7 @@ interface PostItemEditState {
   editor: any;
 }
 
-class PostItemEdit extends React.Component<PostItemEditProps, PostItemEditState> {
+export class PostItemEdit extends React.Component<PostItemEditProps, PostItemEditState> {
   constructor(props: { post: PostModel, submitEdit: any, cancelEdit: any }) {
     super(props);
     this.state = { postEdit: fromModel(props.post), editor: null };

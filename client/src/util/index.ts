@@ -1,0 +1,1 @@
+export { locationPush } from './location';

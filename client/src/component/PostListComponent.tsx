@@ -23,6 +23,7 @@ export const PostList: React.StatelessComponent<PostListProps> =
       <div>
         <QueryBox {...props} />
         <Context {...props} />
+        <StartPostCreateComponent />
         <Switch>
           <Route exact path="/posts/user/me" render={(param) => {
             console.log('/posts/user/me');
@@ -43,6 +44,16 @@ export const PostList: React.StatelessComponent<PostListProps> =
       </div>
     );
   };
+
+const StartPostCreateComponent: React.StatelessComponent<{}> =
+  (props: {}) => {
+    const path = `/posts/new`;
+    return (
+      <div>
+        <Link to={path}>NEW POST</Link>
+      </div>
+    );
+  }
 
 const PostListComponent: React.StatelessComponent<PostListProps> =
   (props: PostListProps) => {

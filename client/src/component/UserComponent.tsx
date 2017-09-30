@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { UserProps } from '../module';
-import { User as UserModel } from '../model/User';
+import { User as UserModel } from '../model/';
 import { LoginForm } from './LoginForm';
 import { Link } from 'react-router-dom';
 
