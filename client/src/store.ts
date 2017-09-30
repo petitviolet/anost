@@ -1,16 +1,21 @@
 import { user, post, postList } from './reducer';
 import * as a from './action';
 import * as m from './module';
-import { createStore, combineReducers, Action } from 'redux';
-import { routerReducer } from 'react-router-redux';
+import { createStore, combineReducers, Action, applyMiddleware } from 'redux';
+import { routerReducer, routerMiddleware } from 'react-router-redux';
+import createBrowserHistory from 'history/createBrowserHistory';
+
+export const history = createBrowserHistory();
+const middleware = routerMiddleware(history);
 
 export default createStore(
   combineReducers({
     user,
     post,
     postList,
-    routing: routerReducer,
-  })
+    router: routerReducer,
+  }),
+  applyMiddleware(middleware)
 );
 
 export type ReduxState = {
