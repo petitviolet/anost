@@ -5,7 +5,7 @@ import { Context } from '../component/Context';
 export class LoginForm extends React.Component<UserProps, { email: string, password: string }> {
   constructor(props: UserProps) {
     super(props);
-    console.dir(this.props);
+    console.log('LoginForm', this);
     this.state = { email: '', password: '' };
   }
 
@@ -18,7 +18,7 @@ export class LoginForm extends React.Component<UserProps, { email: string, passw
   }
 
   private onClick(e: any) {
-    console.dir(this);
+    console.log('LoginForm', this.props);
     this.props.actions.logout();
     e.preventDefault();
     const { email, password } = this.state;
