@@ -9,7 +9,8 @@ import PostList from './container/PostListContainer';
 import Header from './container/HeaderContainer';
 import PostItem from './container/PostItemContainer';
 import NewPostItem from './container/NewPostItemContainer';
-import { LoginForm, NotFound } from './component';
+import LoginForm from './container/LoginContainer';
+import { NotFound } from './component';
 import store, { history } from './store';
 
 export default class App extends React.Component {
@@ -25,13 +26,13 @@ export default class App extends React.Component {
             </div>
             <div className="App-Content">
               <Switch>
-                <Route exact path="/" component={User} />
+                <Route exact path="/" component={PostList} />
+                <Route exact path="/login" component={LoginForm} />
                 <Route exact path="/user/*" component={User} />
                 <Route path="/posts/user" component={PostList} />
                 <Route path="/posts/search" component={PostList} />
                 <Route exact path="/posts/new" component={NewPostItem} />
                 <Route path="/posts/:id" component={PostItem} />
-                <Route exact path="/login" component={LoginForm} />
                 <Route component={NotFound} />
               </Switch>
             </div>

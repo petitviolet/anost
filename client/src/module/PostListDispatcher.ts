@@ -5,6 +5,7 @@ import { ReduxAction } from '../store';
 
 enum PostListPath {
   List = '/post',
+  All = '/post/all',
 }
 
 export interface RequestParam {
@@ -76,6 +77,32 @@ export class PostListActionDispatcher {
       });
     return p;
   }
+
+  public async all(): Promise<void> {
+    const self = this;
+    self.dispatch(actions.startRequestAction());
+    self.dispatch(actions.clearErrorAction());
+    const path = PostListPath.All;
+    const p = apiRequest(HttpMethod.GET, path)
+      .then(res => {
+        self.dispatch(actions.finishRequestAction());
+        // cast
+        const response: Post[] = res.posts;
+        // if id exists, request/response are correct.
+        if (response != null) {
+          console.dir(response);
+          self.dispatch(actions.listAction(response));
+        } else {
+          self.onError('fetch post list failed!');
+        }
+      })
+      .catch(error => {
+        console.log('ERROR: ' + error);
+        self.onError(error);
+      });
+    return p;
+  }
+
 
   private onError(msg: string | Error): void {
     const err: Error = (typeof (msg) === 'string') ? new Error(msg) : msg;

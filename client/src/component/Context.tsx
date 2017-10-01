@@ -3,11 +3,13 @@ import { State } from '../module/state';
 
 export const Context: React.StatelessComponent<{ value: State }> =
   (props: { value: State }) => {
-    // const user = this.props.value.user;
+    const { value } = props;
+    console.log('context', props);
+    if (!value) { return null; }
     return (
       <div>
-        {(props.value.loading === true) ? <p> loading... </p> : null}
-        {(props.value.error) ? <p> error! {props.value.error.message} </p> : null}
+        {(value.loading === true) ? <p> loading... </p> : null}
+        {(value.error) ? <p> error! {value.error.message} </p> : null}
       </div>
     );
   };

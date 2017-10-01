@@ -25,9 +25,9 @@ export const PostList: React.StatelessComponent<PostListProps> =
         <Context {...props} />
         <StartPostCreateComponent />
         <Switch>
+          <Route exact path="/" render={(p) => <PostListComponent {...props}/>}/>
           <Route exact path="/posts/user/me" render={(param) => {
-            console.log('/posts/user/me');
-            console.dir(param);
+            console.log('/posts/user/me', param);
             return <PostListComponent {...props} />;
           }} />
           <Route path="/posts/user/:userId" render={(param) => {
@@ -59,11 +59,16 @@ const PostListComponent: React.StatelessComponent<PostListProps> =
   (props: PostListProps) => {
     // on logged in, fetch and show user's post list.
     const { items, loading, query, userId } = props.value;
-    if (!items && !loading && !query && userId) {
-      const param = new ByUser(userId);
-      props.actions.list(param);
-      console.log('by user!: userId: ' + userId);
-      return <div></div>;
+    if (!items && !loading && !query) {
+      if (userId) {
+        const param = new ByUser(userId);
+        props.actions.list(param);
+        console.log('by user!: userId: ' + userId);
+        return <div></div>;
+      } else {
+        props.actions.all();
+        return <div></div>;
+      }
     }
     console.log('PostListComponent');
     console.dir(props.value);

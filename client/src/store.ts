@@ -6,17 +6,17 @@ import { routerReducer, routerMiddleware } from 'react-router-redux';
 import createBrowserHistory from 'history/createBrowserHistory';
 
 export const history = createBrowserHistory();
-const middleware = routerMiddleware(history);
 
-export default createStore(
+const store = createStore(
   combineReducers({
     user,
     post,
     postList,
     router: routerReducer,
   }),
-  applyMiddleware(middleware)
+  applyMiddleware(routerMiddleware(history))
 );
+export default store;
 
 export type ReduxState = {
   user: m.UserState;
