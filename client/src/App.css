@@ -24,11 +24,17 @@
   width: 100%;
   vertical-align: middle;
 }
-#logout {
+.header-item-component {
+  display: inline-block;
   vertical-align: middle;
   text-align: right;
   color: #0999FF;
-  margin-left: 50%;
+  float: right;
+  margin-right: 1.5em;
+}
+.header-item {
+  color: #0999FF;
+  margin-right: 0.5em;
 }
 
 .App-Content {

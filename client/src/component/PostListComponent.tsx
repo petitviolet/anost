@@ -17,13 +17,13 @@ export const updatePostListPropsWithUserId = (props: PostListProps, userId?: str
   const p = Object.assign({}, props.value, { userId: userId });
   return Object.assign({}, props, { value: p });
 };
+
 export const PostList: React.StatelessComponent<PostListProps> =
   (props: PostListProps) => {
     return (
       <div>
         <QueryBox {...props} />
         <Context {...props} />
-        <StartPostCreateComponent />
         <Switch>
           <Route exact path="/" render={(p) => <PostListComponent {...props}/>}/>
           <Route exact path="/posts/user/me" render={(param) => {
@@ -45,16 +45,6 @@ export const PostList: React.StatelessComponent<PostListProps> =
     );
   };
 
-const StartPostCreateComponent: React.StatelessComponent<{}> =
-  (props: {}) => {
-    const path = `/posts/new`;
-    return (
-      <div>
-        <Link to={path}>NEW POST</Link>
-      </div>
-    );
-  }
-
 const PostListComponent: React.StatelessComponent<PostListProps> =
   (props: PostListProps) => {
     // on logged in, fetch and show user's post list.
@@ -66,12 +56,11 @@ const PostListComponent: React.StatelessComponent<PostListProps> =
         console.log('by user!: userId: ' + userId);
         return <div></div>;
       } else {
+        console.log('fetch all!');
         props.actions.all();
         return <div></div>;
       }
     }
-    console.log('PostListComponent');
-    console.dir(props.value);
 
     return (
       <div>

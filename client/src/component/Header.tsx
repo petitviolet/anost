@@ -10,14 +10,20 @@ export const Header: React.StatelessComponent<UserProps> =
       <div>
         Anost!
         {(props.value.user && props.value.login)
-          ? <Logout {...props} />
-          : <Link style={loginLinkStyle} to="/login">Login</Link>}
+          ? <div className="header-item-component">
+              <StartPostCreateComponent /><Logout {...props} />
+            </div>
+          : <div className="header-item-component"><Link className="header-item" to="/login">Login</Link></div>
+        }
       </div>
     );
   };
 
- const loginLinkStyle = {
-   float: 'right',
-   marginRight: '1em',
-   color: 'white',
- }
+const StartPostCreateComponent: React.StatelessComponent<{}> =
+  (props: {}) => {
+    const path = `/posts/new`;
+    return (
+      <Link to={path} className="header-item">New Post</Link>
+    );
+  }
+
