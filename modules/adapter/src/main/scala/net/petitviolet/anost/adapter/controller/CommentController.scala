@@ -17,12 +17,12 @@ trait CommentController extends AnostController
   override protected def route: Route = {
     pathPrefix("comment") {
       (pathEnd & post & withAuth & entity(as[AddCommentArg])) { (token, arg) =>
-        implicit val ctx = createContext(Anost.writeSession, token)
+        implicit val ctx = writeContext(token)
         val out = commentPresenter.execute(addCommentUseCase.execute(AuthArg(token, arg)))
         onCompleteResponse("/comment", out) { ok }
       } ~
         (pathEnd & delete & withAuth & entity(as[DeleteCommentArg])) { (token, arg) =>
-          implicit val ctx = createContext(Anost.writeSession, token)
+          implicit val ctx = writeContext(token)
           val out = boolPresenter.execute(deleteCommentUseCase.execute(AuthArg(token, arg)))
           onCompleteResponse("/comment", out) { ok }
         }

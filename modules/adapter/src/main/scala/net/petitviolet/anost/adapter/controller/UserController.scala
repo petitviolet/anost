@@ -24,15 +24,16 @@ trait UserController extends AnostController with UsesLogger
       //        onCompleteResponse("/user", out) { ok }
       //      } ~
       (pathEnd & post & entity(as[RegisterUserArgs])) { arg =>
-        implicit val ctx = createContext(Anost.writeSession)
+        implicit val ctx = writeContext()
         val out = authTokenPresenter.execute(registerUserUseCase.execute(arg))
         onCompleteResponse("/user", out) { ok }
       } ~
-        (path("login") & get & pathEnd & parameters('email.as[String], 'password.as[String])).as(LoginUserArgs.apply) { arg =>
-          implicit val ctx = createContext(Anost.readSession)
-          val out = loginUserPresenter.execute(loginUserUseCase.execute(arg))
-          onCompleteResponse("/user/login", out) { ok }
-        }
+        (path("login") & get & pathEnd &
+          parameters('email.as[String], 'password.as[String])).as(LoginUserArgs.apply) { arg =>
+            implicit val ctx = readContext()
+            val out = loginUserPresenter.execute(loginUserUseCase.execute(arg))
+            onCompleteResponse("/user/login", out) { ok }
+          }
     }
   }
 }
