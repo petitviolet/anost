@@ -15,6 +15,7 @@ trait FindPostUseCase extends AnostUseCase[FindPostArg, PostsOutput]
     (arg match {
       case PostOfUserArg(userId) => Post.ofUser(userId)
       case PostLikeTitleArg(titleQuery) => Post.searchByTitle(Title(titleQuery))
+      case AllPost => Post.all()
     }) |> { _.run(postRepository) } map { PostsOutput.fromModels }
 
   }
@@ -23,6 +24,7 @@ trait FindPostUseCase extends AnostUseCase[FindPostArg, PostsOutput]
 sealed trait FindPostArg extends In
 case class PostOfUserArg(userId: Id[User]) extends FindPostArg
 case class PostLikeTitleArg(titleQuery: String) extends FindPostArg
+case object AllPost extends FindPostArg
 
 object FindPostArg {
   def byUser(str: String): FindPostArg = PostOfUserArg(Id(str))

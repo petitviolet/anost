@@ -1,6 +1,5 @@
 package net.petitviolet.anost.domain.post
 
-import net.petitviolet.anost.domain.comment.Comment
 import net.petitviolet.anost.domain.support.Repository
 import net.petitviolet.anost.domain.user.User
 import net.petitviolet.anost.support.Id
@@ -10,6 +9,8 @@ import scala.concurrent.Future
 import scalaz.Kleisli
 
 trait PostRepository extends Repository[Post] {
+  def all(implicit ctx: AppContext): Kleisli[Future, Unit, Seq[Post]]
+
   def findByUserId(implicit ctx: AppContext): Kleisli[Future, Id[User], Seq[Post]]
 
   def findByTitle(implicit ctx: AppContext): Kleisli[Future, Title, Seq[Post]]

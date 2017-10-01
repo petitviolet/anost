@@ -10,6 +10,12 @@ import scala.concurrent.Future
 import scalaz.Kleisli
 
 object PostRepositoryImpl extends PostRepository with MixInLogger {
+
+  override def all(implicit ctx: AppContext): Kleisli[Future, Unit, Seq[Post]] = kleisliF { _ =>
+    import ctx._
+    Posts.findAll().map { Posts.toModel }
+  }
+
   override def resolve(implicit ctx: AppContext): Kleisli[Future, Id[Post], Option[Post]] = kleisliF {
     id: Id[Post] =>
       import ctx._

@@ -53,6 +53,11 @@ object Post {
     repo => repo.findByUserId.run(userId)
   }
 
+  // TODO paging
+  def all()(implicit ctx: AppContext): PostOps[Seq[Post]] = Kleisli {
+    repo => repo.all.run(())
+  }
+
   def findById(postId: Id[Post])(implicit ctx: AppContext): PostOps[Option[Post]] = Kleisli {
     repo => repo.resolve.run(postId)
   }

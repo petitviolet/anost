@@ -17,26 +17,27 @@ trait PostController extends AnostController with UsesLogger
   override protected def route: Route = {
     pathPrefix("post") {
       (pathEnd & post & withAuth & entity(as[SavePostArg])) { (token, arg) =>
-        implicit val ctx = createContext(Anost.writeSession, token)
+        implicit val ctx = writeContext(token)
         val out = postPresenter.execute(savePostUseCase.execute(AuthArg(token, arg)))
         onCompleteResponse("/post", out) { ok }
       } ~
         (pathEnd & put & withAuth & entity(as[UpdatePostArg])) { (token, arg) =>
-          implicit val ctx = createContext(Anost.writeSession, token)
+          implicit val ctx = writeContext(token)
           val out = postPresenter.execute(updatePostUseCase.execute(AuthArg(token, arg)))
           onCompleteResponse("/post", out) { ok }
         } ~
-        (path(Segment) & pathEnd & get).as(GetPostArg.fromString _) { arg: GetPostArg =>
-          implicit val ctx = createContext(Anost.readSession)
-          val out = postPresenter.execute(getPostUseCase.execute(arg))
-          onCompleteResponse(s"/post/${arg.postId}", out) { ok }
-        } ~
-        (get & parameters('user.as[String].?, 'title.as[String].?))
-        .as(FindPostArg.apply _) { arg =>
-          implicit val ctx = createContext(Anost.readSession)
-          val out = postsPresenter.execute(findPostUseCase.execute(arg))
-          onCompleteResponse(s"/post?$arg", out) { ok }
-        }
+        ((path("all") & pathEnd & get & provide(AllPost)) |
+          (get & parameters('user.as[String].?, 'title.as[String].?)).as(FindPostArg.apply _)) {
+            arg: FindPostArg =>
+              implicit val ctx = readContext()
+              val out = postsPresenter.execute(findPostUseCase.execute(arg))
+              onCompleteResponse(s"/post?$arg", out) { ok }
+          } ~
+          (path(Segment) & pathEnd & get).as(GetPostArg.fromString _) { arg: GetPostArg =>
+            implicit val ctx = readContext()
+            val out = postPresenter.execute(getPostUseCase.execute(arg))
+            onCompleteResponse(s"/post/${arg.postId}", out) { ok }
+          }
     }
   }
 }
