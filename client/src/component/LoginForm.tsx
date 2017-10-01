@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { UserProps } from '../module/';
 import { Context } from '../component/Context';
+import { Redirect } from 'react-router-dom';
 
 export class LoginForm extends React.Component<UserProps, { email: string, password: string }> {
   constructor(props: UserProps) {
     super(props);
-    console.log('LoginForm', this);
     this.state = { email: '', password: '' };
   }
 
@@ -32,6 +32,10 @@ export class LoginForm extends React.Component<UserProps, { email: string, passw
   }
 
   render() {
+    if (this.props.value.login && this.props.value.login.token) {
+      console.log('LoginForm already logged in');
+      return <Redirect to="/"/>;
+    }
     return (
       <div>
         <ul>

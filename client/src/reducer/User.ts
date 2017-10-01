@@ -17,7 +17,7 @@ export function reducer(state: UserState = initialState, action: UserActions): U
       return newState;
     case UserAction.LOGOUT:
       clearLocal();
-      return Object.assign({}, state, { user: null });
+      return Object.assign({}, state, { user: null, login: null });
     default:
       return state;
   }
