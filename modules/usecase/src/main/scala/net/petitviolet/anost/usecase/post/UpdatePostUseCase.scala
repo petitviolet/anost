@@ -7,6 +7,9 @@ import net.petitviolet.anost.support.Id
 import net.petitviolet.anost.usecase._
 
 import scala.concurrent.Future
+import net.petitviolet.operator._
+
+import scalaz.Kleisli
 
 trait UpdatePostUseCase extends AnostAuthUseCase[UpdatePostArg, PostOutput]
     with UsesPostRepository {
@@ -15,8 +18,18 @@ trait UpdatePostUseCase extends AnostAuthUseCase[UpdatePostArg, PostOutput]
     import ctx._
     val postV = arg.asPost(user)
     postV.fold[Future[Out]](toFutureFailed, { post: Post =>
-      Post.update(post).run(postRepository) map { PostOutput.fromModel }
+      (Post.findById(post.id) >=> validatePost(post) flatMap Post.update)
+        .run(postRepository) map { PostOutput.fromModel }
     })
+  }
+
+  private def validatePost(post: Post): Kleisli[Future, Option[Post], Post] = Kleisli {
+    postOpt: Option[Post] =>
+      postOpt.filter { p =>
+        p.id == post.id and p.ownerId == post.ownerId
+      }.map { p: Post =>
+        Future.successful(p)
+      } getOrElse { Future.failed(ValidationError(s"invalid post request. $post")) }
   }
 }
 

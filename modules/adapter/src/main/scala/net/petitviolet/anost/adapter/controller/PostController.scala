@@ -26,18 +26,19 @@ trait PostController extends AnostController with UsesLogger
           val out = postPresenter.execute(updatePostUseCase.execute(AuthArg(token, arg)))
           onCompleteResponse("/post", out) { ok }
         } ~
-        ((path("all") & pathEnd & get & provide(AllPost)) |
-          (get & parameters('user.as[String].?, 'title.as[String].?)).as(FindPostArg.apply _)) {
-            arg: FindPostArg =>
+        (get &
+          ((path("all") & pathEnd & provide(AllPost))
+            | (pathEnd & parameters('user.as[String].?, 'title.as[String].?)).as(FindPostArg.apply _))) {
+              arg: FindPostArg =>
+                implicit val ctx = readContext()
+                val out = postsPresenter.execute(findPostUseCase.execute(arg))
+                onCompleteResponse(s"/post?$arg", out) { ok }
+            } ~
+            (path(Segment) & pathEnd & get).as(GetPostArg.fromString _) { arg: GetPostArg =>
               implicit val ctx = readContext()
-              val out = postsPresenter.execute(findPostUseCase.execute(arg))
-              onCompleteResponse(s"/post?$arg", out) { ok }
-          } ~
-          (path(Segment) & pathEnd & get).as(GetPostArg.fromString _) { arg: GetPostArg =>
-            implicit val ctx = readContext()
-            val out = postPresenter.execute(getPostUseCase.execute(arg))
-            onCompleteResponse(s"/post/${arg.postId}", out) { ok }
-          }
+              val out = postPresenter.execute(getPostUseCase.execute(arg))
+              onCompleteResponse(s"/post/${arg.postId}", out) { ok }
+            }
     }
   }
 }
