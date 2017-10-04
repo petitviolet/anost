@@ -12,7 +12,7 @@ export function reducer(state: UserState = initialState, action: UserActions): U
     case UserAction.ERROR_CLEARD:
       return Object.assign({}, state, { error: action.error });
     case UserAction.LOGIN:
-      const newState = Object.assign({}, state, { user: action.user, login: { user: action.user, token: action.token }});
+      const newState = Object.assign({}, state, { user: action.user, login: { user: action.user, token: action.token } });
       saveLocal(newState);
       return newState;
     case UserAction.LOGOUT:

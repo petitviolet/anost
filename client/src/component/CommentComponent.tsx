@@ -7,12 +7,11 @@ import { PostActionDispatcher } from '../module/PostItemDispatcher';
 export const Comments: React.StatelessComponent<PostProps> =
   (props: PostProps) => {
     const { comments: comments } = props.value.post!;
-    console.log('comments');
-    console.dir(comments);
+    console.log('comments', comments);
     return (
       <div>
         {(comments.length > 0) ?
-          comments.map((comment, idx) => <Comment key={idx} {...{comment: comment, actions: props.actions, login: props.value.login}} />)
+          comments.map((comment, idx) => <Comment key={idx} {...{ comment: comment, actions: props.actions, login: props.value.login }} />)
           : <div>no comments.</div>
         }
         <AddComment {...props} />
@@ -31,18 +30,16 @@ class AddComment extends React.Component<PostProps, { input: string }> {
   }
 
   render() {
-    console.log(this.props);
+    console.log('comment-component', this.props);
     const { value: propsValue, actions: actions } = this.props;
     return (
       <div>
-        <input type="text" placeholder="comment" value={this.state.input} onChange={this.onInputChange} />
         {(propsValue.post && propsValue.login) ?
-          <div>
+          <div><input type="text" placeholder="comment" value={this.state.input} onChange={this.onInputChange} />
             <Link to="#" onClick={(e) => {
               actions.addComment(propsValue.post!, this.state.input, propsValue.login!.token);
               this.setState({ input: '' });
-            }}>Add comment</Link>
-          </div>
+            }}>Add comment</Link></div>
           : null
         }
       </div>
@@ -64,9 +61,9 @@ const Comment: React.StatelessComponent<CommentProps> =
         <div style={commentUserStyle}>
           Mr. {comment.owner.userName.charAt(0)}
           {(login && comment.owner.userId === login.user.id) ?
-              <input style={commentDeleteButtonStyle} type="button" onClick={(e) => actions.deleteComment(comment, login.token)} value="☓"/>
-              : null
-            }
+            <input style={commentDeleteButtonStyle} type="button" onClick={(e) => actions.deleteComment(comment, login.token)} value="☓" />
+            : null
+          }
         </div>
         <div>{comment.sentence}</div>
       </div>

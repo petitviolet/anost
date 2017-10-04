@@ -23,19 +23,18 @@ const ENDPOINT = `http://${process.env.REACT_APP_API_HOST || 'localhost'}:${proc
 export function apiRequest(method: HttpMethod, path: string, token: string = '', body?: object): Promise<any> {
   const url = `${ENDPOINT}${path}`;
   const requestInit = { method: method.valueOf(), headers: httpHeader(token), body: (body) ? JSON.stringify(body) : null };
-  console.log(`url: ${url}, params: ${requestInit}`);
-  console.dir(requestInit);
+  console.log('url', url, 'params', requestInit, 'token', token);
   return fetch(url, requestInit)
-  .then(response => {
-    if (response.status === 200) {
-      // chain promise
-      return response.json();
-    } else {
-      return new Error(`illegal status code: ${response.status}`);
-    }
-  })
-  .catch(error => {
-    console.dir(error);
-    return error;
-  });
+    .then(response => {
+      if (response.status === 200) {
+        // chain promise
+        return response.json();
+      } else {
+        return new Error(`illegal status code: ${response.status}`);
+      }
+    })
+    .catch(error => {
+      console.dir(error);
+      return error;
+    });
 }

@@ -33,6 +33,12 @@ const fromModel = (post: PostModel | null): PostEdit => {
   }
 };
 
+const isValidUser = (props: PostProps): boolean => {
+  const v = props.value;
+  return (v.login && v.post && v.login.user.id === v.post.ownerId) ? true : false;
+}
+
+
 export class Post extends React.Component<PostProps, PostComponentState> {
   constructor(props: PostProps) {
     super(props);
@@ -44,6 +50,10 @@ export class Post extends React.Component<PostProps, PostComponentState> {
   }
 
   submitEdit = (e: any, editedPost: PostEdit) => {
+    if (!isValidUser(this.props)) {
+      console.log("you are not valid user.");
+      return;
+    }
     this.setState({ isEditing: false });
 
     const { id, title, fileType, contents } = editedPost;
@@ -160,7 +170,7 @@ const PostItem: React.StatelessComponent<{ postProps: PostProps, startEdit: any 
     return (
       <div>
         <p>{post.title}[{post.fileType}]</p>
-        <Link to="#" onClick={startEdit}>Edit</Link>
+        {isValidUser(postProps) ? <Link to="#" onClick={startEdit}>Edit</Link> : null}
         <PostItemViewer {...post} />
         <CommentsComponent {...postProps} />
       </div>

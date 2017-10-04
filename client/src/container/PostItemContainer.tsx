@@ -10,8 +10,7 @@ export default connect<any, any, { postId?: string }>(
       ? Object.assign({}, state.post, { postId: state.post.post.id })
       : state.post;
     const p = Object.assign({}, ownProps, { isEditing: false });
-    console.log('state.post', state.post);
-    console.log('post', post);
+    console.log('state', state);
     return { value: withLogin(state, Object.assign({}, post, p)) };
   },
   (dispatch: Dispatch<ReduxAction>) => ({ actions: new PostActionDispatcher(dispatch) })
