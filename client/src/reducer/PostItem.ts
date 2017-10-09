@@ -13,6 +13,7 @@ export function reducer(state: PostState = initialPostState, action: PostActions
     case PostAction.ERROR_CLEARD:
       return Object.assign({}, state, { error: action.error });
     case PostAction.SAVE:
+      return Object.assign({}, state, { post: action.post, isEditing: true });
     case PostAction.UPDATE:
     case PostAction.SHOW:
       return Object.assign({}, state, { post: action.post });

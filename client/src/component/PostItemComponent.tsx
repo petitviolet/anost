@@ -35,7 +35,8 @@ const fromModel = (post: PostModel | null): PostEdit => {
 
 const isValidUser = (props: PostProps): boolean => {
   const v = props.value;
-  return ((v.login && !v.post) || (v.login && v.post && v.login.user.id === v.post.ownerId)) ? true : false;
+  if (!v.login) return false;
+  return ((!v.post) || (v.post && v.login.user.id === v.post.ownerId)) ? true : false;
 }
 
 export class Post extends React.Component<PostProps, PostComponentState> {
@@ -53,7 +54,6 @@ export class Post extends React.Component<PostProps, PostComponentState> {
       console.log("you are not valid user.");
       return;
     }
-    this.setState({ isEditing: false });
 
     const { id, title, fileType, contents } = editedPost;
     const login = this.props.value.login;

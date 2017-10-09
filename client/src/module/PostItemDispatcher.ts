@@ -92,9 +92,8 @@ export class PostActionDispatcher {
         // cast
         const post: Post = res;
         // if id exists, request/response are correct.
-        console.log(`post save: ${post}`);
+        console.log('post save', post);
         if (post && post.id) {
-          console.dir(post);
           self.dispatch(actions.savePostAction(post));
         } else {
           self.onError('Save post failed!');
