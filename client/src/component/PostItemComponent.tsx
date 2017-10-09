@@ -35,9 +35,8 @@ const fromModel = (post: PostModel | null): PostEdit => {
 
 const isValidUser = (props: PostProps): boolean => {
   const v = props.value;
-  return (v.login && v.post && v.login.user.id === v.post.ownerId) ? true : false;
+  return ((v.login && !v.post) || (v.login && v.post && v.login.user.id === v.post.ownerId)) ? true : false;
 }
-
 
 export class Post extends React.Component<PostProps, PostComponentState> {
   constructor(props: PostProps) {
@@ -73,11 +72,13 @@ export class Post extends React.Component<PostProps, PostComponentState> {
 
   render() {
     const { value: props, actions: actions } = this.props;
+    console.log('post item component', this.props);
+    const p: any = this.props;
     if (!props.error && !props.loading) {
       if (props.match && (!props.post || props.post.id !== props.match.params.id)) {
         const id: string = props.match.params.id;
         actions.show(id);
-      } else if (props.post && !props.postId) {
+      } else if ((p.match && p.match.path == '/posts/new' && props.post) || (props.post && !props.postId)) {
         console.log('push', props);
         locationPush(`/posts/${props.post.id}`);
       } else {
