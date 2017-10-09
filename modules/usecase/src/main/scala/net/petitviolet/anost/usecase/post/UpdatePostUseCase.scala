@@ -27,8 +27,8 @@ trait UpdatePostUseCase extends AnostAuthUseCase[UpdatePostArg, PostOutput]
     postOpt: Option[Post] =>
       postOpt.filter { p =>
         p.id == post.id and p.ownerId == post.ownerId
-      }.map { p: Post =>
-        Future.successful(p)
+      }.map { _ =>
+        Future.successful(post)
       } getOrElse { Future.failed(ValidationError(s"invalid post request. $post")) }
   }
 }
